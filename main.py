@@ -1,4 +1,3 @@
-import colorsys
 import hashlib
 
 import matplotlib as mpl
@@ -18,40 +17,64 @@ mpl.rcParams["axes.linewidth"] = 0.5
 CONFIG = {
     "NPOINTS": 5000,         # Number of points to plot
     "TOKENS_PER_BLOCK": 16,  # Number of tokens per block
-    "BYTES_PER_BLOCK": 1e6,  # 1 MB per block
-    "MODEL_PARAMS": 8e9      # 8 billion parameters
+    # "BYTES_PER_BLOCK": 1e6,  # 1 MB per block
+    # "MODEL_PARAMS": 8e9      # 8 billion parameters
     # "BYTES_PER_BLOCK": 4e6,   # 4 MB per block
     # "MODEL_PARAMS": 32e9      # 32 billion parameters
-    # "BYTES_PER_BLOCK": 16e6,  # 16 MB per block
-    # "MODEL_PARAMS": 128e9     # 128 billion parameters
+    "BYTES_PER_BLOCK": 16e6,  # 16 MB per block
+    "MODEL_PARAMS": 128e9     # 128 billion parameters
 }
 
 # Define stacks of hardware configurations to evaluate
 STACKS = {
-    "H200-DDR5-6000-NVMe980-NVLink3": {
-        "gpu": GPUS["H200"],
-        "dram": DRAMS["DDR5-6000"],
-        "disk": DISKS["NVMe980"],
-        "link": LINKS["NVLink3"],
-        "gpu_count": 2,
-        "dram_count": 4,
-    },
-    "H200-DDR4-3200-NVMe980-NVLink3": {
+    "H200-DDR4-3200-NVMeT700R0-NVLink5": {
         "gpu": GPUS["H200"],
         "dram": DRAMS["DDR4-3200"],
-        "disk": DISKS["NVMe980"],
-        "link": LINKS["NVLink3"],
+        "disk": DISKS["NVMeT700R0"],
+        "link": LINKS["NVLink5"],
+        "gpu_count": 4,
+        "dram_count": 4,
+    },
+    "H200-DDR4-3200-NVMeT700R5-NVLink6": {
+        "gpu": GPUS["H200"],
+        "dram": DRAMS["DDR4-3200"],
+        "disk": DISKS["NVMeT700R5"],
+        "link": LINKS["NVLink6"],
         "gpu_count": 2,
         "dram_count": 4,
     },
-    "H200-DDR3-1600-NVMe980-NVLink3": {
-        "gpu": GPUS["H200"],
-        "dram": DRAMS["DDR3-1600"],
-        "disk": DISKS["NVMe980"],
-        "link": LINKS["NVLink3"],
-        "gpu_count": 2,
-        "dram_count": 4,
-    }
+    "A100-DDR5-6000-NVMeT700R0-NVLink5": {
+        "gpu": GPUS["A100"],
+        "dram": DRAMS["DDR5-6000"],
+        "disk": DISKS["NVMeT700R0"],
+        "link": LINKS["NVLink5"],
+        "gpu_count": 4,
+        "dram_count": 10,
+    },
+    # "H200-DDR4-3200-NVMe980-NVLink3": {
+    #     "gpu": GPUS["H200"],
+    #     "dram": DRAMS["DDR4-3200"],
+    #     "disk": DISKS["NVMe980"],
+    #     "link": LINKS["NVLink3"],
+    #     "gpu_count": 2,
+    #     "dram_count": 4,
+    # },
+    # "H100-DDR5-6000-NVMe980-NVLink3": {
+    #     "gpu": GPUS["H100"],
+    #     "dram": DRAMS["DDR5-6000"],
+    #     "disk": DISKS["NVMe980"],
+    #     "link": LINKS["NVLink3"],
+    #     "gpu_count": 2,
+    #     "dram_count": 4,
+    # },
+    # "A100-DDR5-6000-NVMeT700R5-NVLink5": {
+    #     "gpu": GPUS["A100"],
+    #     "dram": DRAMS["DDR5-6000"],
+    #     "disk": DISKS["NVMeT700R5"],
+    #     "link": LINKS["NVLink5"],
+    #     "gpu_count": 2,
+    #     "dram_count": 4,
+    # },
 }
 
 
@@ -95,9 +118,12 @@ def fmt_time(s):
 
 # Helper function to get a color for a given label
 def get_color(label):
-    h = int(hashlib.md5(label.encode()).hexdigest(), 16) % 360
-    r, g, b = colorsys.hls_to_rgb(h/360, 0.5, 0.7)
-    return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}"
+    color_palette = plt.get_cmap("tab10")
+
+    # use a hash of the label to get a consistent color index
+    hash_digest = hashlib.md5(label.encode()).hexdigest()
+    color_index = int(hash_digest, 16) % color_palette.N
+    return color_palette(color_index)
 
 
 # Function to calculate the storage curve for a given stack configuration
@@ -161,8 +187,8 @@ def make_plot(
     dpi=400,
     output="plot.png",
 ):
-    max_blocks = 1_000_000
-    min_blocks = 1_000
+    max_blocks = 500_000
+    min_blocks = 500
     model_params = CONFIG["MODEL_PARAMS"]
 
     # create figure and axis
@@ -199,7 +225,7 @@ def make_plot(
             ax.plot(xs, ys, color=color, lw=1.6, linestyle=":", label=compute_label)
 
         # plot the storage line information for the stack
-        storage_label = f"[Storage] {stack_name}"
+        storage_label = f"[Restore] {stack_name}"
         legend_items.append(
             Line2D([0], [0], color=color, lw=1.6, linestyle="-", label=storage_label)
         )
@@ -216,8 +242,8 @@ def make_plot(
 
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel(f"Number of blocks  (1 block = {CONFIG['TOKENS_PER_BLOCK']} tokens = {CONFIG['BYTES_PER_BLOCK'] / (1024**2):.1f} MB)", fontsize=9)
-    ax.tick_params(axis="x", labelsize=7)
+    ax.set_xlabel(f"Number of blocks  (1 block = {CONFIG['TOKENS_PER_BLOCK']} tokens = {CONFIG['BYTES_PER_BLOCK'] / (1024**2):.1f} MB, model parameters = {CONFIG['MODEL_PARAMS'] / (1024**3):.1f}B)", fontsize=10)
+    ax.tick_params(axis="x", labelsize=8)
 
     # Top axis: data volume
     ax2 = ax.twiny()
@@ -227,8 +253,8 @@ def make_plot(
     ax2.xaxis.set_major_formatter(
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
-    ax2.set_xlabel("Data volume", fontsize=9, labelpad=6)
-    ax2.tick_params(axis="x", labelsize=7)
+    ax2.set_xlabel("Data volume", fontsize=10, labelpad=6)
+    ax2.tick_params(axis="x", labelsize=8)
 
     # Y-axis
     y_ticks = [
@@ -248,8 +274,8 @@ def make_plot(
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time (Storage restore  or  GPU recompute)", fontsize=9)
-    ax.tick_params(axis="y", labelsize=7)
+    ax.set_ylabel("Time (Storage restore  or  GPU recompute)", fontsize=10)
+    ax.tick_params(axis="y", labelsize=8)
 
     # ax.set_title(
     #     "Multi-tier Storage Restore vs GPU Recompute",
@@ -261,7 +287,7 @@ def make_plot(
     ax.legend(
         handles=legend_items,
         loc="lower right",
-        fontsize=6,
+        fontsize=8,
         framealpha=0.94,
         edgecolor="#cccccc",
         handlelength=3.0,
