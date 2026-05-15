@@ -3,7 +3,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class GPU:
     name: str
-    hbm_bw: int
+    hbm_bandwidth: int
     hbm_capacity: int
     peak_flops: int
 

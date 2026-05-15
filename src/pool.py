@@ -6,17 +6,17 @@ from .link import Link
 # Define common GPU hardware configurations
 GPUS = {
     # H200 SXM: 3360 GB/s HBM, 141 GB HBM capacity, 4000 TFLOPS peak FP
-    "H200": GPU(name="H200 SXM", hbm_bw=3360e9, hbm_capacity=141e9, peak_flops=4000e12),
+    "H200": GPU(name="H200 SXM", hbm_bandwidth=3360e9, hbm_capacity=141e9, peak_flops=4000e12),
     # H100 NVL: 3360 GB/s HBM, 80 GB HBM capacity, 4000 TFLOPS peak FP
-    "H100": GPU(name="H100 NVL", hbm_bw=3360e9, hbm_capacity=80e9, peak_flops=1979e12),
+    "H100": GPU(name="H100 NVL", hbm_bandwidth=3360e9, hbm_capacity=80e9, peak_flops=1979e12),
     # A100 80GB: 2039 GB/s HBM, 80 GB HBM capacity, 312 TFLOPS peak FP
-    "A100": GPU(name="A100 80GB", hbm_bw=2039e9, hbm_capacity=80e9, peak_flops=312e12),
+    "A100": GPU(name="A100 80GB", hbm_bandwidth=2039e9, hbm_capacity=80e9, peak_flops=312e12),
     # RTX 6000 Ada: 960 GB/s HBM, 48 GB HBM capacity, 182 TFLOPS peak FP
-    "RTX6000": GPU(name="RTX 6000 Ada", hbm_bw=960e9, hbm_capacity=48e9, peak_flops=182e12),
+    "RTX6000": GPU(name="RTX 6000 Ada", hbm_bandwidth=960e9, hbm_capacity=48e9, peak_flops=182e12),
     # Tesla V100: 897 GB/s HBM, 32 GB HBM capacity, 125 TFLOPS peak FP
-    "V100": GPU(name="Tesla V100", hbm_bw=897e9, hbm_capacity=32e9, peak_flops=125e12),
+    "V100": GPU(name="Tesla V100", hbm_bandwidth=897e9, hbm_capacity=32e9, peak_flops=125e12),
     # RTX A5000: 768 GB/s HBM, 24 GB HBM capacity, 55 TFLOPS peak FP
-    "A5000": GPU(name="RTX A5000", hbm_bw=768e9, hbm_capacity=24e9, peak_flops=55e12),
+    "A5000": GPU(name="RTX A5000", hbm_bandwidth=768e9, hbm_capacity=24e9, peak_flops=55e12),
 }
 
 # Define common DRAM configurations
