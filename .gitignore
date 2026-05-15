@@ -1,0 +1,10 @@
+# OS & IDE
+.idea/
+.vscode/
+.DS_Store
+
+# Python
+__pycache__
+venv/
+.venv/
+
