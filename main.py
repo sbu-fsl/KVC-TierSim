@@ -27,52 +27,86 @@ CONFIG = {
 }
 
 # Define stacks of hardware configurations to evaluate
+# STACKS = {
+#     # "H200-DDR5-6000-NVMeT700R0-NVLink6": {
+#     #     "gpu": GPUS["H200"],
+#     #     "dram": DRAMS["DDR5-6000"],
+#     #     "disk": DISKS["NVMeT700R0"],
+#     #     "link": LINKS["NVLink6"],
+#     #     "gpu_count": 4,
+#     #     "dram_count": 4,
+#     # },
+#     # "H100-DDR5-6000-NVMeT700R0-NVLink6": {
+#     #     "gpu": GPUS["H100"],
+#     #     "dram": DRAMS["DDR5-6000"],
+#     #     "disk": DISKS["NVMeT700R0"],
+#     #     "link": LINKS["NVLink6"],
+#     #     "gpu_count": 4,
+#     #     "dram_count": 10,
+#     # },
+#     # "A100-DDR5-6000-NVMeT700R5-NVLink6": {
+#     #     "gpu": GPUS["A100"],
+#     #     "dram": DRAMS["DDR5-6000"],
+#     #     "disk": DISKS["NVMeT700R5"],
+#     #     "link": LINKS["NVLink6"],
+#     #     "gpu_count": 4,
+#     #     "dram_count": 10,
+#     # },
+#     "H200-DDR4-3200-NVMe980-NVLink3": {
+#         "gpu": GPUS["H200"],
+#         "dram": DRAMS["DDR4-3200"],
+#         "disk": DISKS["NVMe980"],
+#         "link": LINKS["NVLink3"],
+#         "gpu_count": 1,
+#         "dram_count": 2,
+#     },
+#     "H100-DDR5-6000-NVMe980-NVLink3": {
+#         "gpu": GPUS["H100"],
+#         "dram": DRAMS["DDR5-6000"],
+#         "disk": DISKS["NVMe980"],
+#         "link": LINKS["NVLink3"],
+#         "gpu_count": 1,
+#         "dram_count": 2,
+#     },
+#     "A100-DDR5-6000-NVMeT700R5-NVLink5": {
+#         "gpu": GPUS["A100"],
+#         "dram": DRAMS["DDR5-6000"],
+#         "disk": DISKS["NVMeT700R5"],
+#         "link": LINKS["NVLink5"],
+#         "gpu_count": 1,
+#         "dram_count": 2,
+#     },
+# }
 STACKS = {
-    # "H200-DDR5-6000-NVMeT700R0-NVLink6": {
-    #     "gpu": GPUS["H200"],
-    #     "dram": DRAMS["DDR5-6000"],
-    #     "disk": DISKS["NVMeT700R0"],
-    #     "link": LINKS["NVLink6"],
-    #     "gpu_count": 4,
-    #     "dram_count": 4,
-    # },
-    # "H100-DDR5-6000-NVMeT700R0-NVLink6": {
-    #     "gpu": GPUS["H100"],
-    #     "dram": DRAMS["DDR5-6000"],
-    #     "disk": DISKS["NVMeT700R0"],
-    #     "link": LINKS["NVLink6"],
-    #     "gpu_count": 4,
-    #     "dram_count": 10,
-    # },
-    # "A100-DDR5-6000-NVMeT700R5-NVLink6": {
-    #     "gpu": GPUS["A100"],
-    #     "dram": DRAMS["DDR5-6000"],
-    #     "disk": DISKS["NVMeT700R5"],
-    #     "link": LINKS["NVLink6"],
-    #     "gpu_count": 4,
-    #     "dram_count": 10,
-    # },
-    "H200-DDR4-3200-NVMe980-NVLink3": {
-        "gpu": GPUS["H200"],
-        "dram": DRAMS["DDR4-3200"],
-        "disk": DISKS["NVMe980"],
-        "link": LINKS["NVLink3"],
+    "High-End (DDR5+NVMe)": {
+        "gpu": GPUS["High-End"],
+        "dram": DRAMS["DDR5"],
+        "disk": DISKS["NVMe"],
+        "link": LINKS["NVLink"],
         "gpu_count": 1,
         "dram_count": 2,
     },
-    "H100-DDR5-6000-NVMe980-NVLink3": {
-        "gpu": GPUS["H100"],
-        "dram": DRAMS["DDR5-6000"],
-        "disk": DISKS["NVMe980"],
-        "link": LINKS["NVLink3"],
+    "Mid-Range (DDR5+NVMe)": {
+        "gpu": GPUS["Mid-Range"],
+        "dram": DRAMS["DDR5"],
+        "disk": DISKS["NVMe"],
+        "link": LINKS["NVLink"],
         "gpu_count": 1,
         "dram_count": 2,
     },
-    "A100-DDR5-6000-NVMeT700R5-NVLink5": {
-        "gpu": GPUS["A100"],
-        "dram": DRAMS["DDR5-6000"],
-        "disk": DISKS["NVMeT700R5"],
-        "link": LINKS["NVLink5"],
+    "Mid-Range (DDR4+NVMe)": {
+        "gpu": GPUS["Mid-Range"],
+        "dram": DRAMS["DDR4"],
+        "disk": DISKS["NVMe"],
+        "link": LINKS["NVLink"],
+        "gpu_count": 1,
+        "dram_count": 2,
+    },
+    "Mid-Range (DDR4+SATA)": {
+        "gpu": GPUS["Mid-Range"],
+        "dram": DRAMS["DDR4"],
+        "disk": DISKS["SATA"],
+        "link": LINKS["PCIe"],
         "gpu_count": 1,
         "dram_count": 2,
     },
@@ -216,7 +250,7 @@ def make_plot(
             computes_hitmap[gpu.name] = True
 
             compute_label = f"[Compute] {stack['gpu_count']}x{gpu.name}"
-            legend_items.append(
+            legend_items.insert(0,
                 Line2D([0], [0], color=color, lw=1.6, linestyle=":", label=compute_label)
             )
 
@@ -235,15 +269,12 @@ def make_plot(
         ax.plot(xs, ys, color=color, lw=1.6, linestyle="-", label=storage_label)
 
     # ── Axes ──────────────────────────────────────────────────────────────────
-    # Ticks aligned to round data sizes:
-    # 1=50MB, 20=1GB, 200=10GB, 2000=100GB, 20000=1TB, 200000=10TB,
-    # 2000000=100TB, 20000000=1000TB
-    x_ticks = [1, 1_000, 100_000, 250_000, 400_000, 500_000, 600_000, 700_000, 800_000, 900_000, 1_000_000, 1_250_000, 2_000_000, 5_000_000]
+    x_ticks = [16, 16_000, 64_000, 128_000, 200_000, 300_000, 400_000, 500_000]
     x_ticks = [v for v in x_ticks if min_blocks <= v <= max_blocks]
 
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel(f"Number of blocks  (1 block = {CONFIG['TOKENS_PER_BLOCK']} tokens = {CONFIG['BYTES_PER_BLOCK'] / (1024**2):.1f} MB, model parameters = {CONFIG['MODEL_PARAMS'] / (1024**3):.1f}B)", fontsize=8)
+    ax.set_xlabel("Number of Tokens", fontsize=8)
     ax.tick_params(axis="x", labelsize=8)
 
     # Top axis: data volume
@@ -254,7 +285,7 @@ def make_plot(
     ax2.xaxis.set_major_formatter(
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
-    ax2.set_xlabel("Data volume", fontsize=8, labelpad=6)
+    # ax2.set_xlabel("Data volume", fontsize=8, labelpad=6)
     ax2.tick_params(axis="x", labelsize=8)
 
     # Y-axis
@@ -275,7 +306,7 @@ def make_plot(
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time (Storage restore  or  GPU recompute)", fontsize=8)
+    ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=8)
     ax.tick_params(axis="y", labelsize=8)
 
     # ax.set_title(

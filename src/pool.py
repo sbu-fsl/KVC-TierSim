@@ -17,6 +17,10 @@ GPUS = {
     "V100": GPU(name="Tesla V100", hbm_bandwidth=897e9, hbm_capacity=32e9, peak_flops=125e12),
     # RTX A5000: 768 GB/s HBM, 24 GB HBM capacity, 55 TFLOPS peak FP
     "A5000": GPU(name="RTX A5000", hbm_bandwidth=768e9, hbm_capacity=24e9, peak_flops=55e12),
+
+    # Grouping by generation
+    "High-End": GPU(name="High-End", hbm_bandwidth=3360e9, hbm_capacity=141e9, peak_flops=4000e12),
+    "Mid-Range": GPU(name="Mid-Range", hbm_bandwidth=2039e9, hbm_capacity=80e9, peak_flops=312e12),
 }
 
 # Define common DRAM configurations
@@ -39,6 +43,10 @@ DRAMS = {
     "DDR3-1600": DRAM(
         name="DDR3-1600", bandwidth=20e9, capacity=8e9
     ),  # 20 GB/s, 8 GB
+
+    # Grouping by generation
+    "DDR5": DRAM(name="DDR5", bandwidth=85e9, capacity=32e9),  # 85 GB/s, 32 GB
+    "DDR4": DRAM(name="DDR4", bandwidth=30e9, capacity=32e9),  # 30 GB/s, 32 GB
 }
 
 # Define common disk configurations
@@ -64,6 +72,10 @@ DISKS = {
     "NVMeT700R5": Disk(
         name="SSD NVMe T700 M.2 (Raid 5)", bandwidth=20e9, capacity=16e12
     ),  # 20 GB/s, 16 TB
+
+    # Grouping by type
+    "SATA": Disk(name="SATA SSD", bandwidth=300e6, capacity=2e12),   # 300 MB/s, 2 TB
+    "NVMe": Disk(name="NVMe SSD", bandwidth=2e9, capacity=2e12),     # 2 GB/s, 2 TB
 }
 
 # Define common link configurations
@@ -75,4 +87,8 @@ LINKS = {
     "NVLink4": Link(name="NVLink 4.0", bandwidth=900e9),    # 900 GB/s
     "NVLink5": Link(name="NVLink 5.0", bandwidth=1800e9),   # 1800 GB/s
     "NVLink6": Link(name="NVLink 6.0", bandwidth=3600e9),   # 3600 GB/s
+
+    # Grouping by type
+    "PCIe": Link(name="PCIe", bandwidth=32e9),       # 32 GB/s
+    "NVLink": Link(name="NVLink", bandwidth=600e9),  # 600 GB/s
 }
