@@ -1,5 +1,3 @@
-import hashlib
-
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -24,6 +22,18 @@ CONFIG = {
     # "BYTES_PER_BLOCK": 16e6,  # 16 MB per block
     # "MODEL_PARAMS": 128e9,    # 128 billion parameters
     "GPU_ETA": 0.6           # GPU effectiveness factor
+}
+
+# GPU family color map — same GPU key = same color
+GPU_COLORS = {
+    "H200":     "#e6194b",
+    "H100":     "#f58231",
+    "A100":     "#ffe119",
+    "RTX6000":  "#3cb44b",
+    "V100":     "#4363d8",
+    "A5000":    "#911eb4",
+    "High-End": "#e6194b",
+    "Mid-Range":"#f58231",
 }
 
 # Define stacks of hardware configurations to evaluate
@@ -154,10 +164,7 @@ def fmt_time(s):
 # Helper function to get a color for a given label
 def get_color(label):
     color_palette = plt.get_cmap("tab10")
-
-    # use a hash of the label to get a consistent color index
-    hash_digest = hashlib.md5(label.encode()).hexdigest()
-    color_index = int(hash_digest, 24) % color_palette.N
+    color_index = abs(hash(label)) % color_palette.N
     return color_palette(color_index)
 
 
@@ -191,7 +198,7 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
             # Overflow spills into DRAM: disk → DRAM → link → GPU
             overflow = (n - vram_blk) * BYTES
             t = (
-                (vram_blk * BYTES) / gpu.hbm_bandwidth   # VRAM portion
+                (vram_blk * BYTES) / gpu.hbm_bandwidth    # VRAM portion
                 + overflow / dram.bandwidth               # DRAM read
                 + overflow / link.bandwidth               # link transfer to GPU
             )
@@ -201,7 +208,7 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
             dram_bytes = dram_blk * BYTES
             overflow = (n - vram_blk - dram_blk) * BYTES
             t = (
-                (vram_blk * BYTES) / gpu.hbm_bandwidth   # VRAM portion
+                (vram_blk * BYTES) / gpu.hbm_bandwidth    # VRAM portion
                 + dram_bytes / dram.bandwidth             # DRAM read
                 + dram_bytes / link.bandwidth             # DRAM → GPU link
                 + overflow / disk.bandwidth               # disk read
@@ -332,5 +339,174 @@ def make_plot(
         print(f"Saved → {output}")
 
 
+# ── Permutation scatter plot ──────────────────────────────────────────────────
+
+# Keys included in the combinatorial sweep
+_PERM_GPU_KEYS  = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
+_PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
+_PERM_DISK_KEYS = ["HDD", "X110", "M550", "NVMe980", "NVMeT700", "NVMeT700R0", "NVMeT700R5"]
+
+# One color per GPU — all (GPU, *, *) dots share the GPU's color
+_PERM_GPU_COLORS = {
+    "H200":    "#e6194b",
+    "H100":    "#f58231",
+    "A100":    "#bfbf00",
+    "RTX6000": "#3cb44b",
+    "V100":    "#4363d8",
+    "A5000":   "#911eb4",
+}
+
+
+def _pick_link(gpu_key):
+    if gpu_key in ("H200", "H100", "A100"):
+        return LINKS["NVLink4"]
+    return LINKS["PCIe4"]
+
+
+def _storage_time_at(n_blocks, model_params, gpu, dram, disk, link, dram_count=2):
+    BYTES = CONFIG["BYTES_PER_BLOCK"]
+    vram_cap = gpu.hbm_capacity - 2 * model_params
+    if vram_cap <= 0:
+        return np.inf
+
+    vram_blk = cap_to_blocks(vram_cap)
+    dram_blk = cap_to_blocks(dram_count * dram.capacity)
+    disk_blk = cap_to_blocks(disk.capacity)
+
+    if n_blocks <= vram_blk:
+        return (n_blocks * BYTES) / gpu.hbm_bandwidth
+
+    if n_blocks <= vram_blk + dram_blk:
+        overflow = (n_blocks - vram_blk) * BYTES
+        return (
+            (vram_blk * BYTES) / gpu.hbm_bandwidth
+            + overflow / dram.bandwidth
+            + overflow / link.bandwidth
+        )
+
+    if n_blocks <= vram_blk + dram_blk + disk_blk:
+        dram_bytes = dram_blk * BYTES
+        overflow = (n_blocks - vram_blk - dram_blk) * BYTES
+        return (
+            (vram_blk * BYTES) / gpu.hbm_bandwidth
+            + dram_bytes / dram.bandwidth
+            + dram_bytes / link.bandwidth
+            + overflow / disk.bandwidth
+            + overflow / dram.bandwidth
+            + overflow / link.bandwidth
+        )
+
+    return np.inf
+
+
+def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.png"):
+    import itertools
+
+    model_params = CONFIG["MODEL_PARAMS"]
+
+    x_ticks = [16_000, 64_000, 128_000, 200_000, 250_000, 300_000, 350_000, 400_000, 450_000, 500_000]
+    y_ticks  = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 60, 600, 3600]
+
+    _, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    ax.set_yscale("log")
+    ax.set_xlim(x_ticks[0], x_ticks[-1])
+
+    legend_items = []
+
+    # Collect storage times across ALL permutations per tick (one merged pool)
+    data = {x: [] for x in x_ticks}
+    total_options = 0
+    for gpu_key, dram_key, disk_key in itertools.product(
+        _PERM_GPU_KEYS, _PERM_DRAM_KEYS, _PERM_DISK_KEYS
+    ):
+        gpu  = GPUS[gpu_key]
+        dram = DRAMS[dram_key]
+        disk = DISKS[disk_key]
+        link = _pick_link(gpu_key)
+        total_options += 1
+        for x in x_ticks:
+            t = _storage_time_at(x, model_params, gpu, dram, disk, link)
+            if np.isfinite(t):
+                data[x].append(t)
+
+    box_w = (x_ticks[-1] - x_ticks[0]) / len(x_ticks) * 0.35
+
+    # Draw compute lines first (behind boxes) — one per GPU, added to legend
+    xs_line = np.linspace(x_ticks[0], x_ticks[-1], 800)
+    for gpu_key in _PERM_GPU_KEYS:
+        gpu   = GPUS[gpu_key]
+        color = _PERM_GPU_COLORS[gpu_key]
+        band  = gpu.gpu_compute_band(model_params, gpu_count=1, eta=CONFIG["GPU_ETA"])
+        ax.plot(xs_line, xs_line * band, color=color, lw=1.1, linestyle=":",
+                alpha=0.85, zorder=2)
+        legend_items.append(
+            Line2D([0], [0], color=color, lw=1.1, linestyle=":", label=gpu.name)
+        )
+
+    # Single merged box per tick
+    box_data = [data[x] for x in x_ticks]
+    ax.boxplot(
+        box_data,
+        positions=x_ticks,
+        widths=box_w,
+        patch_artist=True,
+        manage_ticks=False,
+        zorder=3,
+        medianprops=dict(color="white", linewidth=1.4),
+        whiskerprops=dict(color="#555555", linewidth=0.8),
+        capprops=dict(color="#555555", linewidth=0.8),
+        flierprops=dict(marker=".", color="#888888", markersize=2, alpha=0.5,
+                        linestyle="none"),
+        boxprops=dict(facecolor="#aaaaaa", alpha=0.5, linewidth=0.6, edgecolor="#555555"),
+    )
+    legend_items.append(
+        Line2D([0], [0], marker="s", color="w", markerfacecolor="#aaaaaa",
+               markeredgecolor="#555555", markersize=8, alpha=0.8,
+               label="Storage restore range")
+    )
+
+    # ── Axes ─────────────────────────────────────────────────────────────────
+    ax.set_xticks(x_ticks)
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
+    ax.set_xlabel("Number of Tokens", fontsize=8)
+    ax.tick_params(axis="x", labelsize=8)
+
+    ax2 = ax.twiny()
+    ax2.set_xlim(x_ticks[0], x_ticks[-1])
+    ax2.set_xticks(x_ticks)
+    ax2.xaxis.set_major_formatter(
+        ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
+    )
+    ax2.tick_params(axis="x", labelsize=8)
+
+    ax.set_yticks(y_ticks)
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
+    ax.yaxis.set_minor_locator(ticker.NullLocator())
+    ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
+    ax.set_ylabel("Time", fontsize=8)
+    ax.tick_params(axis="y", labelsize=8)
+
+    ax.text(0.01, 0.99, f"{total_options} configurations",
+            transform=ax.transAxes, fontsize=7, va="top", ha="left", color="#555555")
+
+    ax.legend(
+        handles=legend_items,
+        title="GPU Compute vs. Storage Restore",
+        title_fontsize=7,
+        loc="lower right",
+        fontsize=7,
+        framealpha=0.92,
+        edgecolor="#cccccc",
+        handletextpad=0.4,
+    )
+
+    plt.tight_layout()
+
+    if output:
+        plt.savefig(output, dpi=dpi, bbox_inches="tight")
+        print(f"Saved → {output}  ({total_options} configurations plotted)")
+
+
 if __name__ == "__main__":
     make_plot()
+    make_permutation_plot()
