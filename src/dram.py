@@ -5,3 +5,4 @@ class DRAM:
     name: str
     bandwidth: int
     capacity: int
+    cost: int

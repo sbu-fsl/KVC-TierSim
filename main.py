@@ -8,6 +8,7 @@ from src.pool import DISKS, DRAMS, GPUS, LINKS
 
 # set the global font family to serif
 plt.rcParams["font.family"] = "serif"
+
 # set the global axis line width
 mpl.rcParams["axes.linewidth"] = 0.5
 
@@ -21,7 +22,7 @@ CONFIG = {
     # "MODEL_PARAMS": 32e9,     # 32 billion parameters
     # "BYTES_PER_BLOCK": 16e6,  # 16 MB per block
     # "MODEL_PARAMS": 128e9,    # 128 billion parameters
-    "GPU_ETA": 0.6           # GPU effectiveness factor
+    "GPU_ETA": 0.5           # GPU effectiveness factor
 }
 
 # GPU family color map — same GPU key = same color
@@ -267,7 +268,8 @@ def make_plot(
             ax.plot(xs, ys, color=color, lw=1.6, linestyle=":", label=compute_label)
 
         # plot the storage line information for the stack
-        storage_label = f"[Restore] {stack_name}"
+        stack_cost = stack["gpu"].cost + stack["dram"].cost * stack["dram_count"] + stack["disk"].cost + stack["link"].cost
+        storage_label = f"[Restore] {stack_name} (${stack_cost:.0f})"
         legend_items.append(
             Line2D([0], [0], color=color, lw=1.6, linestyle="-", label=storage_label)
         )
@@ -345,6 +347,7 @@ def make_plot(
 _PERM_GPU_KEYS  = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
 _PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
 _PERM_DISK_KEYS = ["HDD", "X110", "M550", "NVMe980", "NVMeT700", "NVMeT700R0", "NVMeT700R5"]
+_PERM_LINK_KEYS = ["PCIe3", "PCIe4", "PCIe5", "NVLink3", "NVLink4", "NVLink5", "NVLink6"]
 
 # One color per GPU — all (GPU, *, *) dots share the GPU's color
 _PERM_GPU_COLORS = {
@@ -405,7 +408,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
     model_params = CONFIG["MODEL_PARAMS"]
 
     x_ticks = [16_000, 64_000, 128_000, 200_000, 250_000, 300_000, 350_000, 400_000, 450_000, 500_000]
-    y_ticks  = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 60, 600, 3600]
+    y_ticks  = [1e-3, 1e-2, 1e-1, 1, 10, 60, 600, 3600]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -416,13 +419,13 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
     # Collect storage times across ALL permutations per tick (one merged pool)
     data = {x: [] for x in x_ticks}
     total_options = 0
-    for gpu_key, dram_key, disk_key in itertools.product(
-        _PERM_GPU_KEYS, _PERM_DRAM_KEYS, _PERM_DISK_KEYS
+    for gpu_key, dram_key, disk_key, link_key in itertools.product(
+        _PERM_GPU_KEYS, _PERM_DRAM_KEYS, _PERM_DISK_KEYS, _PERM_LINK_KEYS
     ):
         gpu  = GPUS[gpu_key]
         dram = DRAMS[dram_key]
         disk = DISKS[disk_key]
-        link = _pick_link(gpu_key)
+        link = LINKS[link_key]
         total_options += 1
         for x in x_ticks:
             t = _storage_time_at(x, model_params, gpu, dram, disk, link)
@@ -443,22 +446,25 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
             Line2D([0], [0], color=color, lw=1.1, linestyle=":", label=gpu.name)
         )
 
-    # Single merged box per tick
-    box_data = [data[x] for x in x_ticks]
-    ax.boxplot(
-        box_data,
+    # Single merged violin per tick
+    vp = ax.violinplot(
+        [data[x] for x in x_ticks],
         positions=x_ticks,
         widths=box_w,
-        patch_artist=True,
-        manage_ticks=False,
-        zorder=3,
-        medianprops=dict(color="white", linewidth=1.4),
-        whiskerprops=dict(color="#555555", linewidth=0.8),
-        capprops=dict(color="#555555", linewidth=0.8),
-        flierprops=dict(marker=".", color="#888888", markersize=2, alpha=0.5,
-                        linestyle="none"),
-        boxprops=dict(facecolor="#aaaaaa", alpha=0.5, linewidth=0.6, edgecolor="#555555"),
+        showmedians=True,
+        showextrema=True,
     )
+    for body in vp["bodies"]:
+        body.set_facecolor("#aaaaaa")
+        body.set_edgecolor("#555555")
+        body.set_alpha(0.5)
+        body.set_linewidth(0.6)
+    for part in ("cmedians", "cmins", "cmaxes", "cbars"):
+        vp[part].set_color("#555555")
+        vp[part].set_linewidth(0.8)
+    vp["cmedians"].set_color("white")
+    vp["cmedians"].set_linewidth(1.4)
+
     legend_items.append(
         Line2D([0], [0], marker="s", color="w", markerfacecolor="#aaaaaa",
                markeredgecolor="#555555", markersize=8, alpha=0.8,
@@ -491,8 +497,6 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
 
     ax.legend(
         handles=legend_items,
-        title="GPU Compute vs. Storage Restore",
-        title_fontsize=7,
         loc="lower right",
         fontsize=7,
         framealpha=0.92,

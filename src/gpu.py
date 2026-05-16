@@ -6,6 +6,7 @@ class GPU:
     hbm_bandwidth: int
     hbm_capacity: int
     peak_flops: int
+    cost: int
 
     def gpu_compute_band(self, model_params: int, gpu_count: int = 1, eta: float = 0.6):
         # compute time per token

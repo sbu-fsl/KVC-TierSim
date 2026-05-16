@@ -5,3 +5,4 @@ class Disk:
     name: str
     bandwidth: int
     capacity: int
+    cost: int

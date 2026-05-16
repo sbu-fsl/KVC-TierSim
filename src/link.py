@@ -4,3 +4,4 @@ from dataclasses import dataclass
 class Link:
     name: str
     bandwidth: int
+    cost: int
