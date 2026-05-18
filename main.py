@@ -228,7 +228,7 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
 def make_plot(
     figsize=(6, 3.5),
     dpi=700,
-    output="plot.png",
+    output="tier_caps.pdf",
 ):
     max_blocks = 500_000
     min_blocks = 500
@@ -337,7 +337,7 @@ def make_plot(
     plt.tight_layout()
 
     if output:
-        plt.savefig(output, dpi=dpi, bbox_inches="tight")
+        plt.savefig(output, bbox_inches="tight")
         print(f"Saved → {output}")
 
 
@@ -345,7 +345,7 @@ def make_plot(
 
 # Keys included in the combinatorial sweep
 _PERM_GPU_KEYS  = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
-_PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
+_PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-7200", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
 _PERM_DISK_KEYS = ["HDD", "X110", "M550", "NVMe980", "NVMeT700", "NVMeT700R0", "NVMeT700R5"]
 _PERM_LINK_KEYS = ["PCIe3", "PCIe4", "PCIe5", "NVLink3", "NVLink4", "NVLink5", "NVLink6"]
 
@@ -358,12 +358,6 @@ _PERM_GPU_COLORS = {
     "V100":    "#4363d8",
     "A5000":   "#911eb4",
 }
-
-
-def _pick_link(gpu_key):
-    if gpu_key in ("H200", "H100", "A100"):
-        return LINKS["NVLink4"]
-    return LINKS["PCIe4"]
 
 
 def _storage_time_at(n_blocks, model_params, gpu, dram, disk, link, dram_count=2):
@@ -402,7 +396,7 @@ def _storage_time_at(n_blocks, model_params, gpu, dram, disk, link, dram_count=2
     return np.inf
 
 
-def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.png"):
+def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.pdf"):
     import itertools
 
     model_params = CONFIG["MODEL_PARAMS"]
@@ -507,7 +501,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
     plt.tight_layout()
 
     if output:
-        plt.savefig(output, dpi=dpi, bbox_inches="tight")
+        plt.savefig(output, bbox_inches="tight")
         print(f"Saved → {output}  ({total_options} configurations plotted)")
 
 
