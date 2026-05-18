@@ -9,4 +9,6 @@ venv/
 .venv/
 
 # Output
-plot.png
+plots
+*.png
+*.pdf

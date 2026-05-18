@@ -474,8 +474,8 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
     # ── Axes ─────────────────────────────────────────────────────────────────
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel("Number of Tokens", fontsize=8)
-    ax.tick_params(axis="x", labelsize=8)
+    ax.set_xlabel("Number of Tokens", fontsize=9)
+    ax.tick_params(axis="x", labelsize=9)
 
     ax2 = ax.twiny()
     ax2.set_xlim(x_ticks[0], x_ticks[-1])
@@ -483,22 +483,22 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="plot_permutations.p
     ax2.xaxis.set_major_formatter(
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
-    ax2.tick_params(axis="x", labelsize=8)
+    ax2.tick_params(axis="x", labelsize=9)
 
     ax.set_yticks(y_ticks)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time", fontsize=8)
-    ax.tick_params(axis="y", labelsize=8)
+    ax.set_ylabel("Time", fontsize=9)
+    ax.tick_params(axis="y", labelsize=9)
 
     ax.text(0.01, 0.99, f"{total_options} configurations",
-            transform=ax.transAxes, fontsize=7, va="top", ha="left", color="#555555")
+            transform=ax.transAxes, fontsize=8, va="top", ha="left", color="#555555")
 
     ax.legend(
         handles=legend_items,
         loc="lower right",
-        fontsize=7,
+        fontsize=8,
         framealpha=0.92,
         edgecolor="#cccccc",
         handletextpad=0.4,
