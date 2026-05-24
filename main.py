@@ -336,8 +336,6 @@ def make_plot(
         print(f"Saved → {output}")
 
 
-# ── Permutation scatter plot ──────────────────────────────────────────────────
-
 # Keys included in the combinatorial sweep
 _PERM_GPU_KEYS  = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
 _PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-7200", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
@@ -355,49 +353,13 @@ _PERM_GPU_COLORS = {
 }
 
 
-def _storage_time_at(n_blocks, model_params, gpu, dram, disk, link, dram_count=2):
-    BYTES = CONFIG["BYTES_PER_BLOCK"]
-    vram_cap = gpu.hbm_capacity - 2 * model_params
-    if vram_cap <= 0:
-        return np.inf
-
-    vram_blk = cap_to_blocks(vram_cap)
-    dram_blk = cap_to_blocks(dram_count * dram.capacity)
-    disk_blk = cap_to_blocks(disk.capacity)
-
-    if n_blocks <= vram_blk:
-        return (n_blocks * BYTES) / gpu.hbm_bandwidth
-
-    if n_blocks <= vram_blk + dram_blk:
-        overflow = (n_blocks - vram_blk) * BYTES
-        return (
-            (vram_blk * BYTES) / gpu.hbm_bandwidth
-            + overflow / dram.bandwidth
-            + overflow / link.bandwidth
-        )
-
-    if n_blocks <= vram_blk + dram_blk + disk_blk:
-        dram_bytes = dram_blk * BYTES
-        overflow = (n_blocks - vram_blk - dram_blk) * BYTES
-        return (
-            (vram_blk * BYTES) / gpu.hbm_bandwidth
-            + dram_bytes / dram.bandwidth
-            + dram_bytes / link.bandwidth
-            + overflow / disk.bandwidth
-            + overflow / dram.bandwidth
-            + overflow / link.bandwidth
-        )
-
-    return np.inf
-
-
-def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.png"):
+def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.pdf"):
     import itertools
 
     model_params = CONFIG["MODEL_PARAMS"]
 
     x_ticks = [16_000, 64_000, 128_000, 200_000, 250_000, 300_000, 350_000, 400_000, 450_000, 500_000]
-    y_ticks  = [1e-1, 1, 10, 60, 600, 3600]
+    y_ticks  = [1, 10, 60, 600, 3600, 3600*4]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -417,19 +379,33 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
         link = LINKS[link_key]
         total_options += 1
         for x in x_ticks:
-            t = _storage_time_at(x, model_params, gpu, dram, disk, link)
+            # Build a temporary stack dict to reuse `build_storage_curve` logic
+            stack = {
+                "gpu": gpu,
+                "dram": dram,
+                "disk": disk,
+                "link": link,
+                "gpu_count": 1,
+                "dram_count": 2,
+            }
+            # build_storage_curve returns compute+restore time for given x
+            t_arr = build_storage_curve(np.array([x], dtype=np.int64), model_params, stack)
+            t = float(t_arr[0])
             if np.isfinite(t):
                 data[x].append(t)
 
     box_w = (x_ticks[-1] - x_ticks[0]) / len(x_ticks) * 0.35
 
     # Draw compute lines first (behind boxes) — one per GPU, added to legend
-    xs_line = np.linspace(x_ticks[0], x_ticks[-1], 800)
+    xs_line = np.linspace(x_ticks[0], x_ticks[-1], 800).astype(np.int64)
     for gpu_key in _PERM_GPU_KEYS:
-        gpu   = GPUS[gpu_key]
+        gpu = GPUS[gpu_key]
         color = _PERM_GPU_COLORS[gpu_key]
-        band  = gpu.gpu_compute_band(model_params, gpu_count=1, eta=CONFIG["GPU_ETA"])
-        ax.plot(xs_line, xs_line * band, color=color, lw=1.1, linestyle=":",
+        # Use the same compute-curve builder so permutation compute lines match main plot.
+        # Provide a high-bandwidth link so the line reflects compute-dominated behavior.
+        high_bw_link = LINKS.get("NVLink6", LINKS.get("NVLink", list(LINKS.values())[0]))
+        ys_compute = build_compute_curve(xs_line, model_params, gpu, high_bw_link, gpu_count=1)
+        ax.plot(xs_line, ys_compute, color=color, lw=1.1, linestyle=":",
                 alpha=0.85, zorder=2)
         legend_items.append(
             Line2D([0], [0], color=color, lw=1.1, linestyle=":", label=gpu.name)
@@ -463,7 +439,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     # ── Axes ─────────────────────────────────────────────────────────────────
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel("Number of Tokens", fontsize=9)
+    ax.set_xlabel("Context Length", fontsize=9)
     ax.tick_params(axis="x", labelsize=9)
 
     ax2 = ax.twiny()
@@ -478,7 +454,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time", fontsize=9)
+    ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=9)
     ax.tick_params(axis="y", labelsize=9)
 
     ax.text(0.01, 0.99, f"{total_options} configurations",
@@ -502,4 +478,4 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
 
 if __name__ == "__main__":
     make_plot()
-    #make_permutation_plot()
+    make_permutation_plot()
