@@ -16,12 +16,8 @@ mpl.rcParams["axes.linewidth"] = 0.5
 CONFIG = {
     "NPOINTS": 5000,         # Number of points to plot
     "TOKENS_PER_BLOCK": 16,  # Number of tokens per block
-    "BYTES_PER_BLOCK": 1e6,  # 1 MB per block
+    "BYTES_PER_BLOCK": 2e6,  # 2 MB per block
     "MODEL_PARAMS": 8e9,     # 8 billion parameters
-    # "BYTES_PER_BLOCK": 4e6,   # 4 MB per block
-    # "MODEL_PARAMS": 32e9,     # 32 billion parameters
-    # "BYTES_PER_BLOCK": 16e6,  # 16 MB per block
-    # "MODEL_PARAMS": 128e9,    # 128 billion parameters
     "GPU_ETA": 0.5           # GPU effectiveness factor
 }
 
@@ -29,97 +25,49 @@ CONFIG = {
 GPU_COLORS = {
     "H200":     "#e6194b",
     "H100":     "#f58231",
-    "A100":     "#ffe119",
+    "A100":     "#c0a700",
     "RTX6000":  "#3cb44b",
     "V100":     "#4363d8",
     "A5000":    "#911eb4",
-    "High-End": "#e6194b",
-    "Mid-Range":"#f58231",
 }
 
 # Define stacks of hardware configurations to evaluate
-# STACKS = {
-#     # "H200-DDR5-6000-NVMeT700R0-NVLink6": {
-#     #     "gpu": GPUS["H200"],
-#     #     "dram": DRAMS["DDR5-6000"],
-#     #     "disk": DISKS["NVMeT700R0"],
-#     #     "link": LINKS["NVLink6"],
-#     #     "gpu_count": 4,
-#     #     "dram_count": 4,
-#     # },
-#     # "H100-DDR5-6000-NVMeT700R0-NVLink6": {
-#     #     "gpu": GPUS["H100"],
-#     #     "dram": DRAMS["DDR5-6000"],
-#     #     "disk": DISKS["NVMeT700R0"],
-#     #     "link": LINKS["NVLink6"],
-#     #     "gpu_count": 4,
-#     #     "dram_count": 10,
-#     # },
-#     # "A100-DDR5-6000-NVMeT700R5-NVLink6": {
-#     #     "gpu": GPUS["A100"],
-#     #     "dram": DRAMS["DDR5-6000"],
-#     #     "disk": DISKS["NVMeT700R5"],
-#     #     "link": LINKS["NVLink6"],
-#     #     "gpu_count": 4,
-#     #     "dram_count": 10,
-#     # },
-#     "H200-DDR4-3200-NVMe980-NVLink3": {
-#         "gpu": GPUS["H200"],
-#         "dram": DRAMS["DDR4-3200"],
-#         "disk": DISKS["NVMe980"],
-#         "link": LINKS["NVLink3"],
-#         "gpu_count": 1,
-#         "dram_count": 2,
-#     },
-#     "H100-DDR5-6000-NVMe980-NVLink3": {
-#         "gpu": GPUS["H100"],
-#         "dram": DRAMS["DDR5-6000"],
-#         "disk": DISKS["NVMe980"],
-#         "link": LINKS["NVLink3"],
-#         "gpu_count": 1,
-#         "dram_count": 2,
-#     },
-#     "A100-DDR5-6000-NVMeT700R5-NVLink5": {
-#         "gpu": GPUS["A100"],
-#         "dram": DRAMS["DDR5-6000"],
-#         "disk": DISKS["NVMeT700R5"],
-#         "link": LINKS["NVLink5"],
-#         "gpu_count": 1,
-#         "dram_count": 2,
-#     },
-# }
 STACKS = {
-    "High-End (DDR5+NVMe)": {
-        "gpu": GPUS["High-End"],
+    "H200-DDR5+NVMe": {
+        "gpu": GPUS["H200"],
         "dram": DRAMS["DDR5"],
         "disk": DISKS["NVMe"],
         "link": LINKS["NVLink"],
         "gpu_count": 1,
-        "dram_count": 2,
+        "dram_count": 4,
+        "color": "#888888",
     },
-    "Mid-Range (DDR5+NVMe)": {
-        "gpu": GPUS["Mid-Range"],
+    "A100-DDR5+NVMe": {
+        "gpu": GPUS["A100"],
         "dram": DRAMS["DDR5"],
         "disk": DISKS["NVMe"],
         "link": LINKS["NVLink"],
         "gpu_count": 1,
-        "dram_count": 2,
+        "dram_count": 4,
+        "color": "#d95f02",
     },
-    "Mid-Range (DDR4+NVMe)": {
-        "gpu": GPUS["Mid-Range"],
+    "A100-DDR4+NVMe": {
+        "gpu": GPUS["A100"],
         "dram": DRAMS["DDR4"],
         "disk": DISKS["NVMe"],
         "link": LINKS["NVLink"],
         "gpu_count": 1,
-        "dram_count": 2,
+        "dram_count": 4,
+        "color": "#1b9e77",
     },
-    "Mid-Range (DDR4+SATA)": {
-        "gpu": GPUS["Mid-Range"],
+    "A100-DDR4+SATA": {
+        "gpu": GPUS["A100"],
         "dram": DRAMS["DDR4"],
         "disk": DISKS["SATA"],
         "link": LINKS["PCIe"],
         "gpu_count": 1,
-        "dram_count": 2,
+        "dram_count": 4,
+        "color": "#2e2a68",
     },
 }
 
@@ -169,60 +117,94 @@ def get_color(label):
     return color_palette(color_index)
 
 
-# Function to calculate the storage curve for a given stack configuration
-def build_storage_curve(xs_blocks, model_params, stack: dict):
-    gpu = stack["gpu"]
-    dram = stack["dram"]
-    disk = stack["disk"]
-    link = stack["link"]
-
-    vram_cap = stack["gpu_count"] * gpu.hbm_capacity - 2 * model_params
+# Function to calculate the GPU compute curve for a given GPU and model parameters
+def build_compute_curve(xs_blocks, model_params, gpu, link, gpu_count=1):
+    # calculate the effective VRAM capacity after reserving space for model parameters
+    model_size_bytes = model_params * 2  # bf16: 2 bytes per param
+    vram_cap = gpu.hbm_capacity * gpu_count - model_size_bytes
     if vram_cap <= 0:
         return np.full_like(xs_blocks, np.inf, dtype=float)
-    
-    dram_cap = stack["dram_count"] * dram.capacity
 
+    # convert the effective VRAM capacity from bytes to number of blocks
     vram_blk = cap_to_blocks(vram_cap)
-    dram_blk = cap_to_blocks(dram_cap)
-    disk_blk = cap_to_blocks(disk.capacity)
 
-    BYTES = CONFIG["BYTES_PER_BLOCK"]
+    # compute time per token for the GPU
+    t_per_token = gpu.gpu_compute_band(model_params, gpu_count=gpu_count, eta=CONFIG["GPU_ETA"])
 
+    # compute time for processing n blocks, considering both memory access and compute time, depending on how many blocks fit in VRAM
+    def block_time(n, bandwidth):
+        t_mem = (n * CONFIG["BYTES_PER_BLOCK"]) / bandwidth
+        t_cmp = n * CONFIG["TOKENS_PER_BLOCK"] * t_per_token
+        return max(t_mem, t_cmp)
+
+    # compute the total time for each block count in xs_blocks
     times = np.empty_like(xs_blocks, dtype=float)
     for i, n in enumerate(xs_blocks):
-
         if n <= vram_blk:
-            # All data fits in VRAM — only HBM access cost
-            t = (n * BYTES) / gpu.hbm_bandwidth
+            times[i] = block_time(n, gpu.hbm_bandwidth)
+        else:
+            t_vram     = block_time(vram_blk, gpu.hbm_bandwidth)
+            t_overflow = block_time(n - vram_blk, link.bandwidth)  # PCIe
+            times[i]   = t_vram + t_overflow
+
+    return times
+
+
+# Function to calculate the storage curve for a given stack configuration
+def build_storage_curve(xs_blocks, model_params, stack: dict):
+    gpu   = stack["gpu"]
+    dram  = stack["dram"]
+    disk  = stack["disk"]
+    link  = stack["link"]
+
+    # calculate the effective VRAM capacity after reserving space for model parameters
+    model_size_bytes = model_params * 2  # bf16
+    vram_cap = stack["gpu_count"] * gpu.hbm_capacity - model_size_bytes
+    if vram_cap <= 0:
+        return np.full_like(xs_blocks, np.inf, dtype=float)
+
+    # calculate the effective DRAM capacity based on the number of DRAM modules in the stack
+    dram_cap = stack["dram_count"] * dram.capacity
+    vram_blk = cap_to_blocks(vram_cap)
+    dram_blk = cap_to_blocks(dram_cap)
+    BYTES    = CONFIG["BYTES_PER_BLOCK"]
+
+    # compute time per token for the GPU
+    t_per_token = gpu.gpu_compute_band(
+        model_params, gpu_count=stack["gpu_count"], eta=CONFIG["GPU_ETA"]
+    )
+
+    # compute the total time for each block count in xs_blocks, considering the tiered storage hierarchy and the compute time,
+    # using a roofline model to overlap compute and transfer where possible
+    times = np.empty_like(xs_blocks, dtype=float)
+    for i, n in enumerate(xs_blocks):
+        # compute time for n blocks, assuming all blocks are in VRAM (best case)
+        t_compute = n * CONFIG["TOKENS_PER_BLOCK"] * t_per_token
+
+        # memory transfer time for n blocks, depending on how many blocks fit in each tier of the storage hierarchy (VRAM → DRAM → Disk)
+        if n <= vram_blk:
+            t_mem = (n * BYTES) / gpu.hbm_bandwidth
 
         elif n <= vram_blk + dram_blk:
-            # Overflow spills into DRAM: disk → DRAM → link → GPU
-            overflow = (n - vram_blk) * BYTES
-            t = (
-                (vram_blk * BYTES) / gpu.hbm_bandwidth    # VRAM portion
-                + overflow / dram.bandwidth               # DRAM read
-                + overflow / link.bandwidth               # link transfer to GPU
-            )
-
-        elif n <= vram_blk + dram_blk + disk_blk:
-            # Overflow spills into disk: disk data stages through DRAM then link
-            dram_bytes = dram_blk * BYTES
-            overflow = (n - vram_blk - dram_blk) * BYTES
-            t = (
-                (vram_blk * BYTES) / gpu.hbm_bandwidth    # VRAM portion
-                + dram_bytes / dram.bandwidth             # DRAM read
-                + dram_bytes / link.bandwidth             # DRAM → GPU link
-                + overflow / disk.bandwidth               # disk read
-                + overflow / dram.bandwidth               # disk data stages through DRAM
-                + overflow / link.bandwidth               # disk data → GPU link
+            dram_overflow = (n - vram_blk) * BYTES
+            t_mem = (
+                (vram_blk * BYTES) / gpu.hbm_bandwidth
+                + dram_overflow / min(dram.bandwidth, link.bandwidth)
             )
 
         else:
-            # Exceeds all storage tiers — physically impossible
-            t = np.inf
+            dram_full     = dram_blk * BYTES
+            disk_overflow = (n - vram_blk - dram_blk) * BYTES
+            t_mem = (
+                (vram_blk * BYTES) / gpu.hbm_bandwidth
+                + dram_full     / min(dram.bandwidth, link.bandwidth)
+                + disk_overflow / min(disk.bandwidth, link.bandwidth)
+            )
 
-        times[i] = t
+        times[i] = t_compute + t_mem  # roofline: overlap compute and transfer
+
     return times
+
 
 # Plot function
 def make_plot(
@@ -236,12 +218,10 @@ def make_plot(
 
     # create figure and axis
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-    #ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlim(min_blocks, max_blocks)
 
     # set x space
-    # xs = np.logspace(np.log10(min_blocks), np.log10(max_blocks), CONFIG["NPOINTS"]).astype(np.int64)
     xs = np.linspace(min_blocks, max_blocks, CONFIG["NPOINTS"]).astype(np.int64)
 
     # create legend items list to store the legend entries for each stack
@@ -251,31 +231,28 @@ def make_plot(
     # loop through model parameters and stacks to plot compute time against number of blocks
     for stack_name, stack in STACKS.items():
         gpu = stack["gpu"]
-        color = get_color(stack_name)
 
         # plot compute information for the GPU
         if gpu.name not in computes_hitmap:
             computes_hitmap[gpu.name] = True
 
-            compute_label = f"[Compute] {stack['gpu_count']}x{gpu.name}"
+            compute_label = f"{stack['gpu_count']}x{gpu.name} (${gpu.cost:.0f})"
             legend_items.insert(0,
-                Line2D([0], [0], color=color, lw=1.6, linestyle=":", label=compute_label)
+                Line2D([0], [0], color=GPU_COLORS[gpu.name], lw=1.6, linestyle=":", label=compute_label)
             )
 
-            gpu_compute_band = gpu.gpu_compute_band(model_params, gpu_count=stack["gpu_count"], eta=CONFIG["GPU_ETA"])
-            ys = [x * gpu_compute_band for x in xs]
-
-            ax.plot(xs, ys, color=color, lw=1.6, linestyle=":", label=compute_label)
+            ys = build_compute_curve(xs, model_params, gpu, stack["link"], gpu_count=stack["gpu_count"])
+            ax.plot(xs, ys, color=GPU_COLORS[gpu.name], lw=1.6, linestyle=":", label=compute_label)
 
         # plot the storage line information for the stack
         stack_cost = stack["gpu"].cost + stack["dram"].cost * stack["dram_count"] + stack["disk"].cost + stack["link"].cost
-        storage_label = f"[Restore] {stack_name} (${stack_cost:.0f})"
+        storage_label = f"{stack_name} (${stack_cost:.0f})"
         legend_items.append(
-            Line2D([0], [0], color=color, lw=1.6, linestyle="-", label=storage_label)
+            Line2D([0], [0], color=stack["color"], lw=1.6, linestyle="-", label=storage_label)
         )
 
         ys = build_storage_curve(xs, model_params, stack)
-        ax.plot(xs, ys, color=color, lw=1.6, linestyle="-", label=storage_label)
+        ax.plot(xs, ys, color=stack["color"], lw=1.2, linestyle="-", label=storage_label)
 
     # ── Axes ──────────────────────────────────────────────────────────────────
     x_ticks = [16, 16_000, 64_000, 128_000, 200_000, 300_000, 400_000, 500_000]
@@ -283,25 +260,20 @@ def make_plot(
 
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel("Number of Tokens", fontsize=8)
+    ax.set_xlabel("Context Length", fontsize=8)
     ax.tick_params(axis="x", labelsize=8)
 
     # Top axis: data volume
     ax2 = ax.twiny()
-    # ax2.set_xscale("log")
     ax2.set_xlim(min_blocks, max_blocks)
     ax2.set_xticks(x_ticks)
     ax2.xaxis.set_major_formatter(
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
-    # ax2.set_xlabel("Data volume", fontsize=8, labelpad=6)
     ax2.tick_params(axis="x", labelsize=8)
 
     # Y-axis
     y_ticks = [
-        1e-6,
-        1e-5,
-        1e-4,
         1e-3,
         1e-2,
         1e-1,
@@ -318,11 +290,34 @@ def make_plot(
     ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=8)
     ax.tick_params(axis="y", labelsize=8)
 
-    # ax.set_title(
-    #     "Multi-tier Storage Restore vs GPU Recompute",
-    #     fontsize=11,
-    #     pad=10,
-    # )
+    # plot some circles with labels in plot to reference in presentations
+    points_of_interest = [
+        {'x': 16_000, 'y': 5, 'label': 'A', 'color': 'blue'},
+        {'x': 64_000, 'y': 35, 'label': 'B', 'color': 'green'},
+        {'x': 128_000, 'y': 65, 'label': 'C', 'color': 'orange'},
+        {'x': 400_000, 'y': 105, 'label': 'D', 'color': 'red'},
+    ]
+    for point in points_of_interest:
+        ax.scatter(
+            point['x'],
+            point['y'],
+            facecolors='white',
+            edgecolors=point['color'],
+            s=220,
+            linewidths=1.2,
+            zorder=5,
+        )
+        ax.text(
+            point['x'],
+            point['y'],
+            point['label'],
+            color=point['color'],
+            fontsize=9,
+            fontweight='bold',
+            ha='center',
+            va='center',
+            zorder=6,
+        )
 
     # plot legends
     ax.legend(
@@ -396,13 +391,13 @@ def _storage_time_at(n_blocks, model_params, gpu, dram, disk, link, dram_count=2
     return np.inf
 
 
-def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.pdf"):
+def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.png"):
     import itertools
 
     model_params = CONFIG["MODEL_PARAMS"]
 
     x_ticks = [16_000, 64_000, 128_000, 200_000, 250_000, 300_000, 350_000, 400_000, 450_000, 500_000]
-    y_ticks  = [1e-3, 1e-2, 1e-1, 1, 10, 60, 600, 3600]
+    y_ticks  = [1e-1, 1, 10, 60, 600, 3600]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -507,4 +502,4 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
 
 if __name__ == "__main__":
     make_plot()
-    make_permutation_plot()
+    #make_permutation_plot()
