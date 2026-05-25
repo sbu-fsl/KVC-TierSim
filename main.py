@@ -14,21 +14,21 @@ mpl.rcParams["axes.linewidth"] = 0.5
 
 # Global configuration for the simulator
 CONFIG = {
-    "NPOINTS": 5000,         # Number of points to plot
+    "NPOINTS": 5000,  # Number of points to plot
     "TOKENS_PER_BLOCK": 16,  # Number of tokens per block
     "BYTES_PER_BLOCK": 2e6,  # 2 MB per block
-    "MODEL_PARAMS": 8e9,     # 8 billion parameters
-    "GPU_ETA": 0.5           # GPU effectiveness factor
+    "MODEL_PARAMS": 8e9,  # 8 billion parameters
+    "GPU_ETA": 0.5,  # GPU effectiveness factor
 }
 
 # GPU family color map — same GPU key = same color
 GPU_COLORS = {
-    "H200":     "#e6194b",
-    "H100":     "#f58231",
-    "A100":     "#c0a700",
-    "RTX6000":  "#3cb44b",
-    "V100":     "#4363d8",
-    "A5000":    "#911eb4",
+    "H200": "#e6194b",
+    "H100": "#f58231",
+    "A100": "#c0a700",
+    "RTX6000": "#3cb44b",
+    "V100": "#4363d8",
+    "A5000": "#911eb4",
 }
 
 # Define stacks of hardware configurations to evaluate
@@ -129,7 +129,9 @@ def build_compute_curve(xs_blocks, model_params, gpu, link, gpu_count=1):
     vram_blk = cap_to_blocks(vram_cap)
 
     # compute time per token for the GPU
-    t_per_token = gpu.gpu_compute_band(model_params, gpu_count=gpu_count, eta=CONFIG["GPU_ETA"])
+    t_per_token = gpu.gpu_compute_band(
+        model_params, gpu_count=gpu_count, eta=CONFIG["GPU_ETA"]
+    )
 
     # compute time for processing n blocks, considering both memory access and compute time, depending on how many blocks fit in VRAM
     def block_time(n, bandwidth):
@@ -143,19 +145,19 @@ def build_compute_curve(xs_blocks, model_params, gpu, link, gpu_count=1):
         if n <= vram_blk:
             times[i] = block_time(n, gpu.hbm_bandwidth)
         else:
-            t_vram     = block_time(vram_blk, gpu.hbm_bandwidth)
+            t_vram = block_time(vram_blk, gpu.hbm_bandwidth)
             t_overflow = block_time(n - vram_blk, link.bandwidth)  # PCIe
-            times[i]   = t_vram + t_overflow
+            times[i] = t_vram + t_overflow
 
     return times
 
 
 # Function to calculate the storage curve for a given stack configuration
 def build_storage_curve(xs_blocks, model_params, stack: dict):
-    gpu   = stack["gpu"]
-    dram  = stack["dram"]
-    disk  = stack["disk"]
-    link  = stack["link"]
+    gpu = stack["gpu"]
+    dram = stack["dram"]
+    disk = stack["disk"]
+    link = stack["link"]
 
     # calculate the effective VRAM capacity after reserving space for model parameters
     model_size_bytes = model_params * 2  # bf16
@@ -167,7 +169,7 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
     dram_cap = stack["dram_count"] * dram.capacity
     vram_blk = cap_to_blocks(vram_cap)
     dram_blk = cap_to_blocks(dram_cap)
-    BYTES    = CONFIG["BYTES_PER_BLOCK"]
+    BYTES = CONFIG["BYTES_PER_BLOCK"]
 
     # compute time per token for the GPU
     t_per_token = gpu.gpu_compute_band(
@@ -187,17 +189,16 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
 
         elif n <= vram_blk + dram_blk:
             dram_overflow = (n - vram_blk) * BYTES
-            t_mem = (
-                (vram_blk * BYTES) / gpu.hbm_bandwidth
-                + dram_overflow / min(dram.bandwidth, link.bandwidth)
+            t_mem = (vram_blk * BYTES) / gpu.hbm_bandwidth + dram_overflow / min(
+                dram.bandwidth, link.bandwidth
             )
 
         else:
-            dram_full     = dram_blk * BYTES
+            dram_full = dram_blk * BYTES
             disk_overflow = (n - vram_blk - dram_blk) * BYTES
             t_mem = (
                 (vram_blk * BYTES) / gpu.hbm_bandwidth
-                + dram_full     / min(dram.bandwidth, link.bandwidth)
+                + dram_full / min(dram.bandwidth, link.bandwidth)
                 + disk_overflow / min(disk.bandwidth, link.bandwidth)
             )
 
@@ -237,22 +238,53 @@ def make_plot(
             computes_hitmap[gpu.name] = True
 
             compute_label = f"{stack['gpu_count']}x{gpu.name} (${gpu.cost:.0f})"
-            legend_items.insert(0,
-                Line2D([0], [0], color=GPU_COLORS[gpu.name], lw=1.6, linestyle=":", label=compute_label)
+            legend_items.insert(
+                0,
+                Line2D(
+                    [0],
+                    [0],
+                    color=GPU_COLORS[gpu.name],
+                    lw=1.6,
+                    linestyle=":",
+                    label=compute_label,
+                ),
             )
 
-            ys = build_compute_curve(xs, model_params, gpu, stack["link"], gpu_count=stack["gpu_count"])
-            ax.plot(xs, ys, color=GPU_COLORS[gpu.name], lw=1.6, linestyle=":", label=compute_label)
+            ys = build_compute_curve(
+                xs, model_params, gpu, stack["link"], gpu_count=stack["gpu_count"]
+            )
+            ax.plot(
+                xs,
+                ys,
+                color=GPU_COLORS[gpu.name],
+                lw=1.6,
+                linestyle=":",
+                label=compute_label,
+            )
 
         # plot the storage line information for the stack
-        stack_cost = stack["gpu"].cost + stack["dram"].cost * stack["dram_count"] + stack["disk"].cost + stack["link"].cost
+        stack_cost = (
+            stack["gpu"].cost
+            + stack["dram"].cost * stack["dram_count"]
+            + stack["disk"].cost
+            + stack["link"].cost
+        )
         storage_label = f"{stack_name} (${stack_cost:.0f})"
         legend_items.append(
-            Line2D([0], [0], color=stack["color"], lw=1.6, linestyle="-", label=storage_label)
+            Line2D(
+                [0],
+                [0],
+                color=stack["color"],
+                lw=1.6,
+                linestyle="-",
+                label=storage_label,
+            )
         )
 
         ys = build_storage_curve(xs, model_params, stack)
-        ax.plot(xs, ys, color=stack["color"], lw=1.2, linestyle="-", label=storage_label)
+        ax.plot(
+            xs, ys, color=stack["color"], lw=1.2, linestyle="-", label=storage_label
+        )
 
     # ── Axes ──────────────────────────────────────────────────────────────────
     x_ticks = [16, 16_000, 64_000, 128_000, 200_000, 300_000, 400_000, 500_000]
@@ -292,30 +324,37 @@ def make_plot(
 
     # plot some circles with labels in plot to reference in presentations
     points_of_interest = [
-        {'x': 16_000, 'y': 5, 'label': 'A', 'color': 'blue'},
-        {'x': 64_000, 'y': 35, 'label': 'B', 'color': 'green'},
-        {'x': 128_000, 'y': 65, 'label': 'C', 'color': 'orange'},
-        {'x': 400_000, 'y': 105, 'label': 'D', 'color': 'red'},
+        {"x": 16_000, "y": 5, "label": "A", "color": "blue"},
+        {"x": 64_000, "y": 35, "label": "B", "color": "green"},
+        {"x": 128_000, "y": 65, "label": "C", "color": "orange"},
+        {"x": 400_000, "y": 105, "label": "D", "color": "red"},
     ]
     for point in points_of_interest:
+        ax.axvline(
+            point["x"],
+            color=point["color"],
+            linewidth=0.8,
+            alpha=0.22,
+            zorder=1,
+        )
         ax.scatter(
-            point['x'],
-            point['y'],
-            facecolors='white',
-            edgecolors=point['color'],
+            point["x"],
+            point["y"],
+            facecolors="white",
+            edgecolors=point["color"],
             s=220,
             linewidths=1.2,
             zorder=5,
         )
         ax.text(
-            point['x'],
-            point['y'],
-            point['label'],
-            color=point['color'],
+            point["x"],
+            point["y"],
+            point["label"],
+            color=point["color"],
             fontsize=9,
-            fontweight='bold',
-            ha='center',
-            va='center',
+            fontweight="bold",
+            ha="center",
+            va="center",
             zorder=6,
         )
 
@@ -337,19 +376,42 @@ def make_plot(
 
 
 # Keys included in the combinatorial sweep
-_PERM_GPU_KEYS  = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
-_PERM_DRAM_KEYS = ["DDR5-6000", "DDR5-7200", "DDR5-5600", "DDR4-3200", "DDR4-2133", "DDR3-1600"]
-_PERM_DISK_KEYS = ["HDD", "X110", "M550", "NVMe980", "NVMeT700", "NVMeT700R0", "NVMeT700R5"]
-_PERM_LINK_KEYS = ["PCIe3", "PCIe4", "PCIe5", "NVLink3", "NVLink4", "NVLink5", "NVLink6"]
+_PERM_GPU_KEYS = ["H200", "H100", "A100", "RTX6000", "V100", "A5000"]
+_PERM_DRAM_KEYS = [
+    "DDR5-6000",
+    "DDR5-7200",
+    "DDR5-5600",
+    "DDR4-3200",
+    "DDR4-2133",
+    "DDR3-1600",
+]
+_PERM_DISK_KEYS = [
+    "HDD",
+    "X110",
+    "M550",
+    "NVMe980",
+    "NVMeT700",
+    "NVMeT700R0",
+    "NVMeT700R5",
+]
+_PERM_LINK_KEYS = [
+    "PCIe3",
+    "PCIe4",
+    "PCIe5",
+    "NVLink3",
+    "NVLink4",
+    "NVLink5",
+    "NVLink6",
+]
 
 # One color per GPU — all (GPU, *, *) dots share the GPU's color
 _PERM_GPU_COLORS = {
-    "H200":    "#e6194b",
-    "H100":    "#f58231",
-    "A100":    "#bfbf00",
+    "H200": "#e6194b",
+    "H100": "#f58231",
+    "A100": "#bfbf00",
     "RTX6000": "#3cb44b",
-    "V100":    "#4363d8",
-    "A5000":   "#911eb4",
+    "V100": "#4363d8",
+    "A5000": "#911eb4",
 }
 
 
@@ -358,8 +420,19 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
 
     model_params = CONFIG["MODEL_PARAMS"]
 
-    x_ticks = [16_000, 64_000, 128_000, 200_000, 250_000, 300_000, 350_000, 400_000, 450_000, 500_000]
-    y_ticks  = [1, 10, 60, 600, 3600, 3600*4]
+    x_ticks = [
+        16_000,
+        64_000,
+        128_000,
+        200_000,
+        250_000,
+        300_000,
+        350_000,
+        400_000,
+        450_000,
+        500_000,
+    ]
+    y_ticks = [1, 10, 60, 600, 3600, 3600 * 4]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -373,7 +446,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     for gpu_key, dram_key, disk_key, link_key in itertools.product(
         _PERM_GPU_KEYS, _PERM_DRAM_KEYS, _PERM_DISK_KEYS, _PERM_LINK_KEYS
     ):
-        gpu  = GPUS[gpu_key]
+        gpu = GPUS[gpu_key]
         dram = DRAMS[dram_key]
         disk = DISKS[disk_key]
         link = LINKS[link_key]
@@ -389,7 +462,9 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
                 "dram_count": 2,
             }
             # build_storage_curve returns compute+restore time for given x
-            t_arr = build_storage_curve(np.array([x], dtype=np.int64), model_params, stack)
+            t_arr = build_storage_curve(
+                np.array([x], dtype=np.int64), model_params, stack
+            )
             t = float(t_arr[0])
             if np.isfinite(t):
                 data[x].append(t)
@@ -403,10 +478,21 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
         color = _PERM_GPU_COLORS[gpu_key]
         # Use the same compute-curve builder so permutation compute lines match main plot.
         # Provide a high-bandwidth link so the line reflects compute-dominated behavior.
-        high_bw_link = LINKS.get("NVLink6", LINKS.get("NVLink", list(LINKS.values())[0]))
-        ys_compute = build_compute_curve(xs_line, model_params, gpu, high_bw_link, gpu_count=1)
-        ax.plot(xs_line, ys_compute, color=color, lw=1.1, linestyle=":",
-                alpha=0.85, zorder=2)
+        high_bw_link = LINKS.get(
+            "NVLink6", LINKS.get("NVLink", list(LINKS.values())[0])
+        )
+        ys_compute = build_compute_curve(
+            xs_line, model_params, gpu, high_bw_link, gpu_count=1
+        )
+        ax.plot(
+            xs_line,
+            ys_compute,
+            color=color,
+            lw=1.1,
+            linestyle=":",
+            alpha=0.85,
+            zorder=2,
+        )
         legend_items.append(
             Line2D([0], [0], color=color, lw=1.1, linestyle=":", label=gpu.name)
         )
@@ -431,9 +517,17 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     vp["cmedians"].set_linewidth(1.4)
 
     legend_items.append(
-        Line2D([0], [0], marker="s", color="w", markerfacecolor="#aaaaaa",
-               markeredgecolor="#555555", markersize=8, alpha=0.8,
-               label="Storage restore range")
+        Line2D(
+            [0],
+            [0],
+            marker="s",
+            color="w",
+            markerfacecolor="#aaaaaa",
+            markeredgecolor="#555555",
+            markersize=8,
+            alpha=0.8,
+            label="Storage restore range",
+        )
     )
 
     # ── Axes ─────────────────────────────────────────────────────────────────
@@ -457,8 +551,16 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=9)
     ax.tick_params(axis="y", labelsize=9)
 
-    ax.text(0.01, 0.99, f"{total_options} configurations",
-            transform=ax.transAxes, fontsize=8, va="top", ha="left", color="#555555")
+    ax.text(
+        0.01,
+        0.99,
+        f"{total_options} configurations",
+        transform=ax.transAxes,
+        fontsize=8,
+        va="top",
+        ha="left",
+        color="#555555",
+    )
 
     ax.legend(
         handles=legend_items,
