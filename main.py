@@ -415,7 +415,7 @@ _PERM_GPU_COLORS = {
 }
 
 
-def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration.pdf"):
+def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration.pdf"):
     import itertools
 
     model_params = CONFIG["MODEL_PARAMS"]
@@ -479,7 +479,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
         # Use the same compute-curve builder so permutation compute lines match main plot.
         # Provide a high-bandwidth link so the line reflects compute-dominated behavior.
         high_bw_link = LINKS.get(
-            "NVLink6", LINKS.get("NVLink", list(LINKS.values())[0])
+            "NVLink5", LINKS.get("NVLink", list(LINKS.values())[0])
         )
         ys_compute = build_compute_curve(
             xs_line, model_params, gpu, high_bw_link, gpu_count=1
@@ -533,7 +533,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     # ── Axes ─────────────────────────────────────────────────────────────────
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
-    ax.set_xlabel("Context Length", fontsize=9)
+    ax.set_xlabel("Context Length", fontsize=11)
     ax.tick_params(axis="x", labelsize=9)
 
     ax2 = ax.twiny()
@@ -548,7 +548,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=9)
+    ax.set_ylabel("Time\n(Storage restore vs. GPU compute)", fontsize=11)
     ax.tick_params(axis="y", labelsize=9)
 
     ax.text(
@@ -556,7 +556,7 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
         0.99,
         f"{total_options} configurations",
         transform=ax.transAxes,
-        fontsize=8,
+        fontsize=11,
         va="top",
         ha="left",
         color="#555555",
@@ -579,5 +579,5 @@ def make_permutation_plot(figsize=(8, 4.5), dpi=700, output="tiers_configuration
 
 
 if __name__ == "__main__":
-    make_plot()
+    # make_plot()
     make_permutation_plot()

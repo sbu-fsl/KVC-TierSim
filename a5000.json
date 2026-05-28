@@ -1,0 +1,95 @@
+{
+  "hardware": {
+    "gpu_key": "A5000",
+    "dram_key": "DDR5",
+    "disk_key": "NVMe",
+    "link_key": "NVLink",
+    "gpu_count": 1,
+    "dram_count": 4
+  },
+  "experiment": {
+    "user_counts": [
+      50
+    ],
+    "context_lengths": [
+      16000
+    ],
+    "request_count": 25,
+    "context_unit": "tokens",
+    "storage_tier": "disk",
+    "default_policy": "recompute_all",
+    "model_params": 8000000000.0,
+    "tokens_per_block": 16,
+    "bytes_per_block": 2000000.0,
+    "slo_seconds": 1200.0,
+    "gpu_eta": 0.5
+  },
+  "results": [
+    {
+      "users": 50,
+      "context_length": 16000,
+      "context_unit": "tokens",
+      "request_count": 25,
+      "total_blocks": 50000,
+      "storage_throughput": 1000.0,
+      "recompute_throughput": 107.421875,
+      "performance_aware": {
+        "policy": "performance_aware",
+        "users": 50,
+        "context_length": 16000,
+        "context_unit": "tokens",
+        "request_count": 25,
+        "slo_seconds": 1200.0,
+        "meets_slo": true,
+        "met_requests": 25,
+        "total_requests": 25,
+        "success_rate": 1.0,
+        "slo_margin": 1154.8500881834216,
+        "total_blocks": 50000,
+        "storage_blocks": 45149.91181657848,
+        "recompute_blocks": 4850.088183421518,
+        "storage_throughput": 1000.0,
+        "recompute_throughput": 107.421875,
+        "storage_time": 45.14991181657848,
+        "recompute_time": 45.149911816578495,
+        "total_time": 45.149911816578495
+      },
+      "default_policy": {
+        "policy": "recompute_all",
+        "users": 50,
+        "context_length": 16000,
+        "context_unit": "tokens",
+        "request_count": 25,
+        "slo_seconds": 1200.0,
+        "meets_slo": false,
+        "met_requests": 2,
+        "total_requests": 25,
+        "success_rate": 0.08,
+        "slo_margin": 734.5454545454545,
+        "total_blocks": 50000,
+        "storage_blocks": 0.0,
+        "recompute_blocks": 50000.0,
+        "storage_throughput": 1000.0,
+        "recompute_throughput": 107.421875,
+        "storage_time": 0.0,
+        "recompute_time": 465.45454545454544,
+        "total_time": 465.45454545454544
+      },
+      "speedup": 10.309090909090907
+    }
+  ],
+  "slo_summary": {
+    "performance_aware": {
+      "total_requests": 25,
+      "met": 25,
+      "met_requests": 25,
+      "rate": 1.0
+    },
+    "default_policy": {
+      "total_requests": 25,
+      "met": 2,
+      "met_requests": 2,
+      "rate": 0.08
+    }
+  }
+}
