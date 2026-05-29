@@ -80,14 +80,17 @@ def cap_to_blocks(byte_cap):
 # Helper function to convert number of blocks to byte capacity
 def fmt_bytes_from_blocks(n_blocks):
     b = n_blocks * CONFIG["BYTES_PER_BLOCK"]
-    if b >= 1e12:
-        return f"{b / 1e12:.1f} TB"
-    if b >= 1e9:
-        return f"{b / 1e9:.0f} GB"
-    if b >= 1e6:
-        return f"{b / 1e6:.0f} MB"
-    return f"{b:.0f} B"
-
+    if b == 0:
+        return "0"
+    b /= 1e9  # convert to GB
+    # Use standard scientific notation with one digit before the decimal
+    exp = int(np.floor(np.log10(abs(b))))
+    mantissa = b / (10 ** exp)
+    # Format mantissa with up to 15 significant digits, then trim trailing zeros
+    mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
+    if exp == 0:
+        return mantissa_str
+    return f"{mantissa_str}e{exp}"
 
 # Helper function to format time in human-readable units
 def fmt_time(s):
@@ -108,6 +111,20 @@ def fmt_time(s):
     if s == 86400:
         return "1 day"
     return f"{s / 86400:.1f} days"
+
+
+# Helper function to format tick values in engineering notation
+def fmt_engineering(v):
+    if v == 0:
+        return "0"
+    # Use standard scientific notation with one digit before the decimal
+    exp = int(np.floor(np.log10(abs(v))))
+    mantissa = v / (10 ** exp)
+    # Format mantissa with up to 15 significant digits, then trim trailing zeros
+    mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
+    if exp == 0:
+        return mantissa_str
+    return f"{mantissa_str}e{exp}"
 
 
 # Helper function to get a color for a given label
@@ -291,7 +308,7 @@ def make_plot(
     x_ticks = [v for v in x_ticks if min_blocks <= v <= max_blocks]
 
     ax.set_xticks(x_ticks)
-    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_engineering(v)))
     ax.set_xlabel("Context Length", fontsize=8)
     ax.tick_params(axis="x", labelsize=8)
 
@@ -319,7 +336,7 @@ def make_plot(
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time (Storage restore  vs.  GPU compute)", fontsize=8)
+    ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=8)
     ax.tick_params(axis="y", labelsize=8)
 
     # plot some circles with labels in plot to reference in presentations
@@ -432,7 +449,7 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
         450_000,
         500_000,
     ]
-    y_ticks = [1, 10, 60, 600, 3600, 3600 * 4]
+    y_ticks = [2, 10, 60, 600, 3600, 3600 * 4]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -488,13 +505,13 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
             xs_line,
             ys_compute,
             color=color,
-            lw=1.1,
+            lw=1.5,
             linestyle=":",
             alpha=0.85,
             zorder=2,
         )
         legend_items.append(
-            Line2D([0], [0], color=color, lw=1.1, linestyle=":", label=gpu.name)
+            Line2D([0], [0], color=color, lw=1.3, linestyle=":", label=gpu.name)
         )
 
     # Single merged violin per tick
@@ -532,9 +549,9 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
 
     # ── Axes ─────────────────────────────────────────────────────────────────
     ax.set_xticks(x_ticks)
-    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: f"{int(v):,}"))
+    ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_engineering(v)))
     ax.set_xlabel("Context Length", fontsize=11)
-    ax.tick_params(axis="x", labelsize=9)
+    ax.tick_params(axis="x", labelsize=11)
 
     ax2 = ax.twiny()
     ax2.set_xlim(x_ticks[0], x_ticks[-1])
@@ -542,14 +559,15 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
     ax2.xaxis.set_major_formatter(
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
-    ax2.tick_params(axis="x", labelsize=9)
+    ax2.tick_params(axis="x", labelsize=11)
+    ax2.set_xlabel("Data Volume (GB)", fontsize=11)
 
     ax.set_yticks(y_ticks)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time\n(Storage restore vs. GPU compute)", fontsize=11)
-    ax.tick_params(axis="y", labelsize=9)
+    ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=11)
+    ax.tick_params(axis="y", labelsize=11)
 
     ax.text(
         0.01,
@@ -569,6 +587,7 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
         framealpha=0.92,
         edgecolor="#cccccc",
         handletextpad=0.4,
+        ncol=4,
     )
 
     plt.tight_layout()
