@@ -57,8 +57,24 @@ def pretty_gpu_name(gpu_key):
     }.get(gpu_key, gpu_key)
 
 
-def format_context_length(context_length):
-    return f"{context_length:,}"
+def pretty_stack_name(stack_key, hardware):
+    if not stack_key:
+        return pretty_gpu_name(hardware.get("gpu_key", ""))
+    return {
+        "h200": "H200",
+        "a5000": "RTX A5000",
+        "a100_ddr5_nvme": "A100 DDR5/NVMe",
+        "a100_ddr4_nvme": "A100 DDR4/NVMe",
+        "a100_ddr4_sata": "A100 DDR4/SATA",
+    }.get(stack_key, stack_key.replace("_", " "))
+
+
+def format_blocks(blocks):
+    return f"{blocks:,}"
+
+
+def format_rate(rate):
+    return f"{rate:g}"
 
 
 def format_request_count(request_count):
@@ -67,16 +83,16 @@ def format_request_count(request_count):
 
 def build_case_label(case):
     return (
-        f"{case['gpu_label']}\n"
-        f"{case['users']} / {format_context_length(case['context_length'])} / "
-        f"{format_request_count(case['request_count'])}"
+        f"{case['stack_label']}\n"
+        f"N={format_blocks(case['total_blocks'])} / M={format_blocks(case['miss_blocks'])} / "
+        f"r={format_rate(case['request_rate'])} / p={case['p95_seconds']:.0f}s"
     )
 
 
 def scenario_axis_label(case):
     return (
-        f"{case['users']} users / {format_context_length(case['context_length'])} context / "
-        f"{format_request_count(case['request_count'])} requests"
+        f"{case['stack_label']} / N={format_blocks(case['total_blocks'])} / M={format_blocks(case['miss_blocks'])} / "
+        f"r={format_rate(case['request_rate'])} req/s / p={case['p95_seconds']:.0f}s"
     )
 
 
@@ -89,14 +105,27 @@ def load_cases(path):
 
     cases = []
     for result in payload["results"]:
+        total_blocks = result.get("total_blocks", 0)
+        miss_blocks = result.get("miss_blocks")
+        if miss_blocks is None:
+            miss_blocks = result["default_policy"].get("recompute_blocks", 0)
+
+        stack_key = hardware.get("stack_key", "")
+        stack_label = pretty_stack_name(stack_key, hardware)
+
         case = {
             "path": Path(path),
             "file_label": Path(path).stem,
+            "stack_key": stack_key,
+            "stack_label": stack_label,
             "gpu_key": hardware["gpu_key"],
             "gpu_label": pretty_gpu_name(hardware["gpu_key"]),
-            "users": result["users"],
-            "context_length": result["context_length"],
+            "total_blocks": total_blocks,
+            "miss_blocks": miss_blocks,
+            "hit_blocks": result.get("hit_blocks", total_blocks - miss_blocks),
             "request_count": result.get("request_count", experiment.get("request_count", 1)),
+            "request_rate": result.get("request_rate", experiment.get("request_rate", 1.0)),
+            "p95_seconds": result.get("p95_seconds", experiment.get("p95_seconds", experiment.get("slo_seconds", 1.0))),
             "before_time": result["default_policy"]["total_time"],
             "after_time": result["performance_aware"]["total_time"],
             "before_storage_blocks": result["default_policy"]["storage_blocks"],
@@ -106,7 +135,7 @@ def load_cases(path):
             "before_success_rate": result["default_policy"].get("success_rate", 0.0),
             "after_success_rate": result["performance_aware"].get("success_rate", 0.0),
             "speedup": result["speedup"],
-            "slo_seconds": experiment["slo_seconds"],
+            "slo_seconds": result.get("slo_seconds", experiment.get("slo_seconds", 1.0)),
         }
         case["label"] = build_case_label(case)
         cases.append(case)
@@ -115,7 +144,7 @@ def load_cases(path):
 
 
 def plot_latency_comparison(cases, output="policy_latency_comparison.pdf"):
-    labels = [case["gpu_label"] for case in cases]
+    labels = [case["label"] for case in cases]
     x = np.arange(len(labels))
     width = min(0.36, 0.36 / max(1, len(cases) / 4))
 
@@ -178,7 +207,7 @@ def plot_latency_comparison(cases, output="policy_latency_comparison.pdf"):
 
 
 def plot_policy_split(cases, output="policy_block_split.pdf"):
-    labels = [case["gpu_label"] for case in cases]
+    labels = [case["label"] for case in cases]
     x = np.arange(len(labels))
     width = min(0.36, 0.36 / max(1, len(cases) / 4))
 
@@ -267,7 +296,7 @@ def plot_policy_split(cases, output="policy_block_split.pdf"):
 
 
 def plot_slo_rate(cases, output="policy_slo_rate.pdf"):
-    labels = [case["gpu_label"] for case in cases]
+    labels = [case["label"] for case in cases]
     x = np.arange(len(labels))
     width = min(0.34, 0.34 / max(1, len(cases) / 4))
 

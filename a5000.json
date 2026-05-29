@@ -1,5 +1,6 @@
 {
   "hardware": {
+    "stack_key": "a5000",
     "gpu_key": "A5000",
     "dram_key": "DDR5",
     "disk_key": "NVMe",
@@ -8,88 +9,80 @@
     "dram_count": 4
   },
   "experiment": {
-    "user_counts": [
-      50
+    "total_blocks": [
+      50000
     ],
-    "context_lengths": [
-      16000
+    "miss_blocks": [
+      500
     ],
-    "request_count": 25,
-    "context_unit": "tokens",
+    "request_rate": 0.02,
+    "p95_seconds": 46.0,
     "storage_tier": "disk",
-    "default_policy": "recompute_all",
     "model_params": 8000000000.0,
     "tokens_per_block": 16,
     "bytes_per_block": 2000000.0,
-    "slo_seconds": 1200.0,
     "gpu_eta": 0.5
   },
   "results": [
     {
-      "users": 50,
-      "context_length": 16000,
-      "context_unit": "tokens",
-      "request_count": 25,
+      "stack_key": "a5000",
+      "request_rate": 0.02,
+      "p95_seconds": 46.0,
+      "slo_seconds": 46.0,
       "total_blocks": 50000,
+      "miss_blocks": 500,
+      "hit_blocks": 49500,
       "storage_throughput": 1000.0,
       "recompute_throughput": 107.421875,
       "performance_aware": {
         "policy": "performance_aware",
-        "users": 50,
-        "context_length": 16000,
-        "context_unit": "tokens",
-        "request_count": 25,
-        "slo_seconds": 1200.0,
-        "meets_slo": true,
-        "met_requests": 25,
-        "total_requests": 25,
-        "success_rate": 1.0,
-        "slo_margin": 1154.8500881834216,
+        "stack_key": "a5000",
         "total_blocks": 50000,
+        "miss_blocks": 500,
+        "hit_blocks": 49500,
+        "request_rate": 0.02,
+        "p95_seconds": 46.0,
+        "slo_seconds": 46.0,
+        "meets_slo": true,
+        "success_rate": 1.0,
+        "slo_margin": 0.8500881834215122,
         "storage_blocks": 45149.91181657848,
-        "recompute_blocks": 4850.088183421518,
+        "recompute_blocks": 4850.088183421517,
         "storage_throughput": 1000.0,
         "recompute_throughput": 107.421875,
         "storage_time": 45.14991181657848,
-        "recompute_time": 45.149911816578495,
-        "total_time": 45.149911816578495
+        "recompute_time": 45.14991181657849,
+        "total_time": 45.14991181657849
       },
       "default_policy": {
-        "policy": "recompute_all",
-        "users": 50,
-        "context_length": 16000,
-        "context_unit": "tokens",
-        "request_count": 25,
-        "slo_seconds": 1200.0,
-        "meets_slo": false,
-        "met_requests": 2,
-        "total_requests": 25,
-        "success_rate": 0.08,
-        "slo_margin": 734.5454545454545,
+        "policy": "restore_hits_recompute_misses",
+        "stack_key": "a5000",
         "total_blocks": 50000,
-        "storage_blocks": 0.0,
-        "recompute_blocks": 50000.0,
+        "miss_blocks": 500,
+        "hit_blocks": 49500,
+        "request_rate": 0.02,
+        "p95_seconds": 46.0,
+        "slo_seconds": 46.0,
+        "meets_slo": false,
+        "success_rate": 0.0,
+        "slo_margin": -3.5,
+        "storage_blocks": 49500.0,
+        "recompute_blocks": 500.0,
         "storage_throughput": 1000.0,
         "recompute_throughput": 107.421875,
-        "storage_time": 0.0,
-        "recompute_time": 465.45454545454544,
-        "total_time": 465.45454545454544
+        "storage_time": 49.5,
+        "recompute_time": 4.654545454545454,
+        "total_time": 49.5
       },
-      "speedup": 10.309090909090907
+      "speedup": 1.0963476562499999
     }
   ],
   "slo_summary": {
     "performance_aware": {
-      "total_requests": 25,
-      "met": 25,
-      "met_requests": 25,
-      "rate": 1.0
+      "status": "pass"
     },
     "default_policy": {
-      "total_requests": 25,
-      "met": 2,
-      "met_requests": 2,
-      "rate": 0.08
+      "status": "fail"
     }
   }
 }

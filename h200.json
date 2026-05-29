@@ -1,5 +1,6 @@
 {
   "hardware": {
+    "stack_key": "h200",
     "gpu_key": "H200",
     "dram_key": "DDR5",
     "disk_key": "NVMe",
@@ -8,44 +9,43 @@
     "dram_count": 4
   },
   "experiment": {
-    "user_counts": [
-      50
+    "total_blocks": [
+      50000
     ],
-    "context_lengths": [
-      16000
+    "miss_blocks": [
+      5000
     ],
-    "request_count": 25,
-    "context_unit": "tokens",
+    "request_rate": 0.02,
+    "p95_seconds": 10.0,
     "storage_tier": "disk",
-    "default_policy": "restore_all",
     "model_params": 8000000000.0,
     "tokens_per_block": 16,
     "bytes_per_block": 2000000.0,
-    "slo_seconds": 120.0,
     "gpu_eta": 0.5
   },
   "results": [
     {
-      "users": 50,
-      "context_length": 16000,
-      "context_unit": "tokens",
-      "request_count": 25,
+      "stack_key": "h200",
+      "request_rate": 0.02,
+      "p95_seconds": 10.0,
+      "slo_seconds": 10.0,
       "total_blocks": 50000,
+      "miss_blocks": 5000,
+      "hit_blocks": 45000,
       "storage_throughput": 1000.0,
       "recompute_throughput": 7812.5,
       "performance_aware": {
         "policy": "performance_aware",
-        "users": 50,
-        "context_length": 16000,
-        "context_unit": "tokens",
-        "request_count": 25,
-        "slo_seconds": 120.0,
-        "meets_slo": false,
-        "met_requests": 21,
-        "total_requests": 25,
-        "success_rate": 0.84,
-        "slo_margin": 114.32624113475177,
+        "stack_key": "h200",
         "total_blocks": 50000,
+        "miss_blocks": 5000,
+        "hit_blocks": 45000,
+        "request_rate": 0.02,
+        "p95_seconds": 10.0,
+        "slo_seconds": 10.0,
+        "meets_slo": true,
+        "success_rate": 1.0,
+        "slo_margin": 4.32624113475177,
         "storage_blocks": 5673.75886524823,
         "recompute_blocks": 44326.24113475177,
         "storage_throughput": 1000.0,
@@ -55,41 +55,34 @@
         "total_time": 5.67375886524823
       },
       "default_policy": {
-        "policy": "restore_all",
-        "users": 50,
-        "context_length": 16000,
-        "context_unit": "tokens",
-        "request_count": 25,
-        "slo_seconds": 120.0,
-        "meets_slo": false,
-        "met_requests": 2,
-        "total_requests": 25,
-        "success_rate": 0.08,
-        "slo_margin": 70.0,
+        "policy": "restore_hits_recompute_misses",
+        "stack_key": "h200",
         "total_blocks": 50000,
-        "storage_blocks": 50000.0,
-        "recompute_blocks": 0.0,
+        "miss_blocks": 5000,
+        "hit_blocks": 45000,
+        "request_rate": 0.02,
+        "p95_seconds": 10.0,
+        "slo_seconds": 10.0,
+        "meets_slo": false,
+        "success_rate": 0.0,
+        "slo_margin": -35.0,
+        "storage_blocks": 45000.0,
+        "recompute_blocks": 5000.0,
         "storage_throughput": 1000.0,
         "recompute_throughput": 7812.5,
-        "storage_time": 50.0,
-        "recompute_time": 0.0,
-        "total_time": 50.0
+        "storage_time": 45.0,
+        "recompute_time": 0.64,
+        "total_time": 45.0
       },
-      "speedup": 8.812499999999995
+      "speedup": 7.931249999999996
     }
   ],
   "slo_summary": {
     "performance_aware": {
-      "total_requests": 25,
-      "met": 21,
-      "met_requests": 21,
-      "rate": 0.84
+      "status": "pass"
     },
     "default_policy": {
-      "total_requests": 25,
-      "met": 2,
-      "met_requests": 2,
-      "rate": 0.08
+      "status": "fail"
     }
   }
 }

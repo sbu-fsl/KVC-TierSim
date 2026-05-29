@@ -3,28 +3,26 @@
 * H200 + DDR5 + NVMe + NVLink
 * RTX A5000 + DDR5 + NVMe + NVLink
 
-50 users with context size of 16000 tokens.
+Example restore request: $N=50000$ blocks with $M=5000$ misses, target request rate $r=0.02$ requests/s, and P95 latency target $p=120$ seconds.
 
 ```bash
-# shows how restoration used to impact the fraction of users rate and latency speedup
+# compare the performance-aware policy against the baseline restore-hits/recompute-misses policy
 python simulator.py \
-  --gpu H200 \
-  --users 50 \
-  --contexts 16000 \
-  --requests 25 \
-  --slo-seconds 120 \
-  --default-policy restore_all \
+  --stack h200 \
+  --total-blocks 50000 \
+  --miss-blocks 5000 \
+  --request-rate 0.02 \
+  --p95-seconds 10 \
   --output h200.json
 ```
 
 ```bash
-# shows how restoration can improve the performance when storage is faster
+# compare a different stack under the same request profile
 python simulator.py \
-  --gpu A5000 \
-  --users 50 \
-  --contexts 16000 \
-  --requests 25 \
-  --slo-seconds 1200 \
-  --default-policy recompute_all \
+  --stack a5000 \
+  --total-blocks 50000 \
+  --miss-blocks 500 \
+  --request-rate 0.02 \
+  --p95-seconds 46 \
   --output a5000.json
 ```
