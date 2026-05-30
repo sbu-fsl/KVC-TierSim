@@ -13,7 +13,7 @@
       50000
     ],
     "miss_blocks": [
-      5000
+      0
     ],
     "request_rate": 0.02,
     "p95_seconds": 10.0,
@@ -30,16 +30,16 @@
       "p95_seconds": 10.0,
       "slo_seconds": 10.0,
       "total_blocks": 50000,
-      "miss_blocks": 5000,
-      "hit_blocks": 45000,
+      "miss_blocks": 0,
+      "hit_blocks": 50000,
       "storage_throughput": 1000.0,
       "recompute_throughput": 7812.5,
       "performance_aware": {
         "policy": "performance_aware",
         "stack_key": "h200",
         "total_blocks": 50000,
-        "miss_blocks": 5000,
-        "hit_blocks": 45000,
+        "miss_blocks": 0,
+        "hit_blocks": 50000,
         "request_rate": 0.02,
         "p95_seconds": 10.0,
         "slo_seconds": 10.0,
@@ -58,23 +58,23 @@
         "policy": "restore_hits_recompute_misses",
         "stack_key": "h200",
         "total_blocks": 50000,
-        "miss_blocks": 5000,
-        "hit_blocks": 45000,
+        "miss_blocks": 0,
+        "hit_blocks": 50000,
         "request_rate": 0.02,
         "p95_seconds": 10.0,
         "slo_seconds": 10.0,
         "meets_slo": false,
         "success_rate": 0.0,
-        "slo_margin": -35.0,
-        "storage_blocks": 45000.0,
-        "recompute_blocks": 5000.0,
+        "slo_margin": -40.0,
+        "storage_blocks": 50000.0,
+        "recompute_blocks": 0.0,
         "storage_throughput": 1000.0,
         "recompute_throughput": 7812.5,
-        "storage_time": 45.0,
-        "recompute_time": 0.64,
-        "total_time": 45.0
+        "storage_time": 50.0,
+        "recompute_time": 0.0,
+        "total_time": 50.0
       },
-      "speedup": 7.931249999999996
+      "speedup": 8.812499999999995
     }
   ],
   "slo_summary": {

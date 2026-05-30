@@ -343,6 +343,117 @@ def plot_slo_rate(cases, output="policy_slo_rate.pdf"):
     fig.savefig(output, bbox_inches="tight", facecolor=fig.get_facecolor())
 
 
+def plot_throughput_utilization(cases, output="policy_throughput_utilization.pdf"):
+    labels = [case["label"] for case in cases]
+    x = np.arange(len(labels))
+    width = min(0.36, 0.36 / max(1, len(cases) / 4))
+
+    fig, ax = plt.subplots(figsize=(max(4.0, len(cases) * 1.2), 3.2))
+    fig.patch.set_facecolor("#ffffff")
+    style_ax(ax, labels)
+    ax.set_xticklabels(labels, fontsize=8, rotation=0, ha="center", color=text_color)
+
+    # compute utilization = actual_blocks / total_time / capacity_blocks_per_sec
+    before_storage_util = []
+    before_recompute_util = []
+    after_storage_util = []
+    after_recompute_util = []
+
+    for case in cases:
+        before_storage_blocks = case["before_storage_blocks"]
+        before_recompute_blocks = case["before_recompute_blocks"]
+        after_storage_blocks = case["after_storage_blocks"]
+        after_recompute_blocks = case["after_recompute_blocks"]
+
+        before_storage_cap = case.get("storage_throughput", None) or case.get("before_storage_capacity", None)
+        before_recompute_cap = case.get("recompute_throughput", None) or case.get("before_recompute_capacity", None)
+
+        # fall back to values embedded in case (per-result capacities are in input JSON rows)
+        # compute total times used in previous plots
+        before_time = case["before_time"]
+        after_time = case["after_time"]
+
+        def safe_util(blocks, cap, total_time):
+            if total_time <= 0 or cap in (None, 0):
+                return 0.0
+            return min(1.0, (blocks / total_time) / cap)
+
+        before_storage_util.append(safe_util(before_storage_blocks, case.get("storage_throughput"), before_time))
+        before_recompute_util.append(safe_util(before_recompute_blocks, case.get("recompute_throughput"), before_time))
+        after_storage_util.append(safe_util(after_storage_blocks, case.get("storage_throughput"), after_time))
+        after_recompute_util.append(safe_util(after_recompute_blocks, case.get("recompute_throughput"), after_time))
+
+    # stacked bars for storage + recompute utilization
+    ax.bar(
+        x - width / 2,
+        [s * 100 for s in before_storage_util],
+        width,
+        label="Storage (old)",
+        color=after_color,
+        alpha=0.85,
+        zorder=3,
+    )
+    ax.bar(
+        x - width / 2,
+        [r * 100 for r in before_recompute_util],
+        width,
+        bottom=[s * 100 for s in before_storage_util],
+        label="Recompute (old)",
+        color=before_color,
+        alpha=0.85,
+        zorder=3,
+    )
+
+    ax.bar(
+        x + width / 2,
+        [s * 100 for s in after_storage_util],
+        width,
+        label="Storage (new)",
+        color=after_color,
+        alpha=0.95,
+        zorder=3,
+    )
+    ax.bar(
+        x + width / 2,
+        [r * 100 for r in after_recompute_util],
+        width,
+        bottom=[s * 100 for s in after_storage_util],
+        label="Recompute (new)",
+        color=before_color,
+        alpha=0.95,
+        zorder=3,
+    )
+
+    ax.set_ylim(0, 200)
+    ax.yaxis.set_major_formatter(ticker.PercentFormatter())
+    ax.set_ylabel("Utilization (%)", fontsize=10, color="#333")
+    ax.set_xlabel(scenario_axis_label(cases[0]), fontsize=10, color="#333")
+    ax.grid(True, which="major", axis="y", linestyle=":", linewidth=0.5, color=grid_color, zorder=0)
+    ax.legend(
+        facecolor="white",
+        edgecolor="#ccc",
+        fontsize=8,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 1.14),
+        ncol=2,
+        framealpha=0.95,
+    )
+
+    for idx, case in enumerate(cases):
+        ax.text(
+            x[idx],
+            max((before_storage_util[idx] + before_recompute_util[idx]), (after_storage_util[idx] + after_recompute_util[idx])) * 100 + 6,
+            f"t={case['slo_seconds']:.0f}s",
+            ha="center",
+            va="bottom",
+            fontsize=7,
+            color="#222222",
+        )
+
+    fig.tight_layout()
+    fig.savefig(output, bbox_inches="tight", facecolor=fig.get_facecolor())
+
+
 def build_parser():
     parser = argparse.ArgumentParser(description="Plot performance-aware KV cache simulation results.")
     parser.add_argument(
@@ -354,6 +465,7 @@ def build_parser():
     parser.add_argument("--latency-output", default="policy_latency_comparison.pdf")
     parser.add_argument("--split-output", default="policy_block_split.pdf")
     parser.add_argument("--slo-output", default="policy_slo_rate.pdf")
+    parser.add_argument("--throughput-output", default="policy_throughput_utilization.pdf")
     return parser
 
 
@@ -366,6 +478,7 @@ def main(argv=None):
     plot_latency_comparison(cases, output=args.latency_output)
     plot_policy_split(cases, output=args.split_output)
     plot_slo_rate(cases, output=args.slo_output)
+    plot_throughput_utilization(cases, output=args.throughput_output)
 
     print(f"Saved {args.latency_output}, {args.split_output}, and {args.slo_output}.")
     return 0

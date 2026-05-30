@@ -1,0 +1,88 @@
+{
+  "hardware": {
+    "stack_key": "a5000",
+    "gpu_key": "A5000",
+    "dram_key": "DDR5",
+    "disk_key": "NVMe",
+    "link_key": "NVLink",
+    "gpu_count": 1,
+    "dram_count": 4
+  },
+  "experiment": {
+    "total_blocks": [
+      50000
+    ],
+    "miss_blocks": [
+      500
+    ],
+    "request_rate": 0.02,
+    "p95_seconds": 10.0,
+    "storage_tier": "disk",
+    "model_params": 8000000000.0,
+    "tokens_per_block": 16,
+    "bytes_per_block": 2000000.0,
+    "gpu_eta": 0.5
+  },
+  "results": [
+    {
+      "stack_key": "a5000",
+      "request_rate": 0.02,
+      "p95_seconds": 10.0,
+      "slo_seconds": 10.0,
+      "total_blocks": 50000,
+      "miss_blocks": 500,
+      "hit_blocks": 49500,
+      "storage_throughput": 1000.0,
+      "recompute_throughput": 107.421875,
+      "performance_aware": {
+        "policy": "performance_aware",
+        "stack_key": "a5000",
+        "total_blocks": 50000,
+        "miss_blocks": 500,
+        "hit_blocks": 49500,
+        "request_rate": 0.02,
+        "p95_seconds": 10.0,
+        "slo_seconds": 10.0,
+        "meets_slo": false,
+        "success_rate": 0.0,
+        "slo_margin": -35.14991181657849,
+        "storage_blocks": 45149.91181657848,
+        "recompute_blocks": 4850.088183421517,
+        "storage_throughput": 1000.0,
+        "recompute_throughput": 107.421875,
+        "storage_time": 45.14991181657848,
+        "recompute_time": 45.14991181657849,
+        "total_time": 45.14991181657849
+      },
+      "default_policy": {
+        "policy": "restore_hits_recompute_misses",
+        "stack_key": "a5000",
+        "total_blocks": 50000,
+        "miss_blocks": 500,
+        "hit_blocks": 49500,
+        "request_rate": 0.02,
+        "p95_seconds": 10.0,
+        "slo_seconds": 10.0,
+        "meets_slo": false,
+        "success_rate": 0.0,
+        "slo_margin": -39.5,
+        "storage_blocks": 49500.0,
+        "recompute_blocks": 500.0,
+        "storage_throughput": 1000.0,
+        "recompute_throughput": 107.421875,
+        "storage_time": 49.5,
+        "recompute_time": 4.654545454545454,
+        "total_time": 49.5
+      },
+      "speedup": 1.0963476562499999
+    }
+  ],
+  "slo_summary": {
+    "performance_aware": {
+      "status": "fail"
+    },
+    "default_policy": {
+      "status": "fail"
+    }
+  }
+}
