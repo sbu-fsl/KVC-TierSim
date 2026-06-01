@@ -8,7 +8,6 @@ from typing import Iterable
 
 from src.pool import DISKS, DRAMS, GPUS, LINKS
 
-
 BYTES_PER_BLOCK = 2e6
 TOKENS_PER_BLOCK = 16
 MODEL_PARAMS = 8e9
@@ -62,16 +61,40 @@ class PolicyResult:
 
 
 STACK_PRESETS = {
-    "h200": HardwareConfig(stack_key="h200", gpu_key="H200", dram_key="DDR5", disk_key="NVMe", link_key="NVLink"),
-    "a5000": HardwareConfig(stack_key="a5000", gpu_key="A5000", dram_key="DDR5", disk_key="NVMe", link_key="NVLink"),
+    "h200": HardwareConfig(
+        stack_key="h200",
+        gpu_key="H200",
+        dram_key="DDR5",
+        disk_key="NVMe",
+        link_key="NVLink",
+    ),
+    "a5000": HardwareConfig(
+        stack_key="a5000",
+        gpu_key="A5000",
+        dram_key="DDR5",
+        disk_key="NVMe",
+        link_key="NVLink",
+    ),
     "a100_ddr5_nvme": HardwareConfig(
-        stack_key="a100_ddr5_nvme", gpu_key="A100", dram_key="DDR5", disk_key="NVMe", link_key="NVLink"
+        stack_key="a100_ddr5_nvme",
+        gpu_key="A100",
+        dram_key="DDR5",
+        disk_key="NVMe",
+        link_key="NVLink",
     ),
     "a100_ddr4_nvme": HardwareConfig(
-        stack_key="a100_ddr4_nvme", gpu_key="A100", dram_key="DDR4", disk_key="NVMe", link_key="NVLink"
+        stack_key="a100_ddr4_nvme",
+        gpu_key="A100",
+        dram_key="DDR4",
+        disk_key="NVMe",
+        link_key="NVLink",
     ),
     "a100_ddr4_sata": HardwareConfig(
-        stack_key="a100_ddr4_sata", gpu_key="A100", dram_key="DDR4", disk_key="SATA", link_key="PCIe"
+        stack_key="a100_ddr4_sata",
+        gpu_key="A100",
+        dram_key="DDR4",
+        disk_key="SATA",
+        link_key="PCIe",
     ),
 }
 
@@ -86,25 +109,10 @@ def _resolve_hardware_config(args: argparse.Namespace) -> HardwareConfig:
         disk_key=args.disk or preset.disk_key,
         link_key=args.link or preset.link_key,
         gpu_count=args.gpu_count if args.gpu_count is not None else preset.gpu_count,
-        dram_count=args.dram_count if args.dram_count is not None else preset.dram_count,
+        dram_count=args.dram_count
+        if args.dram_count is not None
+        else preset.dram_count,
     )
-
-
-def _recompute_throughput(hardware: HardwareConfig, model_params: float, tokens_per_block: int, gpu_eta: float) -> float:
-    gpu = GPUS[hardware.gpu_key]
-    t_per_token = gpu.gpu_compute_band(model_params, gpu_count=hardware.gpu_count, eta=gpu_eta)
-    return 1.0 / (tokens_per_block * t_per_token)
-
-
-def _storage_throughput(hardware: HardwareConfig, storage_tier: str, bytes_per_block: float) -> float:
-    link = LINKS[hardware.link_key]
-    if storage_tier == "disk":
-        tier_bandwidth = DISKS[hardware.disk_key].bandwidth
-    elif storage_tier == "dram":
-        tier_bandwidth = DRAMS[hardware.dram_key].bandwidth * hardware.dram_count
-    else:
-        raise ValueError(f"Unsupported storage_tier: {storage_tier}")
-    return min(tier_bandwidth, link.bandwidth) / bytes_per_block
 
 
 def _effective_deadline(request_rate: float, p95_seconds: float) -> float:
@@ -115,12 +123,6 @@ def _effective_deadline(request_rate: float, p95_seconds: float) -> float:
     return min(p95_seconds, 1.0 / request_rate)
 
 
-def _time_from_blocks(blocks: float, throughput: float) -> float:
-    if throughput <= 0:
-        return math.inf
-    return blocks / throughput
-
-
 def _slo_outcome(service_time: float, slo_seconds: float | None) -> tuple[float, bool]:
     if slo_seconds is None:
         return 1.0, True
@@ -129,7 +131,55 @@ def _slo_outcome(service_time: float, slo_seconds: float | None) -> tuple[float,
     return 0.0, False
 
 
-def _balanced_recompute_blocks(total_blocks: int, miss_blocks: int, storage_throughput: float, recompute_throughput: float) -> float:
+def _simulator_compute_time(
+    hardware: HardwareConfig,
+    blocks: float,
+    model_params: float,
+    tokens_per_block: int,
+    gpu_eta: float,
+) -> float:
+    if blocks <= 0:
+        return 0.0
+
+    gpu = GPUS[hardware.gpu_key]
+    t_per_token = gpu.gpu_compute_band(
+        model_params, gpu_count=hardware.gpu_count, eta=gpu_eta
+    )
+    token_count = blocks * tokens_per_block
+    return token_count * token_count * t_per_token
+
+
+def _simulator_restore_time(
+    hardware: HardwareConfig,
+    blocks: float,
+    model_params: float,
+    bytes_per_block: float,
+    tokens_per_block: int,
+    gpu_eta: float,
+) -> float:
+    if blocks <= 0:
+        return 0.0
+
+    gpu = GPUS[hardware.gpu_key]
+    disk = DISKS[hardware.disk_key]
+    link = LINKS[hardware.link_key]
+    t_per_token = gpu.gpu_compute_band(
+        model_params, gpu_count=hardware.gpu_count, eta=gpu_eta
+    )
+
+    token_count = blocks * tokens_per_block
+    compute_time = token_count * t_per_token
+    restore_time = (blocks * bytes_per_block) / disk.bandwidth
+    restore_time += (blocks * bytes_per_block) / link.bandwidth
+    return compute_time + restore_time
+
+
+def _balanced_recompute_blocks(
+    total_blocks: int,
+    miss_blocks: int,
+    storage_throughput: float,
+    recompute_throughput: float,
+) -> float:
     if total_blocks <= 0:
         return 0.0
     if recompute_throughput <= 0:
@@ -137,7 +187,9 @@ def _balanced_recompute_blocks(total_blocks: int, miss_blocks: int, storage_thro
     if storage_throughput <= 0:
         return float(total_blocks)
 
-    balanced_recompute = (total_blocks * recompute_throughput) / (storage_throughput + recompute_throughput)
+    balanced_recompute = (total_blocks * recompute_throughput) / (
+        storage_throughput + recompute_throughput
+    )
     return max(float(miss_blocks), min(float(total_blocks), balanced_recompute))
 
 
@@ -146,6 +198,8 @@ def _build_policy_result(
     stack_key: str,
     total_blocks: int,
     miss_blocks: int,
+    storage_time: float,
+    recompute_time: float,
     storage_blocks: float,
     recompute_blocks: float,
     storage_throughput: float,
@@ -153,8 +207,6 @@ def _build_policy_result(
     request_rate: float,
     p95_seconds: float,
 ) -> PolicyResult:
-    storage_time = _time_from_blocks(storage_blocks, storage_throughput)
-    recompute_time = _time_from_blocks(recompute_blocks, recompute_throughput)
     total_time = max(storage_time, recompute_time)
     slo_seconds = _effective_deadline(request_rate, p95_seconds)
     success_rate, meets_slo = _slo_outcome(total_time, slo_seconds)
@@ -182,21 +234,40 @@ def _build_policy_result(
 
 
 def evaluate_performance_aware(
+    hardware: HardwareConfig,
     total_blocks: int,
     miss_blocks: int,
     storage_throughput: float,
     recompute_throughput: float,
     request_rate: float,
     p95_seconds: float,
-    stack_key: str,
 ) -> PolicyResult:
-    recompute_blocks = _balanced_recompute_blocks(total_blocks, miss_blocks, storage_throughput, recompute_throughput)
+    recompute_blocks = _balanced_recompute_blocks(
+        total_blocks, miss_blocks, storage_throughput, recompute_throughput
+    )
     storage_blocks = float(total_blocks) - recompute_blocks
+    storage_time = _simulator_restore_time(
+        hardware,
+        storage_blocks,
+        MODEL_PARAMS,
+        BYTES_PER_BLOCK,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
+    recompute_time = _simulator_compute_time(
+        hardware,
+        recompute_blocks,
+        MODEL_PARAMS,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
     return _build_policy_result(
         policy="performance_aware",
-        stack_key=stack_key,
+        stack_key=hardware.stack_key,
         total_blocks=total_blocks,
         miss_blocks=miss_blocks,
+        storage_time=storage_time,
+        recompute_time=recompute_time,
         storage_blocks=storage_blocks,
         recompute_blocks=recompute_blocks,
         storage_throughput=storage_throughput,
@@ -207,22 +278,79 @@ def evaluate_performance_aware(
 
 
 def evaluate_default_policy(
+    hardware: HardwareConfig,
     total_blocks: int,
     miss_blocks: int,
     storage_throughput: float,
     recompute_throughput: float,
     request_rate: float,
     p95_seconds: float,
-    stack_key: str,
 ) -> PolicyResult:
     hit_blocks = max(0, total_blocks - miss_blocks)
+    storage_time = _simulator_restore_time(
+        hardware,
+        float(hit_blocks),
+        MODEL_PARAMS,
+        BYTES_PER_BLOCK,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
+    recompute_time = _simulator_compute_time(
+        hardware,
+        float(miss_blocks),
+        MODEL_PARAMS,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
     return _build_policy_result(
         policy="restore_hits_recompute_misses",
-        stack_key=stack_key,
+        stack_key=hardware.stack_key,
         total_blocks=total_blocks,
         miss_blocks=miss_blocks,
+        storage_time=storage_time,
+        recompute_time=recompute_time,
         storage_blocks=float(hit_blocks),
         recompute_blocks=float(miss_blocks),
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
+        request_rate=request_rate,
+        p95_seconds=p95_seconds,
+    )
+
+
+def evaluate_all_compute(
+    hardware: HardwareConfig,
+    total_blocks: int,
+    miss_blocks: int,
+    storage_throughput: float,
+    recompute_throughput: float,
+    request_rate: float,
+    p95_seconds: float,
+) -> PolicyResult:
+    storage_time = _simulator_restore_time(
+        hardware,
+        0.0,
+        MODEL_PARAMS,
+        BYTES_PER_BLOCK,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
+    recompute_time = _simulator_compute_time(
+        hardware,
+        float(total_blocks),
+        MODEL_PARAMS,
+        TOKENS_PER_BLOCK,
+        GPU_ETA,
+    )
+    return _build_policy_result(
+        policy="all_compute",
+        stack_key=hardware.stack_key,
+        total_blocks=total_blocks,
+        miss_blocks=miss_blocks,
+        storage_time=storage_time,
+        recompute_time=recompute_time,
+        storage_blocks=0.0,
+        recompute_blocks=float(total_blocks),
         storage_throughput=storage_throughput,
         recompute_throughput=recompute_throughput,
         request_rate=request_rate,
@@ -234,14 +362,24 @@ def _slo_summary(rows: list[dict], policy_key: str) -> dict:
     if not rows:
         return {"status": "fail"}
 
-    return {"status": "pass" if all(row[policy_key]["meets_slo"] for row in rows) else "fail"}
+    return {
+        "status": "pass"
+        if all(row[policy_key]["meets_slo"] for row in rows)
+        else "fail"
+    }
 
 
 def run_experiments(hardware: HardwareConfig, experiment: ExperimentConfig):
-    storage_throughput = _storage_throughput(hardware, experiment.storage_tier, experiment.bytes_per_block)
-    recompute_throughput = _recompute_throughput(
-        hardware, experiment.model_params, experiment.tokens_per_block, experiment.gpu_eta
+    gpu = GPUS[hardware.gpu_key]
+    link = LINKS[hardware.link_key]
+    storage_throughput = (
+        min(DISKS[hardware.disk_key].bandwidth, link.bandwidth)
+        / experiment.bytes_per_block
     )
+    t_per_token = gpu.gpu_compute_band(
+        experiment.model_params, gpu_count=hardware.gpu_count, eta=experiment.gpu_eta
+    )
+    recompute_throughput = 1.0 / (experiment.tokens_per_block * t_per_token)
 
     rows: list[dict] = []
     for total_blocks in experiment.total_blocks:
@@ -252,22 +390,31 @@ def run_experiments(hardware: HardwareConfig, experiment: ExperimentConfig):
                 raise ValueError("miss_blocks cannot exceed total_blocks")
 
             aware = evaluate_performance_aware(
+                hardware,
                 total_blocks,
                 miss_blocks,
                 storage_throughput,
                 recompute_throughput,
                 experiment.request_rate,
                 experiment.p95_seconds,
-                hardware.stack_key,
             )
             default = evaluate_default_policy(
+                hardware,
                 total_blocks,
                 miss_blocks,
                 storage_throughput,
                 recompute_throughput,
                 experiment.request_rate,
                 experiment.p95_seconds,
-                hardware.stack_key,
+            )
+            all_compute = evaluate_all_compute(
+                hardware,
+                total_blocks,
+                miss_blocks,
+                storage_throughput,
+                recompute_throughput,
+                experiment.request_rate,
+                experiment.p95_seconds,
             )
 
             rows.append(
@@ -283,7 +430,19 @@ def run_experiments(hardware: HardwareConfig, experiment: ExperimentConfig):
                     "recompute_throughput": recompute_throughput,
                     "performance_aware": asdict(aware),
                     "default_policy": asdict(default),
-                    "speedup": default.total_time / aware.total_time if aware.total_time > 0 else math.inf,
+                    "all_compute": asdict(all_compute),
+                    "speedup_default_vs_all_compute": default.total_time
+                    / all_compute.total_time
+                    if all_compute.total_time > 0
+                    else math.inf,
+                    "speedup_all_compute_vs_performance_aware": all_compute.total_time
+                    / aware.total_time
+                    if aware.total_time > 0
+                    else math.inf,
+                    "speedup_performance_aware_vs_default": aware.total_time
+                    / default.total_time
+                    if default.total_time > 0
+                    else math.inf,
                 }
             )
     return rows
@@ -297,8 +456,17 @@ def _parse_int_list(raw: str) -> tuple[int, ...]:
 
 
 def _build_arg_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Compare performance-aware and default KV cache policies.")
-    parser.add_argument("--stack", choices=tuple(STACK_PRESETS.keys()), default=None, help="Predefined hardware stack.")
+    parser = argparse.ArgumentParser(
+        description="Compare performance-aware and default KV cache policies."
+    )
+    parser.add_argument(
+        "--stack",
+        choices=tuple(STACK_PRESETS.keys()),
+        default=None,
+        help="Predefined hardware stack.",
+    )
+
+    # X, Y
     parser.add_argument("--gpu", choices=tuple(GPUS.keys()), default=None)
     parser.add_argument("--dram", choices=tuple(DRAMS.keys()), default=None)
     parser.add_argument("--disk", choices=tuple(DISKS.keys()), default=None)
@@ -306,15 +474,35 @@ def _build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--gpu-count", type=int, default=None)
     parser.add_argument("--dram-count", type=int, default=None)
     parser.add_argument("--storage-tier", choices=("disk", "dram"), default="disk")
-    parser.add_argument("--total-blocks", default="50000", help="Comma-separated restore request sizes.")
-    parser.add_argument("--miss-blocks", default="0", help="Comma-separated cache-miss block counts.")
-    parser.add_argument("--request-rate", type=float, default=1.0, help="Target request rate (requests/s).")
-    parser.add_argument("--p95-seconds", type=float, default=1.0, help="Target P95 latency in seconds.")
+
+    # N, M
+    parser.add_argument(
+        "--total-blocks", default="50000", help="Comma-separated restore request sizes."
+    )
+    parser.add_argument(
+        "--miss-blocks", default="0", help="Comma-separated cache-miss block counts."
+    )
+
+    # r, p
+    parser.add_argument(
+        "--request-rate",
+        type=float,
+        default=1.0,
+        help="Target request rate (requests/s).",
+    )
+    parser.add_argument(
+        "--p95-seconds", type=float, default=1.0, help="Target P95 latency in seconds."
+    )
+
     parser.add_argument("--model-params", type=float, default=MODEL_PARAMS)
     parser.add_argument("--tokens-per-block", type=int, default=TOKENS_PER_BLOCK)
+
+    # B
     parser.add_argument("--bytes-per-block", type=float, default=BYTES_PER_BLOCK)
+
     parser.add_argument("--gpu-eta", type=float, default=GPU_ETA)
     parser.add_argument("--output", default="", help="Optional JSON output file.")
+
     return parser
 
 
@@ -343,6 +531,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         "slo_summary": {
             "performance_aware": _slo_summary(rows, "performance_aware"),
             "default_policy": _slo_summary(rows, "default_policy"),
+            "all_compute": _slo_summary(rows, "all_compute"),
         },
     }
 

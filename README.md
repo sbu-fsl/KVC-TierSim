@@ -3,21 +3,24 @@
 * H200 + DDR5 + NVMe + NVLink
 * RTX A5000 + DDR5 + NVMe + NVLink
 
+The simulator now reports three policies in each result row: `default_policy`, `all_compute`, and `performance_aware`.
+It also includes three pairwise speedup fields: `speedup_default_vs_all_compute`, `speedup_all_compute_vs_performance_aware`, and `speedup_performance_aware_vs_default`.
+
 ## (1) Pass 2 Fail
 
 ```bash
-# policy helps meeting SLOs by avoid aggresive restore
+# default restore behavior versus performance-aware balancing
 python simulator.py \
   --stack h200 \
   --total-blocks 50000 \
   --miss-blocks 500 \
-  --request-rate 0.02 \
+  --request-rate 0.18 \
   --p95-seconds 10 \
   --output h200.json
 ```
 
 ```bash
-# policy helps meeting SLOs by keeping restore
+# default restore behavior versus performance-aware balancing
 python simulator.py \
   --stack a5000 \
   --total-blocks 50000 \
@@ -30,7 +33,7 @@ python simulator.py \
 ## (2) Pass Only
 
 ```bash
-# policy passes anyways but increases speed by 8.8
+# default restore behavior, all-compute, and performance-aware compare cleanly
 python simulator.py \
   --stack h200 \
   --total-blocks 50000 \

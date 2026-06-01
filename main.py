@@ -169,7 +169,7 @@ def build_compute_curve(xs_blocks, model_params, gpu, link, gpu_count=1):
     return times
 
 
-# Function to calculate the storage curve for a given stack configuration
+# Function to calculate the storage restore curve.
 def build_storage_curve(xs_blocks, model_params, stack: dict):
     gpu = stack["gpu"]
     dram = stack["dram"]
