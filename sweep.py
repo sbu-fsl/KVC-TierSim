@@ -18,8 +18,8 @@ from simulator import ExperimentConfig, HardwareConfig, run_experiments
 from src.pool import DISKS, DRAMS, GPUS, LINKS
 
 # Default sweep settings. Edit these values or override them via the CLI.
-STACK_KEY = "a5000"
-GPU_KEY = "A5000"
+STACK_KEY = "a100"
+GPU_KEY = "A100"
 DRAM_KEY = "DDR5"
 DISK_KEY = "NVMe"
 LINK_KEY = "NVLink"
@@ -32,8 +32,8 @@ REQUEST_RATES = tuple(round(value, 2) for value in np.arange(0.01, 0.301, 0.01))
 CACHE_RATIO_SWEEP = tuple(range(0, 101, 10))
 
 # Plot controls.
-OUTPUT_FIGURE = "a5000_sweep_map"
-OUTPUT_RESULTS = "a5000_sweep_results.json"
+OUTPUT_FIGURE = "a100_sweep_map"
+OUTPUT_RESULTS = "a100_sweep_results.json"
 FIG_WIDTH_PER_COL = 0.1
 FIG_HEIGHT_PER_ROW = 0.1
 FIG_EXTRA_WIDTH = 2.2
@@ -453,7 +453,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Saved figure -> {output_figure}")
 
     success_rate_figure = output_prefix.with_name(
-        f"{output_prefix.stem}_success_rate{output_prefix.suffix or '.png'}"
+        f"{output_prefix.stem}_success_rate{output_prefix.suffix or '.pdf'}"
     )
 
     _build_success_rate_figure(success_rates, success_rate_figure)
