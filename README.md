@@ -55,3 +55,14 @@ python simulator.py \
   --p95-seconds 10 \
   --output a5000.json
 ```
+
+## Sweep Plot
+
+Use `sweep.py` with a list of `(p95, request_rate)` tuples when you want each x-axis column to control both values together.
+
+```bash
+python sweep.py \
+  --x-axis-points '[(18, 0.01), (19, 0.02), (20, 0.03)]' \
+  --output-figure h200_sweep_map.png \
+  --output-results h200_sweep_results.json
+```

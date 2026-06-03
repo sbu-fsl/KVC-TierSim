@@ -85,12 +85,13 @@ def fmt_bytes_from_blocks(n_blocks):
     b /= 1e9  # convert to GB
     # Use standard scientific notation with one digit before the decimal
     exp = int(np.floor(np.log10(abs(b))))
-    mantissa = b / (10 ** exp)
+    mantissa = b / (10**exp)
     # Format mantissa with up to 15 significant digits, then trim trailing zeros
     mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
     if exp == 0:
         return mantissa_str
     return f"{mantissa_str}e{exp}"
+
 
 # Helper function to format time in human-readable units
 def fmt_time(s):
@@ -119,7 +120,7 @@ def fmt_engineering(v):
         return "0"
     # Use standard scientific notation with one digit before the decimal
     exp = int(np.floor(np.log10(abs(v))))
-    mantissa = v / (10 ** exp)
+    mantissa = v / (10**exp)
     # Format mantissa with up to 15 significant digits, then trim trailing zeros
     mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
     if exp == 0:

@@ -45,12 +45,21 @@ class PolicyResult:
     total_blocks: int
     miss_blocks: int
     hit_blocks: int
+    reassigned_hit_blocks: float
     request_rate: float
     p95_seconds: float
     slo_seconds: float
     meets_slo: bool
     success_rate: float
     slo_margin: float
+    decision_mode: str
+    latency_ratio: float
+    gpu_utilization: float
+    storage_utilization: float
+    latency_violation: float
+    gpu_violation: float
+    storage_violation: float
+    max_violation: float
     storage_blocks: float
     recompute_blocks: float
     storage_throughput: float
@@ -115,22 +124,6 @@ def _resolve_hardware_config(args: argparse.Namespace) -> HardwareConfig:
     )
 
 
-def _effective_deadline(request_rate: float, p95_seconds: float) -> float:
-    if request_rate <= 0:
-        raise ValueError("request_rate must be greater than zero")
-    if p95_seconds <= 0:
-        raise ValueError("p95_seconds must be greater than zero")
-    return min(p95_seconds, 1.0 / request_rate)
-
-
-def _slo_outcome(service_time: float, slo_seconds: float | None) -> tuple[float, bool]:
-    if slo_seconds is None:
-        return 1.0, True
-    if service_time <= slo_seconds:
-        return 1.0, True
-    return 0.0, False
-
-
 def _simulator_compute_time(
     hardware: HardwareConfig,
     blocks: float,
@@ -138,15 +131,34 @@ def _simulator_compute_time(
     tokens_per_block: int,
     gpu_eta: float,
 ) -> float:
+    """Match main.py::build_compute_curve for one block count."""
     if blocks <= 0:
         return 0.0
 
     gpu = GPUS[hardware.gpu_key]
+    link = LINKS[hardware.link_key]
+
+    model_size_bytes = model_params * 2  # bf16: 2 bytes per parameter
+    vram_cap = gpu.hbm_capacity * hardware.gpu_count - model_size_bytes
+    if vram_cap <= 0:
+        return math.inf
+
+    vram_blocks = vram_cap / BYTES_PER_BLOCK
     t_per_token = gpu.gpu_compute_band(
         model_params, gpu_count=hardware.gpu_count, eta=gpu_eta
     )
-    token_count = blocks * tokens_per_block
-    return token_count * token_count * t_per_token
+
+    def block_time(n: float, bandwidth: float) -> float:
+        t_mem = (n * BYTES_PER_BLOCK) / bandwidth
+        t_cmp = n * tokens_per_block * t_per_token
+        return max(t_mem, t_cmp)
+
+    if blocks <= vram_blocks:
+        return block_time(blocks, gpu.hbm_bandwidth)
+
+    t_vram = block_time(vram_blocks, gpu.hbm_bandwidth)
+    t_overflow = block_time(blocks - vram_blocks, link.bandwidth)
+    return t_vram + t_overflow
 
 
 def _simulator_restore_time(
@@ -157,40 +169,56 @@ def _simulator_restore_time(
     tokens_per_block: int,
     gpu_eta: float,
 ) -> float:
+    """Return storage-tier restore time for disk-resident hit blocks.
+
+    The policy is applied only to cache-hit blocks that were evicted to the
+    storage tier. Hits in GPU HBM or CPU DRAM are assumed to be served without a
+    restoration/recomputation decision. Therefore, the restore path here models
+    only the disk-resident data movement cost: disk read overhead plus link
+    transfer overhead. No GPU recomputation term is included in restoration.
+    """
     if blocks <= 0:
         return 0.0
 
-    gpu = GPUS[hardware.gpu_key]
     disk = DISKS[hardware.disk_key]
     link = LINKS[hardware.link_key]
-    t_per_token = gpu.gpu_compute_band(
-        model_params, gpu_count=hardware.gpu_count, eta=gpu_eta
-    )
-
-    token_count = blocks * tokens_per_block
-    compute_time = token_count * t_per_token
-    restore_time = (blocks * bytes_per_block) / disk.bandwidth
-    restore_time += (blocks * bytes_per_block) / link.bandwidth
-    return compute_time + restore_time
+    bytes_to_restore = blocks * bytes_per_block
+    return bytes_to_restore / disk.bandwidth + bytes_to_restore / link.bandwidth
 
 
-def _balanced_recompute_blocks(
+def _balanced_reassigned_hit_blocks(
     total_blocks: int,
     miss_blocks: int,
     storage_throughput: float,
     recompute_throughput: float,
 ) -> float:
+    """Compute k from the policy equation.
+
+    N is total requested blocks, M is missing blocks, and k is the number of
+    cache-hit blocks reassigned from restoration to recomputation:
+
+        k = max(0, min(N-M, (N*X)/(X+Y) - M))
+
+    Here X and Y are represented in blocks/s. This is equivalent to bytes/s
+    because every block has the same size B.
+    """
     if total_blocks <= 0:
         return 0.0
-    if recompute_throughput <= 0:
-        return float(miss_blocks)
-    if storage_throughput <= 0:
-        return float(total_blocks)
+    if miss_blocks < 0 or miss_blocks > total_blocks:
+        raise ValueError("miss_blocks must be in the range [0, total_blocks]")
 
-    balanced_recompute = (total_blocks * recompute_throughput) / (
-        storage_throughput + recompute_throughput
-    )
-    return max(float(miss_blocks), min(float(total_blocks), balanced_recompute))
+    hit_blocks = total_blocks - miss_blocks
+    if hit_blocks <= 0:
+        return 0.0
+    if recompute_throughput <= 0:
+        return 0.0
+    if storage_throughput <= 0:
+        return float(hit_blocks)
+
+    k = (total_blocks * recompute_throughput) / (
+        recompute_throughput + storage_throughput
+    ) - miss_blocks
+    return max(0.0, min(float(hit_blocks), k))
 
 
 def _build_policy_result(
@@ -202,14 +230,32 @@ def _build_policy_result(
     recompute_time: float,
     storage_blocks: float,
     recompute_blocks: float,
+    reassigned_hit_blocks: float,
     storage_throughput: float,
     recompute_throughput: float,
     request_rate: float,
     p95_seconds: float,
+    decision_mode: str,
 ) -> PolicyResult:
     total_time = max(storage_time, recompute_time)
-    slo_seconds = _effective_deadline(request_rate, p95_seconds)
-    success_rate, meets_slo = _slo_outcome(total_time, slo_seconds)
+    if request_rate <= 0:
+        raise ValueError("request_rate must be greater than zero")
+    if p95_seconds <= 0:
+        raise ValueError("p95_seconds must be greater than zero")
+
+    # Policy constraints:
+    # T_req <= p, r*T_c <= 1, and r*T_s <= 1.
+    latency_ratio = total_time / p95_seconds
+    gpu_utilization = request_rate * recompute_time
+    storage_utilization = request_rate * storage_time
+
+    latency_violation = max(0.0, latency_ratio - 1.0)
+    gpu_violation = max(0.0, gpu_utilization - 1.0)
+    storage_violation = max(0.0, storage_utilization - 1.0)
+    max_violation = max(latency_violation, gpu_violation, storage_violation)
+
+    meets_slo = max_violation == 0.0
+    success_rate = 1.0 if meets_slo else 0.0
 
     return PolicyResult(
         policy=policy,
@@ -217,12 +263,21 @@ def _build_policy_result(
         total_blocks=total_blocks,
         miss_blocks=miss_blocks,
         hit_blocks=max(0, total_blocks - miss_blocks),
+        reassigned_hit_blocks=reassigned_hit_blocks,
         request_rate=request_rate,
         p95_seconds=p95_seconds,
-        slo_seconds=slo_seconds,
+        slo_seconds=p95_seconds,
         meets_slo=meets_slo,
         success_rate=success_rate,
-        slo_margin=slo_seconds - total_time,
+        slo_margin=p95_seconds - total_time,
+        decision_mode=decision_mode,
+        latency_ratio=latency_ratio,
+        gpu_utilization=gpu_utilization,
+        storage_utilization=storage_utilization,
+        latency_violation=latency_violation,
+        gpu_violation=gpu_violation,
+        storage_violation=storage_violation,
+        max_violation=max_violation,
         storage_blocks=storage_blocks,
         recompute_blocks=recompute_blocks,
         storage_throughput=storage_throughput,
@@ -231,6 +286,103 @@ def _build_policy_result(
         recompute_time=recompute_time,
         total_time=total_time,
     )
+
+
+def _constraint_max_violation(
+    storage_time: float,
+    recompute_time: float,
+    request_rate: float,
+    p95_seconds: float,
+) -> float:
+    total_time = max(storage_time, recompute_time)
+    if p95_seconds <= 0:
+        return math.inf
+
+    latency_violation = max(0.0, (total_time / p95_seconds) - 1.0)
+    gpu_violation = max(0.0, request_rate * recompute_time - 1.0)
+    storage_violation = max(0.0, request_rate * storage_time - 1.0)
+    return max(latency_violation, gpu_violation, storage_violation)
+
+
+def _allocation_times(
+    total_blocks: int,
+    miss_blocks: int,
+    reassigned_hit_blocks: float,
+    storage_throughput: float,
+    recompute_throughput: float,
+) -> tuple[float, float, float, float]:
+    hit_blocks = max(0, total_blocks - miss_blocks)
+    k = max(0.0, min(float(hit_blocks), reassigned_hit_blocks))
+
+    recompute_blocks = float(miss_blocks) + k
+    storage_blocks = float(hit_blocks) - k
+
+    storage_time = (
+        storage_blocks / storage_throughput if storage_throughput > 0 else math.inf
+    )
+    recompute_time = (
+        recompute_blocks / recompute_throughput
+        if recompute_throughput > 0
+        else math.inf
+    )
+    return storage_blocks, recompute_blocks, storage_time, recompute_time
+
+
+def _best_effort_reassigned_hit_blocks(
+    total_blocks: int,
+    miss_blocks: int,
+    storage_throughput: float,
+    recompute_throughput: float,
+    request_rate: float,
+    p95_seconds: float,
+) -> float:
+    hit_blocks = max(0, total_blocks - miss_blocks)
+    if hit_blocks <= 0:
+        return 0.0
+
+    candidates = {0.0, float(hit_blocks)}
+    balanced_k = _balanced_reassigned_hit_blocks(
+        total_blocks, miss_blocks, storage_throughput, recompute_throughput
+    )
+    candidates.add(balanced_k)
+
+    # Candidate k values from where individual constraints can become tight.
+    if recompute_throughput > 0:
+        candidates.add((recompute_throughput / request_rate) - miss_blocks)
+        candidates.add(p95_seconds * recompute_throughput - miss_blocks)
+    if storage_throughput > 0:
+        candidates.add(total_blocks - miss_blocks - (storage_throughput / request_rate))
+        candidates.add(total_blocks - miss_blocks - (p95_seconds * storage_throughput))
+
+    valid_candidates: list[float] = []
+    for k in candidates:
+        valid_candidates.append(max(0.0, min(float(hit_blocks), float(k))))
+
+    # Evaluate all clamped candidate points and use a deterministic tie-break.
+    best_k = 0.0
+    best_score = math.inf
+    best_total_time = math.inf
+    for k in valid_candidates:
+        _, _, storage_time, recompute_time = _allocation_times(
+            total_blocks,
+            miss_blocks,
+            reassigned_hit_blocks=k,
+            storage_throughput=storage_throughput,
+            recompute_throughput=recompute_throughput,
+        )
+        score = _constraint_max_violation(
+            storage_time=storage_time,
+            recompute_time=recompute_time,
+            request_rate=request_rate,
+            p95_seconds=p95_seconds,
+        )
+        total_time = max(storage_time, recompute_time)
+        if score < best_score or (score == best_score and total_time < best_total_time):
+            best_score = score
+            best_total_time = total_time
+            best_k = k
+
+    return best_k
 
 
 def evaluate_performance_aware(
@@ -242,24 +394,51 @@ def evaluate_performance_aware(
     request_rate: float,
     p95_seconds: float,
 ) -> PolicyResult:
-    recompute_blocks = _balanced_recompute_blocks(
+    reassigned_hit_blocks = _balanced_reassigned_hit_blocks(
         total_blocks, miss_blocks, storage_throughput, recompute_throughput
     )
-    storage_blocks = float(total_blocks) - recompute_blocks
-    storage_time = _simulator_restore_time(
-        hardware,
-        storage_blocks,
-        MODEL_PARAMS,
-        BYTES_PER_BLOCK,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
+    storage_blocks, recompute_blocks, storage_time, recompute_time = _allocation_times(
+        total_blocks,
+        miss_blocks,
+        reassigned_hit_blocks=reassigned_hit_blocks,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
     )
-    recompute_time = _simulator_compute_time(
-        hardware,
-        recompute_blocks,
-        MODEL_PARAMS,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
+
+    result = _build_policy_result(
+        policy="performance_aware",
+        stack_key=hardware.stack_key,
+        total_blocks=total_blocks,
+        miss_blocks=miss_blocks,
+        storage_time=storage_time,
+        recompute_time=recompute_time,
+        storage_blocks=storage_blocks,
+        recompute_blocks=recompute_blocks,
+        reassigned_hit_blocks=reassigned_hit_blocks,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
+        request_rate=request_rate,
+        p95_seconds=p95_seconds,
+        decision_mode="balanced",
+    )
+
+    if result.meets_slo:
+        return result
+
+    reassigned_hit_blocks = _best_effort_reassigned_hit_blocks(
+        total_blocks=total_blocks,
+        miss_blocks=miss_blocks,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
+        request_rate=request_rate,
+        p95_seconds=p95_seconds,
+    )
+    storage_blocks, recompute_blocks, storage_time, recompute_time = _allocation_times(
+        total_blocks,
+        miss_blocks,
+        reassigned_hit_blocks=reassigned_hit_blocks,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
     )
     return _build_policy_result(
         policy="performance_aware",
@@ -270,10 +449,12 @@ def evaluate_performance_aware(
         recompute_time=recompute_time,
         storage_blocks=storage_blocks,
         recompute_blocks=recompute_blocks,
+        reassigned_hit_blocks=reassigned_hit_blocks,
         storage_throughput=storage_throughput,
         recompute_throughput=recompute_throughput,
         request_rate=request_rate,
         p95_seconds=p95_seconds,
+        decision_mode="best_effort",
     )
 
 
@@ -286,21 +467,12 @@ def evaluate_default_policy(
     request_rate: float,
     p95_seconds: float,
 ) -> PolicyResult:
-    hit_blocks = max(0, total_blocks - miss_blocks)
-    storage_time = _simulator_restore_time(
-        hardware,
-        float(hit_blocks),
-        MODEL_PARAMS,
-        BYTES_PER_BLOCK,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
-    )
-    recompute_time = _simulator_compute_time(
-        hardware,
-        float(miss_blocks),
-        MODEL_PARAMS,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
+    storage_blocks, recompute_blocks, storage_time, recompute_time = _allocation_times(
+        total_blocks,
+        miss_blocks,
+        reassigned_hit_blocks=0.0,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
     )
     return _build_policy_result(
         policy="restore_hits_recompute_misses",
@@ -309,12 +481,14 @@ def evaluate_default_policy(
         miss_blocks=miss_blocks,
         storage_time=storage_time,
         recompute_time=recompute_time,
-        storage_blocks=float(hit_blocks),
-        recompute_blocks=float(miss_blocks),
+        storage_blocks=storage_blocks,
+        recompute_blocks=recompute_blocks,
+        reassigned_hit_blocks=0.0,
         storage_throughput=storage_throughput,
         recompute_throughput=recompute_throughput,
         request_rate=request_rate,
         p95_seconds=p95_seconds,
+        decision_mode="fixed_default",
     )
 
 
@@ -327,20 +501,12 @@ def evaluate_all_compute(
     request_rate: float,
     p95_seconds: float,
 ) -> PolicyResult:
-    storage_time = _simulator_restore_time(
-        hardware,
-        0.0,
-        MODEL_PARAMS,
-        BYTES_PER_BLOCK,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
-    )
-    recompute_time = _simulator_compute_time(
-        hardware,
-        float(total_blocks),
-        MODEL_PARAMS,
-        TOKENS_PER_BLOCK,
-        GPU_ETA,
+    storage_blocks, recompute_blocks, storage_time, recompute_time = _allocation_times(
+        total_blocks,
+        miss_blocks,
+        reassigned_hit_blocks=float(max(0, total_blocks - miss_blocks)),
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
     )
     return _build_policy_result(
         policy="all_compute",
@@ -349,12 +515,14 @@ def evaluate_all_compute(
         miss_blocks=miss_blocks,
         storage_time=storage_time,
         recompute_time=recompute_time,
-        storage_blocks=0.0,
-        recompute_blocks=float(total_blocks),
+        storage_blocks=storage_blocks,
+        recompute_blocks=recompute_blocks,
+        reassigned_hit_blocks=float(max(0, total_blocks - miss_blocks)),
         storage_throughput=storage_throughput,
         recompute_throughput=recompute_throughput,
         request_rate=request_rate,
         p95_seconds=p95_seconds,
+        decision_mode="fixed_all_compute",
     )
 
 
@@ -372,9 +540,11 @@ def _slo_summary(rows: list[dict], policy_key: str) -> dict:
 def run_experiments(hardware: HardwareConfig, experiment: ExperimentConfig):
     gpu = GPUS[hardware.gpu_key]
     link = LINKS[hardware.link_key]
-    storage_throughput = (
-        min(DISKS[hardware.disk_key].bandwidth, link.bandwidth)
-        / experiment.bytes_per_block
+    # Restore from disk is modeled as two serial data-movement costs:
+    # disk read overhead plus link transfer overhead.
+    storage_throughput = 1.0 / (
+        (experiment.bytes_per_block / DISKS[hardware.disk_key].bandwidth)
+        + (experiment.bytes_per_block / link.bandwidth)
     )
     t_per_token = gpu.gpu_compute_band(
         experiment.model_params, gpu_count=hardware.gpu_count, eta=experiment.gpu_eta
