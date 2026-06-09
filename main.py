@@ -446,11 +446,8 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
         250_000,
         300_000,
         350_000,
-        400_000,
-        450_000,
-        500_000,
     ]
-    y_ticks = [2, 10, 60, 600, 3600, 3600 * 4]
+    y_ticks = [2, 10, 60, 600, 3600, 3600 * 3]
 
     _, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_yscale("log")
@@ -531,27 +528,27 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
     for part in ("cmedians", "cmins", "cmaxes", "cbars"):
         vp[part].set_color("#555555")
         vp[part].set_linewidth(0.8)
-    vp["cmedians"].set_color("white")
-    vp["cmedians"].set_linewidth(1.4)
+    vp["cmedians"].set_color("red")
+    vp["cmedians"].set_linewidth(4)
 
-    legend_items.append(
-        Line2D(
-            [0],
-            [0],
-            marker="s",
-            color="w",
-            markerfacecolor="#aaaaaa",
-            markeredgecolor="#555555",
-            markersize=8,
-            alpha=0.8,
-            label="Storage restore range",
-        )
-    )
+    # legend_items.append(
+    #     Line2D(
+    #         [0],
+    #         [0],
+    #         marker="s",
+    #         color="w",
+    #         markerfacecolor="#aaaaaa",
+    #         markeredgecolor="#555555",
+    #         markersize=8,
+    #         alpha=0.8,
+    #         label="Storage restore range",
+    #     )
+    # )
 
     # ── Axes ─────────────────────────────────────────────────────────────────
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_engineering(v)))
-    ax.set_xlabel("Context Length", fontsize=11)
+    ax.set_xlabel("Context Length", fontsize=12)
     ax.tick_params(axis="x", labelsize=11)
 
     ax2 = ax.twiny()
@@ -561,13 +558,13 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
         ticker.FuncFormatter(lambda v, _: fmt_bytes_from_blocks(v))
     )
     ax2.tick_params(axis="x", labelsize=11)
-    ax2.set_xlabel("Data Volume (GB)", fontsize=11)
+    ax2.set_xlabel("Data Volume (GB)", fontsize=12)
 
     ax.set_yticks(y_ticks)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
     ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
-    ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=11)
+    ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=12)
     ax.tick_params(axis="y", labelsize=11)
 
     ax.text(
@@ -584,11 +581,11 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
     ax.legend(
         handles=legend_items,
         loc="lower right",
-        fontsize=8,
+        fontsize=12,
         framealpha=0.92,
         edgecolor="#cccccc",
         handletextpad=0.4,
-        ncol=4,
+        ncol=3,
     )
 
     plt.tight_layout()
