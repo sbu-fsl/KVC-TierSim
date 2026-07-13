@@ -3,7 +3,7 @@
 To add a policy: create a new module in this package, subclass ``PolicyBase``,
 set the class attributes, implement ``decide``, and expose an instance named
 ``POLICY``. The registry (see ``policies/__init__.py``) picks it up automatically
-and it appears in the CLI, the API, and the dashboard — no other wiring needed.
+and it appears in the CLI, the API, and the dashboard - no other wiring needed.
 
     # src/policies/greedy_restore.py
     from .base import PolicyBase

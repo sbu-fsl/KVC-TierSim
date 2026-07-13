@@ -12,16 +12,16 @@ plt.rcParams["font.family"] = "serif"
 # set the global axis line width
 mpl.rcParams["axes.linewidth"] = 0.5
 
-# Global configuration for the simulator
+# global configuration for the simulator
 CONFIG = {
-    "NPOINTS": 5000,  # Number of points to plot
+    "NPOINTS": 5000,         # Number of points to plot
     "TOKENS_PER_BLOCK": 16,  # Number of tokens per block
     "BYTES_PER_BLOCK": 2e6,  # 2 MB per block
-    "MODEL_PARAMS": 8e9,  # 8 billion parameters
-    "GPU_ETA": 0.5,  # GPU effectiveness factor
+    "MODEL_PARAMS": 8e9,     # 8 billion parameters
+    "GPU_ETA": 0.5,          # GPU effectiveness factor
 }
 
-# GPU family color map — same GPU key = same color
+# GPU family color map (same GPU key = same color)
 GPU_COLORS = {
     "H200": "#e6194b",
     "H100": "#f58231",
@@ -31,7 +31,7 @@ GPU_COLORS = {
     "A5000": "#911eb4",
 }
 
-# Define stacks of hardware configurations to evaluate
+# define stacks of hardware configurations to evaluate
 STACKS = {
     "H200-DDR5+NVMe": {
         "gpu": GPUS["H200"],
@@ -82,14 +82,18 @@ def fmt_bytes_from_blocks(n_blocks):
     b = n_blocks * CONFIG["BYTES_PER_BLOCK"]
     if b == 0:
         return "0"
+    
     b /= 1e9  # convert to GB
-    # Use standard scientific notation with one digit before the decimal
+
+    # use standard scientific notation with one digit before the decimal
     exp = int(np.floor(np.log10(abs(b))))
     mantissa = b / (10**exp)
-    # Format mantissa with up to 15 significant digits, then trim trailing zeros
+
+    # format mantissa with up to 15 significant digits, then trim trailing zeros
     mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
     if exp == 0:
         return mantissa_str
+    
     return f"{mantissa_str}e{exp}"
 
 
@@ -118,13 +122,16 @@ def fmt_time(s):
 def fmt_engineering(v):
     if v == 0:
         return "0"
-    # Use standard scientific notation with one digit before the decimal
+    
+    # use standard scientific notation with one digit before the decimal
     exp = int(np.floor(np.log10(abs(v))))
     mantissa = v / (10**exp)
-    # Format mantissa with up to 15 significant digits, then trim trailing zeros
+
+    # format mantissa with up to 15 significant digits, then trim trailing zeros
     mantissa_str = f"{mantissa:.15f}".rstrip("0").rstrip(".")
     if exp == 0:
         return mantissa_str
+    
     return f"{mantissa_str}e{exp}"
 
 
@@ -170,7 +177,7 @@ def build_compute_curve(xs_blocks, model_params, gpu, link, gpu_count=1):
     return times
 
 
-# Function to calculate the storage restore curve.
+# Function to calculate the storage restore curve
 def build_storage_curve(xs_blocks, model_params, stack: dict):
     gpu = stack["gpu"]
     dram = stack["dram"]
@@ -201,7 +208,7 @@ def build_storage_curve(xs_blocks, model_params, stack: dict):
         # compute time for n blocks, assuming all blocks are in VRAM (best case)
         t_compute = n * CONFIG["TOKENS_PER_BLOCK"] * t_per_token
 
-        # memory transfer time for n blocks, depending on how many blocks fit in each tier of the storage hierarchy (VRAM → DRAM → Disk)
+        # memory transfer time for n blocks, depending on how many blocks fit in each tier of the storage hierarchy (VRAM to DRAM to Disk)
         if n <= vram_blk:
             t_mem = (n * BYTES) / gpu.hbm_bandwidth
 
@@ -422,7 +429,7 @@ _PERM_LINK_KEYS = [
     "NVLink6",
 ]
 
-# One color per GPU — all (GPU, *, *) dots share the GPU's color
+# One color per GPU - all (GPU, *, *) dots share the GPU's color
 _PERM_GPU_COLORS = {
     "H200": "#e6194b",
     "H100": "#f58231",
@@ -486,7 +493,7 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
 
     box_w = (x_ticks[-1] - x_ticks[0]) / len(x_ticks) * 0.35
 
-    # Draw compute lines first (behind boxes) — one per GPU, added to legend
+    # Draw compute lines first (behind boxes) - one per GPU, added to legend
     xs_line = np.linspace(x_ticks[0], x_ticks[-1], 800).astype(np.int64)
     for gpu_key in _PERM_GPU_KEYS:
         gpu = GPUS[gpu_key]

@@ -1,9 +1,9 @@
-"""Shared policy math — the hardware-derived model every policy runs on.
+"""Shared policy math - the hardware-derived model every policy runs on.
 
 A *policy* only decides one thing: how many cache-hit blocks ``k`` to reassign
 from restoration (read from a storage tier) to recomputation (on the GPU).
-Everything else — restore/recompute throughputs, block allocation, latency, and
-the SLO constraint checks — is identical across policies and lives here.
+Everything else - restore/recompute throughputs, block allocation, latency, and
+the SLO constraint checks - is identical across policies and lives here.
 
 Flow:  hardware layer computes X (restore blocks/s) and Y (recompute blocks/s)
        -> PolicyContext bundles them with the workload (N, M, r, p)

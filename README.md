@@ -1,6 +1,6 @@
 # KV-Cache Tier Placement Simulator
 
-Simulate KV-cache tiers across the storage hierarchy (GPU HBM → CPU DRAM →
+Simulate KV-cache tiers across the storage hierarchy (GPU HBM to CPU DRAM to
 Disk) during LLM inference, and compare cache-restore policies against a latency
 SLO. Includes a CLI, a parameter sweep, and a web dashboard.
 
@@ -14,11 +14,11 @@ from its tier and move over the link) or **recompute** it (on the GPU).
 
 Two throughputs drive everything:
 
-- **Restore rate `X`** (blocks/s) — depends on *where* hit blocks live. Each
+- **Restore rate `X`** (blocks/s) - depends on *where* hit blocks live. Each
   tier has its own rate: `X_vram = hbm_bw/B`, `X_dram = 1/(B/dram_bw + B/link_bw)`,
   `X_disk = 1/(B/disk_bw + B/link_bw)`. A residency split (n_v, n_d, n_k) blends
   into a single effective rate `X_eff = (n_v+n_d+n_k) / (n_v/X_vram + n_d/X_dram + n_k/X_disk)`.
-- **Recompute rate `Y`** (blocks/s) — GPU compute throughput for the model.
+- **Recompute rate `Y`** (blocks/s) - GPU compute throughput for the model.
 
 A **policy** decides only one thing: how many hit blocks `k` to reassign from
 restore to recompute. All the hardware math (X, Y, allocation times, SLO checks)
@@ -35,7 +35,7 @@ An allocation **meets the SLO** when latency `≤ p95`, GPU utilization
 
 ### Adding a policy
 
-Policies live in [`src/policies/`](src/policies/) — one module each. The shared
+Policies live in [`src/policies/`](src/policies/) - one module each. The shared
 math is in `src/policies/core.py` (`PolicyContext`, `evaluate`) and the base
 class in `src/policies/base.py`. To add one, drop in a module that exposes a
 `POLICY` instance; the registry discovers it automatically and it appears in the
@@ -83,7 +83,7 @@ frontend/            Vanilla HTML/CSS/JS + Chart.js dashboard
 ```
 
 Hardware lives in `hardware/*.yaml` and is loaded into frozen dataclasses by
-`src/loader.py`. Add a GPU by appending an entry to `hardware/gpus.yaml` — it
+`src/loader.py`. Add a GPU by appending an entry to `hardware/gpus.yaml` - it
 appears everywhere (CLI choices, API catalog, dashboard dropdowns) automatically.
 
 ## Setup
@@ -101,7 +101,7 @@ uvicorn api.app:app --reload --port 8000
 ```
 
 Pick a GPU/DRAM/disk/link (or a stack preset), choose a model, set the workload
-(blocks, hit ratio, request rate, P95), then control **tier placement** — either
+(blocks, hit ratio, request rate, P95), then control **tier placement** - either
 *auto* (capacity waterfall: fill VRAM, then DRAM, then Disk) or *manual* sliders.
 The **Single Point** tab shows per-tier residency, the effective restore/recompute
 rates, and the three policies side by side (latency, SLO pass/fail, time
@@ -110,9 +110,9 @@ rate and a success-rate-vs-hit-ratio curve.
 
 ### API
 
-- `GET  /api/catalog` — hardware/model catalogs + stack presets
-- `POST /api/simulate` — `{hardware, workload, placement}` → per-tier + per-policy results
-- `POST /api/sweep` — `{hardware, placement, total_blocks, hit_ratio, p95_values, request_rates, cache_ratio_sweep}` → grids + success rates
+- `GET  /api/catalog` - hardware/model catalogs + stack presets
+- `POST /api/simulate` - `{hardware, workload, placement}` to per-tier + per-policy results
+- `POST /api/sweep` - `{hardware, placement, total_blocks, hit_ratio, p95_values, request_rates, cache_ratio_sweep}` to grids + success rates
 
 ## CLI
 
@@ -120,7 +120,7 @@ The simulator reports `default_policy`, `all_compute`, and `performance_aware`
 plus pairwise speedups.
 
 ```bash
-# H200 stack: default restoration fails the SLO, IO-aware passes (Pass→Fail case)
+# H200 stack: default restoration fails the SLO, IO-aware passes (PasstoFail case)
 python simulator.py --stack h200 --total-blocks 50000 --miss-blocks 500 \
   --request-rate 0.18 --p95-seconds 10 --output h200.json
 ```
