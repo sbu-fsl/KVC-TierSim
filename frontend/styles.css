@@ -192,6 +192,23 @@ canvas { max-height: 280px; }
 
 .hidden { display: none !important; }
 
+/* ---------- Footer ---------- */
+.sitefoot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 18px 22px 26px;
+  margin-top: 8px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.sitefoot b { color: var(--text); font-weight: 600; }
+.sitefoot .dot { color: var(--border); }
+
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
   .config { position: static; max-height: none; }
