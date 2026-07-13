@@ -1,0 +1,57 @@
+# Disk / storage-tier catalog. bandwidth in bytes/s, capacity in bytes, cost in USD.
+# Loaded into src.disk.Disk objects.
+
+HDD:
+  name: HDD
+  bandwidth: 100e6   # 100 MB/s
+  capacity: 4e12     # 4 TB
+  cost: 100
+
+X110:
+  name: SSD X110 SATA M.2
+  bandwidth: 300e6   # 300 MB/s
+  capacity: 2e12     # 2 TB
+  cost: 200
+
+M550:
+  name: SSD M550 SATA M.2
+  bandwidth: 400e6   # 400 MB/s
+  capacity: 512e9    # 512 GB
+  cost: 150
+
+NVMe980:
+  name: SSD NVMe 980 M.2
+  bandwidth: 2e9     # 2 GB/s
+  capacity: 2e12     # 2 TB
+  cost: 300
+
+NVMeT700:
+  name: SSD NVMe T700 M.2
+  bandwidth: 5e9     # 5 GB/s
+  capacity: 4e12     # 4 TB
+  cost: 500
+
+NVMeT700R0:
+  name: SSD NVMe T700 M.2 (Raid 0)
+  bandwidth: 10e9    # 10 GB/s
+  capacity: 8e12     # 8 TB
+  cost: 1000
+
+NVMeT700R5:
+  name: SSD NVMe T700 M.2 (Raid 5)
+  bandwidth: 20e9    # 20 GB/s
+  capacity: 16e12    # 16 TB
+  cost: 2000
+
+# Convenience groupings.
+SATA:
+  name: SATA SSD
+  bandwidth: 300e6   # 300 MB/s
+  capacity: 2e12     # 2 TB
+  cost: 200
+
+NVMe:
+  name: NVMe SSD
+  bandwidth: 2e9     # 2 GB/s
+  capacity: 2e12     # 2 TB
+  cost: 500

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KV-Cache Tier Placement Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">▚</span>
+      <div>
+        <h1>KV-Cache Tier Placement Simulator</h1>
+        <p class="subtitle">Place cache blocks across GPU HBM · DRAM · Disk, then compare restore / recompute / IO-aware policies against your SLO.</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="single">Single Point</button>
+      <button class="tab" data-tab="sweep">SLO Sweep</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <!-- ===================== Config panel ===================== -->
+    <aside class="panel config">
+      <section class="group">
+        <h2>Infrastructure</h2>
+        <label>Stack preset
+          <select id="stackPreset"><option value="">— custom —</option></select>
+        </label>
+        <div class="row">
+          <label>GPU <select id="gpu"></select></label>
+          <label class="narrow">Count <input id="gpuCount" type="number" min="1" value="1" /></label>
+        </div>
+        <div class="row">
+          <label>DRAM <select id="dram"></select></label>
+          <label class="narrow">Modules <input id="dramCount" type="number" min="1" value="4" /></label>
+        </div>
+        <label>Disk <select id="disk"></select></label>
+        <label>Link <select id="link"></select></label>
+        <div id="hwSummary" class="hint"></div>
+      </section>
+
+      <section class="group">
+        <h2>Model</h2>
+        <label>Preset
+          <select id="modelPreset"><option value="">— custom —</option></select>
+        </label>
+        <div class="row">
+          <label>Params (B) <input id="modelParams" type="number" step="0.1" value="8" /></label>
+          <label>GPU η <input id="gpuEta" type="number" step="0.05" min="0.01" max="1" value="0.5" /></label>
+        </div>
+        <div class="row">
+          <label>Tokens/block <input id="tokensPerBlock" type="number" min="1" value="16" /></label>
+          <label>Bytes/block <input id="bytesPerBlock" type="number" step="0.1" value="2" /><span class="unit">MB</span></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Workload</h2>
+        <label>Total blocks <input id="totalBlocks" type="number" min="1" value="50000" /></label>
+        <label>Cache hit ratio <span class="val" id="hitRatioVal">99%</span>
+          <input id="hitRatio" type="range" min="0" max="100" value="99" />
+        </label>
+        <div class="hint" id="missHint"></div>
+        <div class="row">
+          <label>Request rate (req/s) <input id="requestRate" type="number" step="0.01" min="0.01" value="0.02" /></label>
+          <label>P95 SLO (s) <input id="p95" type="number" step="0.5" min="0.5" value="10" /></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Tier Placement</h2>
+        <div class="segmented">
+          <button class="seg active" data-mode="auto">Auto (capacity waterfall)</button>
+          <button class="seg" data-mode="manual">Manual</button>
+        </div>
+        <div id="manualPlacement" class="hidden">
+          <label>VRAM <span class="val" id="vramVal">0%</span><input id="vram" type="range" min="0" max="100" value="0" /></label>
+          <label>DRAM <span class="val" id="dramVal">0%</span><input id="dramFrac" type="range" min="0" max="100" value="0" /></label>
+          <label>Disk <span class="val" id="diskVal">100%</span><input id="diskFrac" type="range" min="0" max="100" value="100" /></label>
+          <div class="hint">Sliders are normalized to 100% of hit blocks.</div>
+        </div>
+      </section>
+
+      <button id="runBtn" class="run">▶ Run Simulation</button>
+      <div id="status" class="status"></div>
+    </aside>
+
+    <!-- ===================== Single-point results ===================== -->
+    <section class="panel results" id="singleView">
+      <div class="placeholder" id="singlePlaceholder">Configure the stack and press <b>Run Simulation</b>.</div>
+
+      <div id="singleResults" class="hidden">
+        <div class="metric-strip">
+          <div class="metric"><span class="mlabel">Restore rate (X)</span><span class="mval" id="mX">–</span><span class="munit">blocks/s</span></div>
+          <div class="metric"><span class="mlabel">Recompute rate (Y)</span><span class="mval" id="mY">–</span><span class="munit">blocks/s</span></div>
+          <div class="metric"><span class="mlabel">Hit / Miss blocks</span><span class="mval" id="mHM">–</span><span class="munit">blocks</span></div>
+          <div class="metric"><span class="mlabel">Capacity</span><span class="mval" id="mFits">–</span><span class="munit"></span></div>
+        </div>
+
+        <h3 class="section-title">Tier residency</h3>
+        <div id="tierBars" class="tier-bars"></div>
+
+        <h3 class="section-title">Policy comparison</h3>
+        <div id="policyCards" class="policy-cards"></div>
+
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h4>Latency vs SLO</h4>
+            <canvas id="latencyChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h4>Time breakdown (restore vs recompute)</h4>
+            <canvas id="breakdownChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Sweep results ===================== -->
+    <section class="panel results hidden" id="sweepView">
+      <div class="sweep-controls">
+        <p class="hint">Sweeps P95 SLO (rows) against request rate (columns) at the configured hit ratio and placement. Uses <b>Total blocks</b> from the workload panel.</p>
+        <button id="sweepBtn" class="run small">▶ Run Sweep</button>
+        <div id="sweepStatus" class="status"></div>
+      </div>
+      <div id="sweepResults" class="hidden">
+        <div class="legend" id="sweepLegend"></div>
+        <div id="heatmaps" class="heatmaps"></div>
+        <div class="chart-box wide">
+          <h4>SLO success rate vs cache hit ratio</h4>
+          <canvas id="successChart"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

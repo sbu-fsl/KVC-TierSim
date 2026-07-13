@@ -59,7 +59,7 @@ POLICY_LINE_COLORS = {
 POLICY_PLOTS = (
     ("default_policy", "Restoration"),
     ("all_compute", "Recomputation"),
-    ("performance_aware", "SPA"),
+    ("performance_aware", "IO-aware"),
 )
 POLICY_KEYS = tuple(name for name, _ in POLICY_PLOTS)
 

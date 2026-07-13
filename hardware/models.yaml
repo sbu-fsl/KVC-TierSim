@@ -1,0 +1,31 @@
+# LLM presets. params in number of parameters. bytes_per_block and tokens_per_block
+# describe the KV-cache block granularity (default: 16 tokens -> 2 MB per block).
+# gpu_eta is the achievable fraction of peak FLOPS during decode.
+
+llama3-8b:
+  name: Llama 3 8B
+  params: 8e9
+  tokens_per_block: 16
+  bytes_per_block: 2e6
+  gpu_eta: 0.5
+
+llama3-70b:
+  name: Llama 3 70B
+  params: 70e9
+  tokens_per_block: 16
+  bytes_per_block: 2e6
+  gpu_eta: 0.5
+
+mistral-7b:
+  name: Mistral 7B
+  params: 7e9
+  tokens_per_block: 16
+  bytes_per_block: 2e6
+  gpu_eta: 0.5
+
+qwen2-32b:
+  name: Qwen2 32B
+  params: 32e9
+  tokens_per_block: 16
+  bytes_per_block: 2e6
+  gpu_eta: 0.5

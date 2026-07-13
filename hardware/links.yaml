@@ -1,0 +1,48 @@
+# Interconnect / link catalog. bandwidth in bytes/s, cost in USD.
+# Loaded into src.link.Link objects. The link carries KV data from DRAM/Disk to the GPU.
+
+PCIe3:
+  name: PCIe 3.0 x16
+  bandwidth: 16e9    # 16 GB/s
+  cost: 15
+
+PCIe4:
+  name: PCIe 4.0 x16
+  bandwidth: 32e9    # 32 GB/s
+  cost: 90
+
+PCIe5:
+  name: PCIe 5.0 x16
+  bandwidth: 64e9    # 64 GB/s
+  cost: 200
+
+NVLink3:
+  name: NVLink 3.0
+  bandwidth: 600e9   # 600 GB/s
+  cost: 150
+
+NVLink4:
+  name: NVLink 4.0
+  bandwidth: 900e9   # 900 GB/s
+  cost: 800
+
+NVLink5:
+  name: NVLink 5.0
+  bandwidth: 1800e9  # 1800 GB/s
+  cost: 1600
+
+NVLink6:
+  name: NVLink 6.0
+  bandwidth: 3600e9  # 3600 GB/s
+  cost: 3200
+
+# Convenience groupings.
+PCIe:
+  name: PCIe
+  bandwidth: 32e9    # 32 GB/s
+  cost: 90
+
+NVLink:
+  name: NVLink
+  bandwidth: 600e9   # 600 GB/s
+  cost: 150

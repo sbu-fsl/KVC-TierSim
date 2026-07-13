@@ -1,0 +1,60 @@
+# GPU catalog. Bandwidth in bytes/s, capacity in bytes, peak_flops in FLOP/s, cost in USD.
+# Loaded into src.gpu.GPU objects by src/loader.py. Keys are stable identifiers
+# referenced by presets, the API, and saved *_results.json files.
+
+H200:
+  name: H200
+  hbm_bandwidth: 3.36e12   # 3360 GB/s HBM3e
+  hbm_capacity: 141e9      # 141 GB
+  peak_flops: 4000e12      # 4000 TFLOPS peak FP
+  cost: 40000
+
+H100:
+  name: H100
+  hbm_bandwidth: 3.36e12   # 3360 GB/s
+  hbm_capacity: 80e9       # 80 GB (NVL)
+  peak_flops: 1979e12      # 1979 TFLOPS
+  cost: 24500
+
+A100:
+  name: A100
+  hbm_bandwidth: 2.039e12  # 2039 GB/s
+  hbm_capacity: 80e9       # 80 GB
+  peak_flops: 312e12       # 312 TFLOPS
+  cost: 12000
+
+RTX6000:
+  name: RTX 6000 Ada
+  hbm_bandwidth: 960e9     # 960 GB/s
+  hbm_capacity: 48e9       # 48 GB
+  peak_flops: 182e12       # 182 TFLOPS
+  cost: 8000
+
+V100:
+  name: Tesla V100
+  hbm_bandwidth: 897e9     # 897 GB/s
+  hbm_capacity: 32e9       # 32 GB
+  peak_flops: 125e12       # 125 TFLOPS
+  cost: 3000
+
+A5000:
+  name: RTX A5000
+  hbm_bandwidth: 768e9     # 768 GB/s
+  hbm_capacity: 24e9       # 24 GB
+  peak_flops: 55e12        # 55 TFLOPS
+  cost: 2300
+
+# Convenience groupings kept for backward compatibility with older configs.
+High-End:
+  name: High-End
+  hbm_bandwidth: 3.36e12
+  hbm_capacity: 141e9
+  peak_flops: 4000e12
+  cost: 40000
+
+Mid-Range:
+  name: Mid-Range
+  hbm_bandwidth: 2.039e12
+  hbm_capacity: 80e9
+  peak_flops: 312e12
+  cost: 12000

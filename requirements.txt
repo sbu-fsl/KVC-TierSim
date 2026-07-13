@@ -1,2 +1,9 @@
+# Core simulation + plotting (CLI: simulator.py, sweep.py, main.py)
 matplotlib
+numpy
+pyyaml
 
+# Web dashboard (api/app.py + frontend/)
+fastapi
+uvicorn[standard]
+pydantic

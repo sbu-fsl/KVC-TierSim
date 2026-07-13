@@ -12,3 +12,9 @@ venv/
 plots
 *.png
 *.pdf
+
+# venv extras
+*.pyc
+
+# scratch simulation outputs
+/scratchpad/

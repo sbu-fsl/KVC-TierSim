@@ -1,0 +1,52 @@
+# CPU DRAM catalog. bandwidth in bytes/s, capacity in bytes (per module), cost in USD.
+# Loaded into src.dram.DRAM objects. Module count is chosen per-stack; capacity scales
+# with the count, bandwidth is modeled per-module (link is usually the transfer limit).
+
+DDR5-6000:
+  name: DDR5-6000
+  bandwidth: 85e9    # 85 GB/s
+  capacity: 32e9     # 32 GB
+  cost: 500
+
+DDR5-7200:
+  name: DDR5-7200
+  bandwidth: 81e9
+  capacity: 32e9
+  cost: 490
+
+DDR5-5600:
+  name: DDR5-5600
+  bandwidth: 62e9
+  capacity: 32e9
+  cost: 280
+
+DDR4-3200:
+  name: DDR4-3200
+  bandwidth: 30e9
+  capacity: 16e9
+  cost: 150
+
+DDR4-2133:
+  name: DDR4-2133
+  bandwidth: 25e9
+  capacity: 16e9
+  cost: 120
+
+DDR3-1600:
+  name: DDR3-1600
+  bandwidth: 20e9
+  capacity: 8e9
+  cost: 60
+
+# Convenience groupings.
+DDR5:
+  name: DDR5
+  bandwidth: 85e9
+  capacity: 32e9
+  cost: 500
+
+DDR4:
+  name: DDR4
+  bandwidth: 30e9
+  capacity: 16e9
+  cost: 150
