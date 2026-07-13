@@ -32,12 +32,8 @@ import math
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from simulator import (
-    HardwareConfig,
-    evaluate_all_compute,
-    evaluate_default_policy,
-    evaluate_performance_aware,
-)
+from simulator import HardwareConfig
+from src.policies import PolicyContext, evaluate, get_policies, policy_meta
 from src.pool import DISKS, DRAMS, GPUS, LINKS
 
 TIER_ORDER = ("vram", "dram", "disk")
@@ -262,22 +258,21 @@ def simulate(
     storage_throughput = _effective_storage_throughput(residency, throughputs)
     recompute_throughput = _recompute_throughput(hardware, workload)
 
-    args = (
-        hardware,
-        workload.total_blocks,
-        workload.miss_blocks,
-        storage_throughput,
-        recompute_throughput,
-        workload.request_rate,
-        workload.p95_seconds,
+    # Shared hardware math -> one context; every registered policy runs on it.
+    ctx = PolicyContext(
+        total_blocks=workload.total_blocks,
+        miss_blocks=workload.miss_blocks,
+        storage_throughput=storage_throughput,
+        recompute_throughput=recompute_throughput,
+        request_rate=workload.request_rate,
+        p95_seconds=workload.p95_seconds,
+        stack_key=hardware.stack_key,
     )
-    performance_aware = evaluate_performance_aware(*args)
-    default_policy = evaluate_default_policy(*args)
-    all_compute = evaluate_all_compute(*args)
+    results = {policy.name: evaluate(policy, ctx) for policy in get_policies()}
 
     fits = all(state.overflow_blocks == 0.0 for state in tier_states)
 
-    return {
+    payload = {
         "hardware": asdict(hardware),
         "workload": asdict(workload),
         "placement": {"mode": placement.mode, "fractions": placement.fractions},
@@ -285,13 +280,21 @@ def simulate(
         "storage_throughput": storage_throughput,
         "recompute_throughput": recompute_throughput,
         "tiers": [asdict(state) for state in tier_states],
-        "performance_aware": asdict(performance_aware),
-        "default_policy": asdict(default_policy),
-        "all_compute": asdict(all_compute),
-        "speedup_performance_aware_vs_default": _speedup(
-            default_policy.total_time, performance_aware.total_time
-        ),
-        "speedup_performance_aware_vs_all_compute": _speedup(
-            all_compute.total_time, performance_aware.total_time
-        ),
+        "policies": policy_meta(),
+        "results": {name: asdict(result) for name, result in results.items()},
     }
+
+    # Speedups of the IO-aware policy vs the fixed baselines, when present.
+    aware = results.get("performance_aware")
+    if aware:
+        default = results.get("default_policy")
+        all_compute = results.get("all_compute")
+        if default:
+            payload["speedup_performance_aware_vs_default"] = _speedup(
+                default.total_time, aware.total_time
+            )
+        if all_compute:
+            payload["speedup_performance_aware_vs_all_compute"] = _speedup(
+                all_compute.total_time, aware.total_time
+            )
+    return payload

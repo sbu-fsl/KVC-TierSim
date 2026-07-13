@@ -20,10 +20,11 @@ Two throughputs drive everything:
   into a single effective rate `X_eff = (n_v+n_d+n_k) / (n_v/X_vram + n_d/X_dram + n_k/X_disk)`.
 - **Recompute rate `Y`** (blocks/s) — GPU compute throughput for the model.
 
-Three policies decide how many hit blocks `k` to reassign from restore to
-recompute:
+A **policy** decides only one thing: how many hit blocks `k` to reassign from
+restore to recompute. All the hardware math (X, Y, allocation times, SLO checks)
+is shared, so policies are interchangeable. The built-in ones:
 
-| Policy | `k` | Idea |
+| Policy (`name`) | `k` | Idea |
 | --- | --- | --- |
 | `default_policy` (Restore) | 0 | Restore all hits, recompute only misses |
 | `all_compute` (Recompute) | all hits | Recompute everything |
@@ -32,16 +33,48 @@ recompute:
 An allocation **meets the SLO** when latency `≤ p95`, GPU utilization
 `r·T_recompute ≤ 1`, and storage utilization `r·T_restore ≤ 1`.
 
+### Adding a policy
+
+Policies live in [`src/policies/`](src/policies/) — one module each. The shared
+math is in `src/policies/core.py` (`PolicyContext`, `evaluate`) and the base
+class in `src/policies/base.py`. To add one, drop in a module that exposes a
+`POLICY` instance; the registry discovers it automatically and it appears in the
+CLI, the API, and the dashboard (cards, charts, heatmaps) with no other changes:
+
+```python
+# src/policies/greedy_restore.py
+from .base import PolicyBase
+from .core import PolicyContext, PolicyDecision
+
+class GreedyRestore(PolicyBase):
+    name = "greedy_restore"        # JSON key / registry key
+    label = "Greedy restore"       # shown in UI
+    description = "Recompute only what the SLO forces."
+    color = "#e6a817"              # UI color
+    order = 40                     # display order
+
+    def decide(self, ctx: PolicyContext) -> PolicyDecision:
+        k = ...                    # your strategy, using ctx.allocation / ctx.max_violation
+        return PolicyDecision(reassigned_hit_blocks=k, decision_mode="greedy")
+
+POLICY = GreedyRestore()
+```
+
 ## Layout
 
 ```
 hardware/            Editable YAML catalogs (edit these to add/change hardware)
   gpus.yaml  dram.yaml  disks.yaml  links.yaml  models.yaml
 src/
-  gpu.py dram.py disk.py link.py model.py   Typed dataclasses
+  types.py                                  Typed hardware/model dataclasses
   loader.py                                 Reads hardware/*.yaml into objects
   pool.py                                   GPUS/DRAMS/DISKS/LINKS/MODELS dicts
-  engine.py                                 Placement-aware simulation core
+  engine.py                                 Placement-aware hardware model
+  policies/                                 One module per policy (see "Adding a policy")
+    core.py                                 Shared math: PolicyContext / evaluate
+    base.py                                 PolicyBase class
+    restore.py  recompute.py  io_aware.py   Built-in policies
+    __init__.py                             Auto-discovery registry
 simulator.py         CLI: compare policies for one point
 sweep.py             CLI: P95 × request-rate sweep + figures
 main.py              Standalone roofline / permutation plots

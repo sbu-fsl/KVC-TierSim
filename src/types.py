@@ -1,0 +1,62 @@
+"""Typed hardware and model definitions.
+
+These frozen dataclasses are the in-memory representation of the ``hardware/``
+YAML catalogs. ``src.loader`` reads the YAML files and instantiates them;
+``src.pool`` exposes the loaded catalogs as ``GPUS`` / ``DRAMS`` / ``DISKS`` /
+``LINKS`` / ``MODELS``.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class GPU:
+    name: str
+    hbm_bandwidth: float
+    hbm_capacity: float
+    peak_flops: float
+    cost: float
+
+    def gpu_compute_band(
+        self, model_params: float, gpu_count: int = 1, eta: float = 0.6
+    ) -> float:
+        """Seconds of GPU compute per generated token (decode-bound estimate)."""
+        flops_per_token = 2 * model_params
+        total_flops = self.peak_flops * gpu_count * eta
+        return flops_per_token / total_flops
+
+
+@dataclass(frozen=True)
+class DRAM:
+    name: str
+    bandwidth: float
+    capacity: float
+    cost: float
+
+
+@dataclass(frozen=True)
+class Disk:
+    name: str
+    bandwidth: float
+    capacity: float
+    cost: float
+
+
+@dataclass(frozen=True)
+class Link:
+    name: str
+    bandwidth: float
+    cost: float
+
+
+@dataclass(frozen=True)
+class ModelPreset:
+    """An LLM workload preset describing model size and KV-block granularity."""
+
+    name: str
+    params: float
+    tokens_per_block: int = 16
+    bytes_per_block: float = 2e6
+    gpu_eta: float = 0.5

@@ -23,6 +23,7 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from src.policies import policy_keys, policy_meta
 from simulator import HardwareConfig, STACK_PRESETS
 from src.engine import Placement, Workload, simulate
 from src.pool import DISKS, DRAMS, GPUS, LINKS, MODELS
@@ -157,9 +158,6 @@ def _policy_pass_state(policy_row: dict[str, Any]) -> dict[str, bool]:
     }
 
 
-POLICY_KEYS = ("default_policy", "all_compute", "performance_aware")
-
-
 # --------------------------------------------------------------------------- #
 # Endpoints
 # --------------------------------------------------------------------------- #
@@ -175,6 +173,7 @@ def catalog() -> JSONResponse:
         "links": dump(LINKS),
         "models": dump(MODELS),
         "stacks": {key: asdict(cfg) for key, cfg in STACK_PRESETS.items()},
+        "policies": policy_meta(),
     }
     return JSONResponse(_sanitize(payload))
 
@@ -213,36 +212,39 @@ def sweep_endpoint(request: SweepRequest) -> JSONResponse:
             gpu_eta=request.gpu_eta,
         )
 
+    keys = policy_keys()
+
     # Pass/fail grids (rows = p95 values, cols = request rates), one per policy.
     miss_blocks = int(round(request.total_blocks * (100 - request.hit_ratio) / 100))
-    grids: dict[str, list[list[dict[str, bool]]]] = {k: [] for k in POLICY_KEYS}
+    grids: dict[str, list[list[dict[str, bool]]]] = {k: [] for k in keys}
     for p95 in p95_values:
-        rows = {k: [] for k in POLICY_KEYS}
+        rows = {k: [] for k in keys}
         for rate in request_rates:
             wl = make_workload(request.total_blocks, miss_blocks, rate, p95)
-            result = simulate(hardware, wl, placement)
-            for key in POLICY_KEYS:
+            result = simulate(hardware, wl, placement)["results"]
+            for key in keys:
                 rows[key].append(_policy_pass_state(result[key]))
-        for key in POLICY_KEYS:
+        for key in keys:
             grids[key].append(rows[key])
 
     # Success-rate vs cache-ratio curve.
     total_cases = len(p95_values) * len(request_rates)
-    success_rates: dict[str, list[float]] = {k: [] for k in POLICY_KEYS}
+    success_rates: dict[str, list[float]] = {k: [] for k in keys}
     for cache_ratio in request.cache_ratio_sweep:
         miss = int(round(request.total_blocks * (100 - cache_ratio) / 100))
-        counts = {k: 0 for k in POLICY_KEYS}
+        counts = {k: 0 for k in keys}
         for p95 in p95_values:
             for rate in request_rates:
                 wl = make_workload(request.total_blocks, miss, rate, p95)
-                result = simulate(hardware, wl, placement)
-                for key in POLICY_KEYS:
+                result = simulate(hardware, wl, placement)["results"]
+                for key in keys:
                     counts[key] += int(bool(result[key]["meets_slo"]))
-        for key in POLICY_KEYS:
+        for key in keys:
             success_rates[key].append(100.0 * counts[key] / total_cases if total_cases else 0.0)
 
     payload = {
         "hardware": asdict(hardware),
+        "policies": policy_meta(),
         "total_blocks": request.total_blocks,
         "hit_ratio": request.hit_ratio,
         "miss_blocks": miss_blocks,

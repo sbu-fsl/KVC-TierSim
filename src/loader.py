@@ -14,11 +14,7 @@ from typing import Any, Type, TypeVar
 
 import yaml
 
-from .disk import Disk
-from .dram import DRAM
-from .gpu import GPU
-from .link import Link
-from .model import ModelPreset
+from .types import DRAM, Disk, GPU, Link, ModelPreset
 
 # hardware/ lives next to the repository root, i.e. one level above src/.
 HARDWARE_DIR = Path(__file__).resolve().parent.parent / "hardware"

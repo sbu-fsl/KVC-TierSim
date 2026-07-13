@@ -3,17 +3,10 @@
 // ------------------------------------------------------------------ helpers
 const $ = (id) => document.getElementById(id);
 
-const POLICIES = [
-  { key: "performance_aware", label: "IO-aware policy", sub: "Balances restore & recompute", cls: "performance_aware" },
-  { key: "default_policy", label: "Restore", sub: "Restore hits, recompute misses", cls: "default" },
-  { key: "all_compute", label: "Recompute", sub: "Recompute every block", cls: "all_compute" },
-];
-
-const POLICY_COLORS = {
-  performance_aware: "#4f8cff",
-  default_policy: "#e01c1c",
-  all_compute: "#33bf59",
-};
+// Policies are loaded dynamically from /api/catalog so a new policy module on
+// the backend appears here with no frontend changes. Each entry:
+//   { key, label, sub, color }
+let POLICIES = [];
 
 // Heatmap state colors (match sweep.py).
 const HEAT = {
@@ -70,6 +63,10 @@ function fmtBlocks(b) {
 async function loadCatalog() {
   const res = await fetch("/api/catalog");
   CATALOG = await res.json();
+
+  POLICIES = (CATALOG.policies || []).map((p) => ({
+    key: p.name, label: p.label, sub: p.description, color: p.color,
+  }));
 
   fillSelect("gpu", CATALOG.gpus, (k, v) => `${v.name} · ${(v.hbm_capacity / 1e9).toFixed(0)}GB · $${v.cost.toLocaleString()}`);
   fillSelect("dram", CATALOG.drams, (k, v) => `${v.name} · ${(v.capacity / 1e9).toFixed(0)}GB`);
@@ -218,8 +215,8 @@ function renderSingle(data) {
 
   $("mX").textContent = fmtRate(data.storage_throughput);
   $("mY").textContent = fmtRate(data.recompute_throughput);
-  const pa = data.performance_aware;
-  $("mHM").textContent = `${fmtInt(pa.hit_blocks)} / ${fmtInt(pa.miss_blocks)}`;
+  const ref = data.results[POLICIES[0].key];
+  $("mHM").textContent = `${fmtInt(ref.hit_blocks)} / ${fmtInt(ref.miss_blocks)}`;
   $("mFits").textContent = data.capacity_fits ? "✓ fits" : "✗ overflow";
   $("mFits").style.color = data.capacity_fits ? "var(--green)" : "var(--red)";
 
@@ -255,11 +252,13 @@ function renderTiers(tiers) {
 function renderPolicyCards(data) {
   const host = $("policyCards");
   host.innerHTML = "";
+  host.style.gridTemplateColumns = `repeat(${Math.min(POLICIES.length, 4)}, 1fr)`;
   POLICIES.forEach((p) => {
-    const r = data[p.key];
+    const r = data.results[p.key];
     const meets = r.meets_slo;
     const card = document.createElement("div");
-    card.className = "pcard " + p.cls;
+    card.className = "pcard";
+    card.style.borderTopColor = p.color;
     card.innerHTML = `
       <h4>${p.label}</h4>
       <div class="policy-sub">${p.sub}</div>
@@ -286,10 +285,10 @@ function renderLatencyChart(data) {
   destroyChart("latency");
   const labels = POLICIES.map((p) => p.label);
   const values = POLICIES.map((p) => {
-    const t = num(data[p.key].total_time);
+    const t = num(data.results[p.key].total_time);
     return isFinite(t) ? t : 0;
   });
-  const slo = num(data.performance_aware.p95_seconds);
+  const slo = num(data.results[POLICIES[0].key].p95_seconds);
   charts.latency = new Chart($("latencyChart"), {
     type: "bar",
     data: {
@@ -297,7 +296,7 @@ function renderLatencyChart(data) {
       datasets: [{
         label: "Latency (s)",
         data: values,
-        backgroundColor: POLICIES.map((p) => POLICY_COLORS[p.key]),
+        backgroundColor: POLICIES.map((p) => p.color),
         borderRadius: 5,
       }],
     },
@@ -349,13 +348,13 @@ function renderBreakdownChart(data) {
       datasets: [
         {
           label: "Restore time",
-          data: POLICIES.map((p) => { const v = num(data[p.key].storage_time); return isFinite(v) ? v : 0; }),
+          data: POLICIES.map((p) => { const v = num(data.results[p.key].storage_time); return isFinite(v) ? v : 0; }),
           backgroundColor: "#fab333",
           borderRadius: 4,
         },
         {
           label: "Recompute time",
-          data: POLICIES.map((p) => { const v = num(data[p.key].recompute_time); return isFinite(v) ? v : 0; }),
+          data: POLICIES.map((p) => { const v = num(data.results[p.key].recompute_time); return isFinite(v) ? v : 0; }),
           backgroundColor: "#7c5cff",
           borderRadius: 4,
         },
@@ -417,10 +416,11 @@ function renderSweep(data) {
 
   const host = $("heatmaps");
   host.innerHTML = "";
+  host.style.gridTemplateColumns = `repeat(${Math.min(POLICIES.length, 3)}, 1fr)`;
   POLICIES.forEach((p) => {
     const box = document.createElement("div");
     box.className = "heatmap-box";
-    box.innerHTML = `<h4 style="color:${POLICY_COLORS[p.key]}">${p.label}</h4>
+    box.innerHTML = `<h4 style="color:${p.color}">${p.label}</h4>
       <div class="hsub">P95 (y) vs request rate (x)</div>
       <canvas class="grid-canvas" id="heat_${p.key}"></canvas>
       <div class="axis-x">request rate → ${data.request_rates[0]} … ${data.request_rates[data.request_rates.length - 1]} req/s</div>`;
@@ -463,8 +463,8 @@ function renderSuccessChart(data) {
       datasets: POLICIES.map((p) => ({
         label: p.label,
         data: data.success_rates[p.key],
-        borderColor: POLICY_COLORS[p.key],
-        backgroundColor: POLICY_COLORS[p.key],
+        borderColor: p.color,
+        backgroundColor: p.color,
         tension: 0.25,
         pointRadius: 3,
       })),

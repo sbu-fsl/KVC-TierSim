@@ -7,8 +7,8 @@ these are saved outputs kept for comparison and documentation.
 
 Small, current-schema outputs from the placement-aware engine
 (`src/engine.simulate`), one per canonical scenario. Each shows per-tier
-residency plus the three policies (`default_policy`, `all_compute`,
-`performance_aware` / IO-aware):
+residency, a `policies` metadata list, and a `results` map keyed by policy name
+(`default_policy`, `all_compute`, `performance_aware` / IO-aware):
 
 | File | Stack | Placement | Story |
 | --- | --- | --- | --- |
