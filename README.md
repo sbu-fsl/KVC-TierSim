@@ -1,8 +1,9 @@
-# KV-Cache Tier Placement Simulator
+# LLM Inference KV-Cache Tiers Simulator
 
-Simulate KV-cache tiers across the storage hierarchy (GPU HBM to CPU DRAM to
-Disk) during LLM inference, and compare cache-restore policies against a latency
-SLO. Includes a CLI, a parameter sweep, and a web dashboard.
+Simulate LLM inference KV-cache tiers across the storage hierarchy (GPU HBM,
+DRAM, Disk, and Transfer Links) during inference, and compare cache-restore
+policies against both end-to-end latency and throughput SLO. Includes a CLI, a
+parameter sweep, and a web dashboard.
 
 ## What it models
 
@@ -24,10 +25,10 @@ A **policy** decides only one thing: how many hit blocks `k` to reassign from
 restore to recompute. All the hardware math (X, Y, allocation times, SLO checks)
 is shared, so policies are interchangeable. The built-in ones:
 
-| Policy (`name`) | `k` | Idea |
-| --- | --- | --- |
-| `default_policy` (Restore) | 0 | Restore all hits, recompute only misses |
-| `all_compute` (Recompute) | all hits | Recompute everything |
+| Policy (`name`)                | `k`      | Idea                                                                                           |
+| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------- |
+| `default_policy` (Restore)     | 0        | Restore all hits, recompute only misses                                                        |
+| `all_compute` (Recompute)      | all hits | Recompute everything                                                                           |
 | `performance_aware` (IO-aware) | balanced | Split so restore and recompute finish together, falling back to best-effort under SLO pressure |
 
 An allocation **meets the SLO** when latency `≤ p95`, GPU utilization
@@ -107,12 +108,6 @@ The **Single Point** tab shows per-tier residency, the effective restore/recompu
 rates, and the three policies side by side (latency, SLO pass/fail, time
 breakdown). The **SLO Sweep** tab renders pass/fail heatmaps over P95 × request
 rate and a success-rate-vs-hit-ratio curve.
-
-### API
-
-- `GET  /api/catalog` - hardware/model catalogs + stack presets
-- `POST /api/simulate` - `{hardware, workload, placement}` to per-tier + per-policy results
-- `POST /api/sweep` - `{hardware, placement, total_blocks, hit_ratio, p95_values, request_rates, cache_ratio_sweep}` to grids + success rates
 
 ## CLI
 
