@@ -81,7 +81,9 @@ class IOAwarePolicy(PolicyBase):
     def decide(self, ctx: PolicyContext) -> PolicyDecision:
         balanced = self._balanced_k(ctx)
         if ctx.max_violation(balanced) == 0.0:
-            return PolicyDecision(reassigned_hit_blocks=balanced, decision_mode="balanced")
+            return PolicyDecision(
+                reassigned_hit_blocks=balanced, decision_mode="balanced"
+            )
         return PolicyDecision(
             reassigned_hit_blocks=self._best_effort_k(ctx),
             decision_mode="best_effort",

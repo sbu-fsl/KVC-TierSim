@@ -1,27 +1,4 @@
-"""Base class for KV-cache placement policies.
-
-To add a policy: create a new module in this package, subclass ``PolicyBase``,
-set the class attributes, implement ``decide``, and expose an instance named
-``POLICY``. The registry (see ``policies/__init__.py``) picks it up automatically
-and it appears in the CLI, the API, and the dashboard - no other wiring needed.
-
-    # src/policies/greedy_restore.py
-    from .base import PolicyBase
-    from .core import PolicyContext, PolicyDecision
-
-    class GreedyRestore(PolicyBase):
-        name = "greedy_restore"
-        label = "Greedy restore"
-        description = "Restore as much as the SLO allows, recompute the rest."
-        color = "#e6a817"
-        order = 40
-
-        def decide(self, ctx: PolicyContext) -> PolicyDecision:
-            ...
-            return PolicyDecision(reassigned_hit_blocks=k, decision_mode="greedy")
-
-    POLICY = GreedyRestore()
-"""
+"""Base class for KV-cache placement policies."""
 
 from __future__ import annotations
 

@@ -1,15 +1,4 @@
-"""Shared policy math - the hardware-derived model every policy runs on.
-
-A *policy* only decides one thing: how many cache-hit blocks ``k`` to reassign
-from restoration (read from a storage tier) to recomputation (on the GPU).
-Everything else - restore/recompute throughputs, block allocation, latency, and
-the SLO constraint checks - is identical across policies and lives here.
-
-Flow:  hardware layer computes X (restore blocks/s) and Y (recompute blocks/s)
-       -> PolicyContext bundles them with the workload (N, M, r, p)
-       -> a Policy.decide(ctx) returns a PolicyDecision(k, mode)
-       -> evaluate(policy, ctx) applies the shared math -> PolicyResult
-"""
+"""Shared policy math, the hardware-derived model every policy runs on."""
 
 from __future__ import annotations
 
@@ -84,7 +73,9 @@ class PolicyContext:
         """Clamp a proposed k into the feasible range [0, hit_blocks]."""
         return max(0.0, min(float(self.hit_blocks), float(reassigned_hit_blocks)))
 
-    def allocation(self, reassigned_hit_blocks: float) -> tuple[float, float, float, float]:
+    def allocation(
+        self, reassigned_hit_blocks: float
+    ) -> tuple[float, float, float, float]:
         """Return (storage_blocks, recompute_blocks, storage_time, recompute_time)."""
         k = self.clamp(reassigned_hit_blocks)
         recompute_blocks = float(self.miss_blocks) + k

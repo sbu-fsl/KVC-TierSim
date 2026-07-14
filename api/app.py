@@ -6,9 +6,6 @@ GET  /api/catalog   Hardware + model catalogs and stack presets (for the UI).
 POST /api/simulate  Run all three policies for one hardware/workload/placement.
 POST /api/sweep     Sweep P95 x request-rate into per-policy pass/fail grids,
                     plus a success-rate-vs-cache-ratio curve.
-GET  /              Serves the dashboard (frontend/index.html).
-
-Run with:  uvicorn api.app:app --reload
 """
 
 from __future__ import annotations
@@ -149,7 +146,9 @@ def _sanitize(value: Any) -> Any:
 
 
 def _policy_pass_state(policy_row: dict[str, Any]) -> dict[str, bool]:
-    rpc_pass = policy_row["gpu_violation"] == 0.0 and policy_row["storage_violation"] == 0.0
+    rpc_pass = (
+        policy_row["gpu_violation"] == 0.0 and policy_row["storage_violation"] == 0.0
+    )
     latency_pass = policy_row["latency_violation"] == 0.0
     return {
         "rpc_pass": rpc_pass,
@@ -198,9 +197,13 @@ def sweep_endpoint(request: SweepRequest) -> JSONResponse:
     p95_values = request.p95_values
     request_rates = request.request_rates
     if not p95_values or not request_rates:
-        raise HTTPException(status_code=400, detail="p95_values and request_rates required")
+        raise HTTPException(
+            status_code=400, detail="p95_values and request_rates required"
+        )
 
-    def make_workload(total_blocks: int, miss_blocks: int, rate: float, p95: float) -> Workload:
+    def make_workload(
+        total_blocks: int, miss_blocks: int, rate: float, p95: float
+    ) -> Workload:
         return Workload(
             total_blocks=total_blocks,
             miss_blocks=miss_blocks,
@@ -240,7 +243,9 @@ def sweep_endpoint(request: SweepRequest) -> JSONResponse:
                 for key in keys:
                     counts[key] += int(bool(result[key]["meets_slo"]))
         for key in keys:
-            success_rates[key].append(100.0 * counts[key] / total_cases if total_cases else 0.0)
+            success_rates[key].append(
+                100.0 * counts[key] / total_cases if total_cases else 0.0
+            )
 
     payload = {
         "hardware": asdict(hardware),

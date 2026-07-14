@@ -1,31 +1,3 @@
-"""Placement-aware KV-cache simulation engine.
-
-This module extends the original single-tier policy model (see
-:mod:`simulator`) with explicit control over where cache-hit blocks live across
-the memory hierarchy: GPU HBM (VRAM), CPU DRAM, and Disk.
-
-Model
------
-Every cache-hit block resides in exactly one tier. Restoring a block means
-reading it from its tier and (for DRAM/Disk) moving it over the link to the GPU.
-Each tier therefore has its own restore throughput (blocks/s):
-
-    X_vram = hbm_bandwidth / B                    (already on the GPU)
-    X_dram = 1 / (B/dram_bw + B/link_bw)          (DRAM read, then link)
-    X_disk = 1 / (B/disk_bw + B/link_bw)          (disk read, then link)
-
-where ``B`` is bytes per block. Given a residency split (n_v, n_d, n_k) of the
-hit blocks, the time to restore all of them is modeled as serial across tiers
-(the link is a shared resource), yielding a single blended throughput:
-
-    X_eff = (n_v + n_d + n_k) / (n_v/X_vram + n_d/X_dram + n_k/X_disk)
-
-``X_eff`` is then fed into the existing policy engine (default / all-compute /
-performance-aware), so pushing residency toward VRAM/DRAM raises the restore
-rate and shifts every policy's latency and SLO outcome. Recompute throughput
-``Y`` is unchanged from the original model.
-"""
-
 from __future__ import annotations
 
 import math
@@ -83,7 +55,9 @@ class TierState:
     utilization: float  # resident / capacity, clamped display value
 
 
-def _tier_capacities_blocks(hardware: HardwareConfig, workload: Workload) -> dict[str, float]:
+def _tier_capacities_blocks(
+    hardware: HardwareConfig, workload: Workload
+) -> dict[str, float]:
     """Usable KV-cache capacity of each tier, in blocks."""
     gpu = GPUS[hardware.gpu_key]
     dram = DRAMS[hardware.dram_key]
@@ -155,7 +129,9 @@ def _resolve_residency(
         return resident
 
     # Manual: normalize fractions over the tier order.
-    raw = {tier: max(0.0, float(placement.fractions.get(tier, 0.0))) for tier in TIER_ORDER}
+    raw = {
+        tier: max(0.0, float(placement.fractions.get(tier, 0.0))) for tier in TIER_ORDER
+    }
     total = sum(raw.values())
     if total <= 0:
         raw = {"vram": 0.0, "dram": 0.0, "disk": 1.0}
@@ -215,7 +191,9 @@ def _build_tier_states(
         cap = capacities[tier]
         resident = residency[tier]
         overflow = max(0.0, resident - cap)
-        utilization = (resident / cap) if cap > 0 else (math.inf if resident > 0 else 0.0)
+        utilization = (
+            (resident / cap) if cap > 0 else (math.inf if resident > 0 else 0.0)
+        )
         states.append(
             TierState(
                 tier=tier,

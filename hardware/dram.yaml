@@ -1,6 +1,5 @@
 # CPU DRAM catalog. bandwidth in bytes/s, capacity in bytes (per module), cost in USD.
-# Loaded into src.dram.DRAM objects. Module count is chosen per-stack; capacity scales
-# with the count, bandwidth is modeled per-module (link is usually the transfer limit).
+# Loaded into src.dram.DRAM objects.
 
 DDR5-6000:
   name: DDR5-6000

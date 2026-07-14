@@ -1,11 +1,3 @@
-"""Load hardware and model catalogs from the ``hardware/`` YAML files.
-
-Each YAML file maps a stable string key to a component's fields. The loader
-turns those into frozen dataclass instances so the rest of the simulator works
-with typed objects rather than dicts. Values may use YAML float syntax such as
-``3.36e12`` for bandwidths and capacities.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass

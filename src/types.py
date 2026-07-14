@@ -1,10 +1,4 @@
-"""Typed hardware and model definitions.
-
-These frozen dataclasses are the in-memory representation of the ``hardware/``
-YAML catalogs. ``src.loader`` reads the YAML files and instantiates them;
-``src.pool`` exposes the loaded catalogs as ``GPUS`` / ``DRAMS`` / ``DISKS`` /
-``LINKS`` / ``MODELS``.
-"""
+"""Typed hardware and model definitions."""
 
 from __future__ import annotations
 

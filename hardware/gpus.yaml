@@ -1,6 +1,5 @@
 # GPU catalog. Bandwidth in bytes/s, capacity in bytes, peak_flops in FLOP/s, cost in USD.
-# Loaded into src.gpu.GPU objects by src/loader.py. Keys are stable identifiers
-# referenced by presets, the API, and saved *_results.json files.
+# Loaded into src.gpu.GPU objects by src/loader.py.
 
 H200:
   name: H200

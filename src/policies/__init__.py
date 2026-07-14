@@ -1,9 +1,4 @@
-"""Policy registry.
-
-Every module in this package that exposes a ``POLICY`` instance of
-``PolicyBase`` is discovered automatically. Drop in a new policy module and it
-shows up everywhere (CLI, API, dashboard) with no further wiring.
-"""
+"""Policy registry."""
 
 from __future__ import annotations
 
