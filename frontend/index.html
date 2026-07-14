@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KV-Cache Tier Placement Simulator</title>
+  <title>LLM Inference KV-Cache Tiers Simulator</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
@@ -12,8 +12,8 @@
     <div class="brand">
       <span class="logo">▚</span>
       <div>
-        <h1>KV-Cache Tier Placement Simulator</h1>
-        <p class="subtitle">Place cache blocks across GPU HBM · DRAM · Disk, then compare restore / recompute / IO-aware policies against your SLO.</p>
+        <h1>LLM Inference KV-Cache Tiers Simulator</h1>
+        <p class="subtitle">Pick your hardware, place cache blocks across GPU HBM · DRAM · Disk, then compare cache-restore policies.</p>
       </div>
     </div>
     <nav class="tabs">
@@ -142,6 +142,8 @@
     <span>Design &amp; frontend by <b>Claude Code</b></span>
     <span class="dot">·</span>
     <span>Backend &amp; simulator by the <b>File Systems &amp; Storage Lab</b>, Department of Computer Science, Stony Brook University</span>
+    <span class="dot">·</span>
+    <span>Under Apache-2.0 License (2026)</span>
   </footer>
 
   <script src="app.js"></script>
