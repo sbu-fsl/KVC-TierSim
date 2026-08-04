@@ -28,6 +28,7 @@ __all__ = [
     "ExperimentConfig",
     "PolicyResult",
     "STACK_PRESETS",
+    "hardware_throughputs",
     "run_experiments",
     "main",
 ]
@@ -90,7 +91,7 @@ def _resolve_hardware_config(args: argparse.Namespace) -> HardwareConfig:
     )
 
 
-def _hardware_throughputs(
+def hardware_throughputs(
     hardware: HardwareConfig, experiment: ExperimentConfig
 ) -> tuple[float, float]:
     """Shared hardware math: single-tier restore rate X and recompute rate Y.
@@ -118,7 +119,7 @@ def _speedup(numerator: float, denominator: float) -> float:
 
 
 def run_experiments(hardware: HardwareConfig, experiment: ExperimentConfig):
-    storage_throughput, recompute_throughput = _hardware_throughputs(hardware, experiment)
+    storage_throughput, recompute_throughput = hardware_throughputs(hardware, experiment)
 
     rows: list[dict] = []
     for total_blocks in experiment.total_blocks:

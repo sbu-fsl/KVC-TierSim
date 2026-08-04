@@ -78,6 +78,7 @@ src/
     __init__.py                             Auto-discovery registry
 simulator.py         CLI: compare policies for one point
 sweep.py             CLI: P95 × request-rate sweep + figures
+overhead.py          CLI: scheduler-overhead sweep (micro → macro requests)
 main.py              Standalone roofline / permutation plots
 api/app.py           FastAPI backend (catalog / simulate / sweep + serves UI)
 frontend/            Vanilla HTML/CSS/JS + Chart.js dashboard
@@ -134,3 +135,68 @@ python simulator.py --gpu A100 --dram DDR4 --disk NVMe980 --link PCIe5 \
 python sweep.py --gpu H200 --output-figure-prefix h200_sweep_map \
   --output-results h200_sweep_results.json
 ```
+
+## Scheduler overhead plot
+
+`sweep.py` measures what a decision *buys*; `overhead.py` measures what it
+*costs*. It times `decide()` itself over a request stream that grows from micro
+(one request) to macro (a million), and draws one line per registered policy:
+
+```bash
+python overhead.py --gpu A100 --output-figure-prefix a100_overhead \
+  --output-results a100_overhead_results.json
+```
+
+Requests come from a seeded pool of randomized workload **combinations** (block
+counts, hit ratios, request rates, and P95 targets spanning decades), so a
+search-based policy is timed across both its fast and its fallback path in
+realistic proportions rather than only its cheapest branch. Output is a JSON
+results file plus four vector PDFs:
+
+| Figure          | Y axis                        | Reads as                                                   |
+| --------------- | ----------------------------- | ---------------------------------------------------------- |
+| `_total`        | scheduler time (s)            | CPU spent scheduling `R` requests                          |
+| `_per_request`  | time per decision (µs)        | amortized cost of one decision                             |
+| `_relative`     | % of modeled request time     | the real-world number: overhead as a share of service time |
+| `_distribution` | time per decision (µs)        | spread over all combinations - box = median, ◇ = mean      |
+
+### The summary
+
+Alongside the request sweep, every combination in the pool is timed on its own
+(`--combination-reps` decisions x `--combination-rounds` rounds, median kept).
+That gives a distribution per policy instead of one blended number, aggregated
+into `summary` in the JSON and printed at the end of a run:
+
+```
+Per-combination summary: 512 workload combinations x 1,000 reps x 3 rounds = 1,536,000 timed decisions per policy
+Baseline (no decision logic): Restore, Recompute
+
+  Policy               median     mean      p95      max   +median    +mean   x base      % req
+  ---------------------------------------------------------------------------------------------
+  IO-aware policy       6.494    5.028    7.425    7.572     6.261    4.798    21.8x   6.13e-05
+  Restore *             0.208    0.208    0.214    0.251    -0.023   -0.023     0.9x  -4.36e-07
+  Recompute *           0.254    0.253    0.263    0.277     0.023    0.023     1.1x   2.47e-07
+```
+
+`default_policy` and `all_compute` return a fixed `k`, so what they cost is
+dispatch and loop overhead, not decision-making. Their mean is the **baseline**
+(`--baseline-policies`), and the `+median` / `+mean` columns are each policy's
+overhead *over* that floor - a subtraction that cancels the measurement harness
+out of the number. In the run above: across 512 combinations and 1.5 M timed
+decisions, the IO-aware policy added **4.80 µs mean / 6.26 µs median** per
+scheduling decision over the no-logic baseline (21.8x), i.e. ~6e-05 % of the
+modeled end-to-end request time.
+
+Mean below median is not a typo - the IO-aware policy is bimodal, and the JSON's
+`by_decision_mode` (also printed) says why: its `balanced` branch closed in 155
+of 512 combinations at 0.88 µs, while the `best_effort` candidate scan ran in the
+other 357 at 6.59 µs.
+
+The absolute times are a property of the *host CPU* running the scheduler, not of
+the simulated hardware; the `--gpu/--dram/--disk/--link` choice only moves the
+`% of request time` numbers, by changing the modeled service time the overhead is
+divided by. Every registered policy is picked up automatically, drawn in its own
+`color`, and summarized, so a new policy module appears here with no changes.
+
+Full runs take ~40 s. Use `--max-requests 10000` for a quick pass, and
+`--pool-size` / `--seed` to change the workload mix.
