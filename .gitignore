@@ -7,14 +7,17 @@
 __pycache__
 venv/
 .venv/
+*.pyc
 
-# Output
+# Generated outputs at the repository root (re-runs of the CLIs land here).
+# Curated copies live under results/ and are tracked on purpose.
 plots
 *.png
 *.pdf
-
-# venv extras
-*.pyc
+/*.json
+!results/**/*.png
+!results/**/*.pdf
+!results/**/*.json
 
 # scratch simulation outputs
 /scratchpad/

@@ -1,5 +1,5 @@
 # Interconnect / link catalog. bandwidth in bytes/s, cost in USD.
-# Loaded into src.link.Link objects. The link carries KV data from DRAM/Disk to the GPU.
+# Loaded into src.types.Link objects by src/loader.py. The link carries KV data from DRAM/Disk to the GPU.
 
 PCIe3:
   name: PCIe 3.0 x16

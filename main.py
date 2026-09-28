@@ -18,7 +18,13 @@ CONFIG = {
     "TOKENS_PER_BLOCK": 16,  # Number of tokens per block
     "BYTES_PER_BLOCK": 2e6,  # 2 MB per block
     "MODEL_PARAMS": 8e9,     # 8 billion parameters
-    "GPU_ETA": 0.5,          # GPU effectiveness factor
+    "MODEL_LAYERS": 32,      # transformer blocks (Llama-3 8B shape)
+    "MODEL_DIM": 4096,       # hidden size
+    "GPU_ETA": 0.5,          # achieved fraction of dense peak during prefill
+    "RESTORE_HBM_PASSES": 2, # HBM passes over restored KV: land it, then read it
+    "KV_COMPRESSION": 0.1,   # KV stored compressed (CacheGen reports 3.5-4.3x)
+    "DECODE_RATE": 100e9,    # GPU decode of compressed KV, bytes/s of expanded cache
+    "DECODE_RATE_HBM": 2.039e12,  # ... on A100-class HBM (~5% of it); scaled by bandwidth
 }
 
 # GPU family color map (same GPU key = same color)
@@ -311,7 +317,7 @@ def make_plot(
             xs, ys, color=stack["color"], lw=1.2, linestyle="-", label=storage_label
         )
 
-    # ── Axes ──────────────────────────────────────────────────────────────────
+    # Axes
     x_ticks = [16, 16_000, 64_000, 128_000, 200_000, 300_000, 400_000, 500_000]
     x_ticks = [v for v in x_ticks if min_blocks <= v <= max_blocks]
 
@@ -343,7 +349,7 @@ def make_plot(
     ax.set_yticks(y_ticks)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
-    ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
+    ax.grid(True, which="major", linestyle="dashed", linewidth=0.45, alpha=0.35)
     ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=8)
     ax.tick_params(axis="y", labelsize=8)
 
@@ -552,7 +558,7 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
     #     )
     # )
 
-    # ── Axes ─────────────────────────────────────────────────────────────────
+    # Axes
     ax.set_xticks(x_ticks)
     ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_engineering(v)))
     ax.set_xlabel("Context Length", fontsize=12)
@@ -570,7 +576,7 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
     ax.set_yticks(y_ticks)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(v)))
     ax.yaxis.set_minor_locator(ticker.NullLocator())
-    ax.grid(True, which="major", linestyle="--", linewidth=0.45, alpha=0.35)
+    ax.grid(True, which="major", linestyle="dashed", linewidth=0.45, alpha=0.35)
     ax.set_ylabel("Time\n(Restore vs. Compute)", fontsize=12)
     ax.tick_params(axis="y", labelsize=11)
 
@@ -602,6 +608,312 @@ def make_permutation_plot(figsize=(8, 3.5), dpi=700, output="tiers_configuration
         print(f"Saved → {output}  ({total_options} configurations plotted)")
 
 
+
+def _log_violin(ax, datasets, positions, width, face="#aaaaaa", edge="#555555"):
+    """Violins of log10(time) on a linear axis.
+
+    ``violinplot`` fits its KDE in data space, so on a log axis a distribution
+    spanning decades collapses into a bottom-heavy blob. Fitting on log10(t) and
+    labelling the axis with real times keeps the shape readable - callers must
+    plot every other series as log10 too.
+    """
+    vp = ax.violinplot(
+        [np.log10(np.asarray(values, dtype=float)) for values in datasets],
+        positions=positions,
+        widths=width,
+        showmedians=True,
+        showextrema=True,
+    )
+    for body in vp["bodies"]:
+        body.set_facecolor(face)
+        body.set_edgecolor(edge)
+        body.set_alpha(0.5)
+        body.set_linewidth(0.6)
+    for part in ("cmedians", "cmins", "cmaxes", "cbars"):
+        vp[part].set_color(edge)
+        vp[part].set_linewidth(0.8)
+    vp["cmedians"].set_color("red")
+    vp["cmedians"].set_linewidth(4)
+    return vp
+
+
+def _log_time_axis(ax, y_ticks, y_lo, y_hi):
+    """Label a log10-valued axis with human-readable times."""
+    ax.set_ylim(np.log10(y_lo), np.log10(y_hi))
+    ax.set_yticks([np.log10(v) for v in y_ticks])
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda v, _: fmt_time(10**v)))
+    ax.yaxis.set_minor_locator(ticker.NullLocator())
+
+
+# No-cache compute vs. tiered restore
+#
+# The two curves this figure compares scale differently in the context length N:
+#
+#   * Prefilling with no KV cache is O(N^2) - every token attends to every
+#     earlier token, so the attention term grows quadratically and eventually
+#     dominates the linear weight term.
+#   * Restoring a cached context is O(N) - it is bytes over the tier path, and
+#     the bytes grow linearly with N.
+#
+# So the lines must cross: a GPU that beats restore on short contexts falls
+# behind it on long ones, and a slow GPU is behind for the whole range.
+
+
+# Function to calculate prefill time with no KV cache (O(N^2) in context length)
+def build_prefill_curve(xs_tokens, model_params, gpu, gpu_count=1):
+    layers = CONFIG["MODEL_LAYERS"]
+    dim = CONFIG["MODEL_DIM"]
+
+    n = np.asarray(xs_tokens, dtype=float)
+
+    # Weights: 2 FLOPs per parameter per token - linear in N.
+    flops_weights = 2.0 * model_params * n
+    # Causal attention (QK^T and AV over the whole prefix) - quadratic in N.
+    flops_attention = 2.0 * layers * dim * n**2
+
+    throughput = gpu.peak_flops * gpu_count * CONFIG["GPU_ETA"]
+    return (flops_weights + flops_attention) / throughput
+
+
+# Function to calculate restore time from the storage tiers (O(N) in context length)
+def build_restore_curve(xs_tokens, dram, disk, link, gpu, gpu_count=1):
+    """Seconds to bring a cached context back over disk -> DRAM -> link -> GPU.
+
+    Two things real systems do decide the shape of this model:
+
+    * The cache is stored **compressed** (CacheGen reports 3.5-4.3x), so the tier
+      path moves ``KV_COMPRESSION`` times fewer bytes - which is what makes the
+      cheap tiers usable at all - but the GPU has to decode the stream back into
+      a usable cache. That decode is the one restore stage that scales with the
+      GPU rather than with the storage stack.
+    * Serving stacks **pipeline** the two: LMCache gives inference and data
+      movement separate CUDA streams and transforms layer i+1 into pages while
+      layer i computes; CacheGen overlaps decoding chunk i-1 with transmitting
+      chunk i. So the stages overlap, and a restore costs ``max`` of the two
+      paths, not their sum.
+
+    Everything here is linear in N, so a restore stays O(N); which side binds is
+    what changes - a fast stack under a weak GPU is decode-bound, a slow disk
+    under any GPU is transfer-bound.
+    """
+    n = np.asarray(xs_tokens, dtype=float)
+    kv_bytes = (n / CONFIG["TOKENS_PER_BLOCK"]) * CONFIG["BYTES_PER_BLOCK"]
+    wire_bytes = kv_bytes / CONFIG["KV_COMPRESSION"]
+
+    # Storage path: disk read, staged through DRAM, shipped over the link. The
+    # link is capped by the GPU's own interconnect - a V100 cannot be fed over
+    # NVLink 6, and an Ada card has no NVLink at all - so the same catalog link
+    # delivers different bandwidth depending on the part it is bolted to.
+    link_bandwidth = gpu.effective_link_bandwidth(link.bandwidth) * gpu_count
+    seconds_per_byte = 1.0 / disk.bandwidth + 1.0 / dram.bandwidth + 1.0 / link_bandwidth
+    t_path = wire_bytes * seconds_per_byte
+
+    # GPU side. Decode the compressed stream back into a full KV cache. The
+    # kernel is elementwise and memory-bound, so the rate tracks HBM bandwidth,
+    # not peak FLOPS - the catalog's FLOPS mix number formats (sparse FP8 for
+    # H200 against FP32 for the workstation parts) and would spread the GPUs by
+    # 73x on a term that is really just memory traffic.
+    decode_rate = (
+        CONFIG["DECODE_RATE"]
+        * gpu.hbm_bandwidth
+        * gpu_count
+        / CONFIG["DECODE_RATE_HBM"]
+    )
+    t_decode = kv_bytes / decode_rate
+    # HBM traffic for the restored blocks: land them, then read them back.
+    t_hbm = CONFIG["RESTORE_HBM_PASSES"] * kv_bytes / (gpu.hbm_bandwidth * gpu_count)
+    # Attention for one token against the restored prefix (QK^T + AV).
+    flops_attention = 4.0 * CONFIG["MODEL_LAYERS"] * CONFIG["MODEL_DIM"] * n
+    t_attention = flops_attention / (gpu.peak_flops * gpu_count * CONFIG["GPU_ETA"])
+
+    return np.maximum(t_path, t_decode + t_hbm + t_attention)
+
+
+# Storage stack swept for the restore distribution. The GPU dropped out of the
+# restore math, so DRAM and disk carry the tier count: 12 x 21 x 7 = 1764.
+_RESTORE_DRAM_KEYS = [
+    "DDR3-1600",     # 20 GB/s
+    "DDR4-2133",     # 25 GB/s
+    "DDR4-2400",     # 26 GB/s
+    "DDR4-2666",     # 28 GB/s
+    "DDR4-3200",     # 30 GB/s
+    "DDR5-4800",     # 55 GB/s
+    "DDR5-5600",     # 62 GB/s
+    "DDR5-6400",     # 75 GB/s
+    "DDR5-7200",     # 81 GB/s
+    "DDR5-6000",     # 85 GB/s
+    "DDR5-8000",     # 95 GB/s
+    "LPDDR5X-8533",  # 102 GB/s
+]
+_RESTORE_DISK_KEYS = [
+    "HDD5400",       # 0.08 GB/s
+    "HDD",           # 0.1
+    "HDDR0x2",       # 0.2
+    "X110",          # 0.3
+    "M550",          # 0.4
+    "HDDR0x5",       # 0.5
+    "SATA870",       # 0.56
+    "SATAR0x4",      # 1.8
+    "NVMe980",       # 2
+    "NVMeGen3R0",    # 4
+    "NVMeT700",      # 5
+    "NVMe990",       # 7
+    "NVMeT700R0",    # 10
+    "NVMeGen5",      # 12
+    "NVMeT700R5",    # 20
+    "NVMeGen4R0x4",  # 24
+    "RDMADram",      # 25
+    "NVMeGen5R0x4",  # 45
+    "CXLFlash",      # 64
+    "NVMeGen5R0x8",  # 80
+    "CXLMem",        # 128
+]
+_RESTORE_LINK_KEYS = _PERM_LINK_KEYS
+
+# Context lengths on the x axis, in tokens (each doubling is one tick).
+_RESTORE_X_TOKENS = [16e3, 32e3, 64e3, 128e3, 256e3, 512e3, 1e6, 2e6]
+_RESTORE_Y_TICKS = [0.1, 1, 10, 60, 600, 3600, 3600 * 4]
+_RESTORE_Y_MAX = 3600 * 4  # top of the axis: 4 hours
+
+
+# Helper function to format the KV volume a context occupies
+def fmt_gb_from_tokens(n_tokens):
+    blocks = n_tokens / CONFIG["TOKENS_PER_BLOCK"]
+    return f"{blocks * CONFIG['BYTES_PER_BLOCK'] / 1e9:g}"
+
+
+def make_no_cache_vs_restore_plots(
+    figsize=(8, 3.5), dpi=700, output_prefix="tiers_configuration"
+):
+    """One figure per GPU: that GPU's no-cache prefill against every stack.
+
+    The violins are identical in all six figures - the restore distribution has
+    no GPU in it - so flipping between the plots reads as swapping the GPU under
+    a fixed set of 1764 storage deployments. Both axes are plotted as log10 so
+    the violin KDE keeps its shape on a log scale; ticks carry the real values.
+    """
+    import itertools
+
+    model_params = CONFIG["MODEL_PARAMS"]
+    x_tokens = np.array(_RESTORE_X_TOKENS, dtype=float)
+    x_pos = np.log10(x_tokens)
+
+    # Restore distribution: one sample per (DRAM, disk, link) deployment
+    # The GPU takes part in a restore, so each GPU gets its own distribution.
+    stacks = list(
+        itertools.product(_RESTORE_DRAM_KEYS, _RESTORE_DISK_KEYS, _RESTORE_LINK_KEYS)
+    )
+    deployments = len(stacks)
+    per_gpu_data = {}
+    for gpu_key in _PERM_GPU_KEYS:
+        data = [[] for _ in x_tokens]
+        for dram_key, disk_key, link_key in stacks:
+            times = build_restore_curve(
+                x_tokens,
+                DRAMS[dram_key],
+                DISKS[disk_key],
+                LINKS[link_key],
+                GPUS[gpu_key],
+                gpu_count=1,
+            )
+            for index, t in enumerate(times):
+                if np.isfinite(t) and t > 0:
+                    data[index].append(float(t))
+        per_gpu_data[gpu_key] = data
+
+    # Compute lines: smooth, so they show the quadratic bend
+    xs_line = np.logspace(np.log10(x_tokens[0]), np.log10(x_tokens[-1]), 400)
+    compute_curves = {
+        gpu_key: build_prefill_curve(xs_line, model_params, GPUS[gpu_key], gpu_count=1)
+        for gpu_key in _PERM_GPU_KEYS
+    }
+
+    # Limits come from the restore spread alone - it is the same in all six
+    # figures, so they stay comparable, and a slow GPU's line simply runs off
+    # the top instead of stretching every panel to fit it.
+    all_values = [
+        v for data in per_gpu_data.values() for values in data for v in values
+    ]
+    y_lo, y_hi = min(all_values) * 0.6, float(_RESTORE_Y_MAX)
+
+    box_w = float(np.diff(x_pos).min()) * 0.42
+    outputs = []
+
+    for gpu_key in _PERM_GPU_KEYS:
+        gpu = GPUS[gpu_key]
+        color = _PERM_GPU_COLORS[gpu_key]
+
+        _, ax = plt.subplots(figsize=figsize, dpi=dpi)
+        ax.set_xlim(x_pos[0] - box_w, x_pos[-1] + box_w)
+
+        # Restore spread: original grey bodies, red medians.
+        _log_violin(ax, per_gpu_data[gpu_key], x_pos, box_w)
+
+        # No-cache prefill for this GPU.
+        ax.plot(
+            np.log10(xs_line),
+            np.log10(compute_curves[gpu_key]),
+            color=color,
+            lw=2.0,
+            linestyle=":",
+            zorder=4,
+        )
+
+        legend_items = [
+            Line2D([0], [0], color=color, lw=1.6, linestyle=":", label=gpu.name)
+        ]
+
+        # Axes
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels([fmt_engineering(v) for v in x_tokens])
+        ax.set_xlabel("Context Length (Log)", fontsize=12)
+        ax.tick_params(axis="x", labelsize=11)
+
+        ax2 = ax.twiny()
+        ax2.set_xlim(ax.get_xlim())
+        ax2.set_xticks(x_pos)
+        ax2.set_xticklabels([fmt_gb_from_tokens(v) for v in x_tokens])
+        ax2.tick_params(axis="x", labelsize=11)
+        ax2.set_xlabel("Data Volume (GB)", fontsize=12)
+
+        _log_time_axis(ax, _RESTORE_Y_TICKS, y_lo, y_hi)
+        ax.grid(True, which="major", linestyle="dashed", linewidth=0.45, alpha=0.35)
+        ax.set_ylabel("Time (Log)", fontsize=12)
+        ax.tick_params(axis="y", labelsize=11)
+
+        ax.text(
+            0.01,
+            0.99,
+            f"{deployments} configurations",
+            transform=ax.transAxes,
+            fontsize=11,
+            va="top",
+            ha="left",
+            color="#555555",
+        )
+
+        ax.legend(
+            handles=legend_items,
+            loc="lower right",
+            fontsize=12,
+            framealpha=0.92,
+            edgecolor="#cccccc",
+            handletextpad=0.4,
+            handlelength=3.0,
+        )
+
+        plt.tight_layout()
+
+        output = f"{output_prefix}_{gpu_key.lower()}.pdf"
+        plt.savefig(output, bbox_inches="tight")
+        plt.close()
+        outputs.append(output)
+        print(f"Saved \u2192 {output}  ({deployments} storage deployments)")
+
+    return outputs
+
+
 if __name__ == "__main__":
     # make_plot()
-    make_permutation_plot()
+    # make_permutation_plot()
+    make_no_cache_vs_restore_plots()

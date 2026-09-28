@@ -1,5 +1,5 @@
 # Disk / storage-tier catalog. bandwidth in bytes/s, capacity in bytes, cost in USD.
-# Loaded into src.disk.Disk objects.
+# Loaded into src.types.Disk objects by src/loader.py.
 
 HDD:
   name: HDD
@@ -42,6 +42,90 @@ NVMeT700R5:
   bandwidth: 20e9    # 20 GB/s
   capacity: 16e12    # 16 TB
   cost: 2000
+
+HDD5400:
+  name: HDD 5400rpm
+  bandwidth: 80e6    # 80 MB/s
+  capacity: 4e12     # 4 TB
+  cost: 80
+
+HDDR0x2:
+  name: HDD (Raid 0 x2)
+  bandwidth: 200e6   # 200 MB/s
+  capacity: 8e12     # 8 TB
+  cost: 200
+
+HDDR0x5:
+  name: HDD (Raid 0 x5)
+  bandwidth: 500e6   # 500 MB/s
+  capacity: 20e12    # 20 TB
+  cost: 500
+
+SATA870:
+  name: SSD 870 EVO SATA
+  bandwidth: 560e6   # 560 MB/s
+  capacity: 4e12     # 4 TB
+  cost: 250
+
+SATAR0x4:
+  name: SATA SSD (Raid 0 x4)
+  bandwidth: 1.8e9   # 1.8 GB/s
+  capacity: 8e12     # 8 TB
+  cost: 800
+
+NVMeGen3R0:
+  name: SSD NVMe Gen3 (Raid 0 x2)
+  bandwidth: 4e9     # 4 GB/s
+  capacity: 4e12     # 4 TB
+  cost: 600
+
+NVMe990:
+  name: SSD NVMe 990 Pro Gen4
+  bandwidth: 7e9     # 7 GB/s
+  capacity: 4e12     # 4 TB
+  cost: 400
+
+NVMeGen5:
+  name: SSD NVMe T705 Gen5
+  bandwidth: 12e9    # 12 GB/s
+  capacity: 2e12     # 2 TB
+  cost: 350
+
+NVMeGen4R0x4:
+  name: SSD NVMe Gen4 (Raid 0 x4)
+  bandwidth: 24e9    # 24 GB/s
+  capacity: 8e12     # 8 TB
+  cost: 1600
+
+RDMADram:
+  name: Remote DRAM (RDMA)
+  bandwidth: 25e9    # 25 GB/s
+  capacity: 1e12     # 1 TB
+  cost: 3000
+
+NVMeGen5R0x4:
+  name: SSD NVMe Gen5 (Raid 0 x4)
+  bandwidth: 45e9    # 45 GB/s
+  capacity: 8e12     # 8 TB
+  cost: 1400
+
+CXLFlash:
+  name: CXL Flash Pool
+  bandwidth: 64e9    # 64 GB/s
+  capacity: 8e12     # 8 TB
+  cost: 6000
+
+NVMeGen5R0x8:
+  name: SSD NVMe Gen5 (Raid 0 x8)
+  bandwidth: 80e9    # 80 GB/s
+  capacity: 16e12    # 16 TB
+  cost: 2800
+
+CXLMem:
+  name: CXL Memory Pool
+  bandwidth: 128e9   # 128 GB/s
+  capacity: 2e12     # 2 TB
+  cost: 9000
 
 # Convenience groupings.
 SATA:

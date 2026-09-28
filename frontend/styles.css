@@ -26,7 +26,7 @@ body {
   font-size: 14px;
 }
 
-/* ---------- Top bar ---------- */
+/* Top bar */
 .topbar {
   display: flex;
   align-items: center;
@@ -72,7 +72,7 @@ body {
 }
 .github-link:hover { color: var(--text); }
 
-/* ---------- Layout ---------- */
+/* Layout */
 .layout {
   display: grid;
   grid-template-columns: 320px 1fr;
@@ -88,7 +88,7 @@ body {
 }
 .config { position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; }
 
-/* ---------- Form ---------- */
+/* Form */
 .group { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
 .group:last-of-type { border-bottom: none; }
 .group h2 {
@@ -130,7 +130,7 @@ input[type="range"] { width: 100%; margin-top: 6px; accent-color: var(--accent);
 .status { font-size: 12px; color: var(--muted); margin-top: 8px; min-height: 16px; }
 .status.error { color: var(--red); }
 
-/* ---------- Results ---------- */
+/* Results */
 .placeholder { color: var(--muted); text-align: center; padding: 60px 20px; }
 .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 22px 0 12px; }
 
@@ -203,7 +203,7 @@ canvas { max-height: 280px; }
 
 .hidden { display: none !important; }
 
-/* ---------- Footer ---------- */
+/* Footer */
 .sitefoot {
   display: flex;
   align-items: center;

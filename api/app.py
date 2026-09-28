@@ -1,7 +1,6 @@
 """FastAPI backend for the KV-cache tier-placement simulator.
 
-Endpoints
----------
+Endpoints:
 GET  /api/catalog   Hardware + model catalogs and stack presets (for the UI).
 POST /api/simulate  Run all three policies for one hardware/workload/placement.
 POST /api/sweep     Sweep P95 x request-rate into per-policy pass/fail grids,
@@ -27,12 +26,10 @@ from src.pool import DISKS, DRAMS, GPUS, LINKS, MODELS
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
-app = FastAPI(title="KV-Cache Tier Placement Simulator", version="1.0.0")
+app = FastAPI(title="KVC-TierSim", version="1.0.0")
 
 
-# --------------------------------------------------------------------------- #
 # Request models
-# --------------------------------------------------------------------------- #
 class HardwareSpec(BaseModel):
     gpu_key: str = "H200"
     dram_key: str = "DDR5"
@@ -87,9 +84,7 @@ class SweepRequest(BaseModel):
     gpu_eta: float = Field(default=0.5, gt=0, le=1)
 
 
-# --------------------------------------------------------------------------- #
 # Helpers
-# --------------------------------------------------------------------------- #
 def _hardware_config(spec: HardwareSpec) -> HardwareConfig:
     for key, catalog, kind in (
         (spec.gpu_key, GPUS, "gpu"),
@@ -157,9 +152,7 @@ def _policy_pass_state(policy_row: dict[str, Any]) -> dict[str, bool]:
     }
 
 
-# --------------------------------------------------------------------------- #
 # Endpoints
-# --------------------------------------------------------------------------- #
 @app.get("/api/catalog")
 def catalog() -> JSONResponse:
     def dump(mapping):

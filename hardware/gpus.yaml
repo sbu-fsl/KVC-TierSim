@@ -1,11 +1,16 @@
 # GPU catalog. Bandwidth in bytes/s, capacity in bytes, peak_flops in FLOP/s, cost in USD.
-# Loaded into src.gpu.GPU objects by src/loader.py.
+# peak_flops is the vendor headline tensor rate per part, the same numbers the
+# sweeps under results/ were generated with. Formats differ between parts (sparse FP8 for
+# the datacenter GPUs, FP16/FP32 for the workstation ones), so a prefill sustains
+# well under these; src/policies scales them by an eta factor.
+# Loaded into src.types.GPU objects by src/loader.py.
 
 H200:
   name: H200
-  hbm_bandwidth: 3.36e12   # 3360 GB/s HBM3e
+  hbm_bandwidth: 4.8e12    # 4800 GB/s HBM3e
   hbm_capacity: 141e9      # 141 GB
   peak_flops: 4000e12      # 4000 TFLOPS peak FP
+  max_link_bandwidth: 900e9  # NVLink 4.0
   cost: 40000
 
 H100:
@@ -13,6 +18,7 @@ H100:
   hbm_bandwidth: 3.36e12   # 3360 GB/s
   hbm_capacity: 80e9       # 80 GB (NVL)
   peak_flops: 1979e12      # 1979 TFLOPS
+  max_link_bandwidth: 900e9  # NVLink 4.0
   cost: 24500
 
 A100:
@@ -20,6 +26,7 @@ A100:
   hbm_bandwidth: 2.039e12  # 2039 GB/s
   hbm_capacity: 80e9       # 80 GB
   peak_flops: 312e12       # 312 TFLOPS
+  max_link_bandwidth: 600e9  # NVLink 3.0
   cost: 12000
 
 RTX6000:
@@ -27,6 +34,7 @@ RTX6000:
   hbm_bandwidth: 960e9     # 960 GB/s
   hbm_capacity: 48e9       # 48 GB
   peak_flops: 182e12       # 182 TFLOPS
+  max_link_bandwidth: 32e9   # PCIe 4.0 x16, no NVLink
   cost: 8000
 
 V100:
@@ -34,6 +42,7 @@ V100:
   hbm_bandwidth: 897e9     # 897 GB/s
   hbm_capacity: 32e9       # 32 GB
   peak_flops: 125e12       # 125 TFLOPS
+  max_link_bandwidth: 300e9  # NVLink 2.0
   cost: 3000
 
 A5000:
@@ -41,12 +50,13 @@ A5000:
   hbm_bandwidth: 768e9     # 768 GB/s
   hbm_capacity: 24e9       # 24 GB
   peak_flops: 55e12        # 55 TFLOPS
+  max_link_bandwidth: 112e9  # NVLink (A5000 bridge)
   cost: 2300
 
 # Convenience groupings kept for backward compatibility with older configs.
 High-End:
   name: High-End
-  hbm_bandwidth: 3.36e12
+  hbm_bandwidth: 4.8e12
   hbm_capacity: 141e9
   peak_flops: 4000e12
   cost: 40000

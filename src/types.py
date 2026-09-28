@@ -12,6 +12,15 @@ class GPU:
     hbm_capacity: float
     peak_flops: float
     cost: float
+    # Ceiling on the interconnect that feeds this GPU (its NVLink generation, or
+    # PCIe for parts without one). A catalog link faster than this cannot be
+    # attached to the part; 0.0 leaves it uncapped.
+    max_link_bandwidth: float = 0.0
+
+    def effective_link_bandwidth(self, link_bandwidth: float) -> float:
+        if self.max_link_bandwidth <= 0.0:
+            return link_bandwidth
+        return min(link_bandwidth, self.max_link_bandwidth)
 
     def gpu_compute_band(
         self, model_params: float, gpu_count: int = 1, eta: float = 0.6

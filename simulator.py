@@ -1,6 +1,6 @@
 """CLI comparing KV-cache policies on a single-tier (disk) hardware model.
 
-The policy strategies themselves live in the ``policies/`` package; this module
+The policy strategies themselves live in the ``src/policies/`` package; this module
 owns the *hardware math* (how X and Y are derived) and the experiment plumbing.
 Every registered policy is evaluated automatically, so adding a policy module
 makes it show up here too.

@@ -692,7 +692,7 @@ def _print_summary(outcome: SweepOutcome) -> None:
         f"{'+median':>10}{'+mean':>9}{'x base':>9}{'% req':>11}"
     )
     print(f"\n{header}")
-    print(f"  {'':-<18}{'':->9}{'':->9}{'':->9}{'':->9}{'':->10}{'':->9}{'':->9}{'':->11}")
+    print(f"  {'':=<18}{'':=>9}{'':=>9}{'':=>9}{'':=>9}{'':=>10}{'':=>9}{'':=>9}{'':=>11}")
     for name, entry in summary["policies"].items():
         cost = entry["cost"]
         added = entry["added_overhead"]

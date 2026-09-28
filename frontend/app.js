@@ -1,6 +1,6 @@
 "use strict";
 
-// ------------------------------------------------------------------ helpers
+// helpers
 const $ = (id) => document.getElementById(id);
 
 // Policies are loaded dynamically from /api/catalog so a new policy module on
@@ -59,7 +59,7 @@ function fmtBlocks(b) {
   return `${Math.round(b).toLocaleString()} blk · ${gb.toFixed(1)} GB`;
 }
 
-// ------------------------------------------------------------------ catalog
+// catalog
 async function loadCatalog() {
   const res = await fetch("/api/catalog");
   CATALOG = await res.json();
@@ -109,7 +109,7 @@ function updateHwSummary() {
     `Disk ${(k.bandwidth / 1e9).toFixed(1)} GB/s · Link ${(l.bandwidth / 1e9).toFixed(0)} GB/s · ~$${cost.toLocaleString()}`;
 }
 
-// ------------------------------------------------------------------ inputs
+// inputs
 function applyStackPreset() {
   const key = $("stackPreset").value;
   if (!key || !CATALOG.stacks[key]) return;
@@ -185,7 +185,7 @@ function workloadSpec() {
   };
 }
 
-// ------------------------------------------------------------------ simulate
+// simulate
 async function runSimulation() {
   const status = $("status");
   status.className = "status";
@@ -374,7 +374,7 @@ function renderBreakdownChart(data) {
   });
 }
 
-// ------------------------------------------------------------------ sweep
+// sweep
 async function runSweep() {
   const status = $("sweepStatus");
   status.className = "status";
@@ -480,7 +480,7 @@ function renderSuccessChart(data) {
   });
 }
 
-// ------------------------------------------------------------------ wiring
+// wiring
 function initEvents() {
   // Tabs
   document.querySelectorAll(".tab").forEach((tab) => {
