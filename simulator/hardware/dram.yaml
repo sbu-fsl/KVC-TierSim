@@ -1,0 +1,87 @@
+# CPU DRAM catalog. bandwidth in bytes/s, capacity in bytes (per module), cost in USD.
+# Loaded into src.types.DRAM objects by src/loader.py.
+
+DDR5-6000:
+  name: DDR5-6000
+  bandwidth: 85e9    # 85 GB/s
+  capacity: 32e9     # 32 GB
+  cost: 500
+
+DDR5-7200:
+  name: DDR5-7200
+  bandwidth: 81e9
+  capacity: 32e9
+  cost: 490
+
+DDR5-5600:
+  name: DDR5-5600
+  bandwidth: 62e9
+  capacity: 32e9
+  cost: 280
+
+DDR4-3200:
+  name: DDR4-3200
+  bandwidth: 30e9
+  capacity: 16e9
+  cost: 150
+
+DDR4-2133:
+  name: DDR4-2133
+  bandwidth: 25e9
+  capacity: 16e9
+  cost: 120
+
+DDR3-1600:
+  name: DDR3-1600
+  bandwidth: 20e9
+  capacity: 8e9
+  cost: 60
+
+DDR4-2400:
+  name: DDR4-2400
+  bandwidth: 26e9
+  capacity: 16e9
+  cost: 130
+
+DDR4-2666:
+  name: DDR4-2666
+  bandwidth: 28e9
+  capacity: 16e9
+  cost: 140
+
+DDR5-4800:
+  name: DDR5-4800
+  bandwidth: 55e9
+  capacity: 32e9
+  cost: 250
+
+DDR5-6400:
+  name: DDR5-6400
+  bandwidth: 75e9
+  capacity: 32e9
+  cost: 400
+
+DDR5-8000:
+  name: DDR5-8000
+  bandwidth: 95e9
+  capacity: 48e9
+  cost: 700
+
+LPDDR5X-8533:
+  name: LPDDR5X-8533
+  bandwidth: 102e9
+  capacity: 32e9
+  cost: 600
+
+# Convenience groupings.
+DDR5:
+  name: DDR5
+  bandwidth: 85e9
+  capacity: 32e9
+  cost: 500
+
+DDR4:
+  name: DDR4
+  bandwidth: 30e9
+  capacity: 16e9
+  cost: 150

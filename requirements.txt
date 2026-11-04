@@ -1,9 +1,19 @@
-# Core simulation + plotting (CLI: simulator.py, sweep.py, main.py)
+# Core simulation + plotting (simulator/)
 matplotlib
 numpy
 pyyaml
 
-# Web dashboard (api/app.py + frontend/)
+# Web dashboard (simulator/api + simulator/frontend)
 fastapi
 uvicorn[standard]
 pydantic
+
+# Dataset analysis (datasets/kvwl)
+pandas
+scipy
+scikit-learn
+mistral-common
+sentencepiece
+
+# Hugging Face dataset fetching (kvwl.fetch --hf)
+datasets

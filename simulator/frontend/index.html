@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KVC TierSim</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b1220'/%3E%3Ctext x='32' y='33' font-family='Segoe UI,Helvetica,Arial,sans-serif' font-size='24' font-weight='700' fill='%234a9eff' text-anchor='middle' dominant-baseline='central'%3EKVC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">▚</span>
+      <div>
+        <h1>LLM Inference KV-Cache Tiers Simulator</h1>
+        <p class="subtitle">Pick your hardware, place cache blocks across GPU HBM · DRAM · Disk, then compare cache-restore policies.</p>
+      </div>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="single">Single Point</button>
+      <button class="tab" data-tab="sweep">SLO Sweep</button>
+      <a class="github-link" href="https://github.com/sbu-fsl/KVC-TierSim" target="_blank" rel="noopener noreferrer" title="View on GitHub" aria-label="View on GitHub">
+        <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <!-- ===================== Config panel ===================== -->
+    <aside class="panel config">
+      <section class="group">
+        <h2>Infrastructure</h2>
+        <label>Stack preset
+          <select id="stackPreset"><option value="">— custom —</option></select>
+        </label>
+        <div class="row">
+          <label>GPU <select id="gpu"></select></label>
+          <label class="narrow">Count <input id="gpuCount" type="number" min="1" value="1" /></label>
+        </div>
+        <div class="row">
+          <label>DRAM <select id="dram"></select></label>
+          <label class="narrow">Modules <input id="dramCount" type="number" min="1" value="4" /></label>
+        </div>
+        <label>Disk <select id="disk"></select></label>
+        <label>Link <select id="link"></select></label>
+        <div id="hwSummary" class="hint"></div>
+      </section>
+
+      <section class="group">
+        <h2>Model</h2>
+        <label>Preset
+          <select id="modelPreset"><option value="">— custom —</option></select>
+        </label>
+        <div class="row">
+          <label>Params (B) <input id="modelParams" type="number" step="0.1" value="8" /></label>
+          <label>GPU η <input id="gpuEta" type="number" step="0.05" min="0.01" max="1" value="0.5" /></label>
+        </div>
+        <div class="row">
+          <label>Tokens/block <input id="tokensPerBlock" type="number" min="1" value="16" /></label>
+          <label>Bytes/block <input id="bytesPerBlock" type="number" step="0.1" value="2" /><span class="unit">MB</span></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Workload</h2>
+        <label>Total blocks <input id="totalBlocks" type="number" min="1" value="50000" /></label>
+        <label>Cache hit ratio <span class="val" id="hitRatioVal">99%</span>
+          <input id="hitRatio" type="range" min="0" max="100" value="99" />
+        </label>
+        <div class="hint" id="missHint"></div>
+        <div class="row">
+          <label>Request rate (req/s) <input id="requestRate" type="number" step="0.01" min="0.01" value="0.02" /></label>
+          <label>P95 SLO (s) <input id="p95" type="number" step="0.5" min="0.5" value="10" /></label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Tier Placement</h2>
+        <div class="segmented">
+          <button class="seg active" data-mode="auto">Auto (capacity waterfall)</button>
+          <button class="seg" data-mode="manual">Manual</button>
+        </div>
+        <div id="manualPlacement" class="hidden">
+          <label>VRAM <span class="val" id="vramVal">0%</span><input id="vram" type="range" min="0" max="100" value="0" /></label>
+          <label>DRAM <span class="val" id="dramVal">0%</span><input id="dramFrac" type="range" min="0" max="100" value="0" /></label>
+          <label>Disk <span class="val" id="diskVal">100%</span><input id="diskFrac" type="range" min="0" max="100" value="100" /></label>
+          <div class="hint">Sliders are normalized to 100% of hit blocks.</div>
+        </div>
+      </section>
+
+      <button id="runBtn" class="run">▶ Run Simulation</button>
+      <div id="status" class="status"></div>
+    </aside>
+
+    <!-- ===================== Single-point results ===================== -->
+    <section class="panel results" id="singleView">
+      <div class="placeholder" id="singlePlaceholder">Configure the stack and press <b>Run Simulation</b>.</div>
+
+      <div id="singleResults" class="hidden">
+        <div class="metric-strip">
+          <div class="metric"><span class="mlabel">Restore rate (X)</span><span class="mval" id="mX">–</span><span class="munit">blocks/s</span></div>
+          <div class="metric"><span class="mlabel">Recompute rate (Y)</span><span class="mval" id="mY">–</span><span class="munit">blocks/s</span></div>
+          <div class="metric"><span class="mlabel">Hit / Miss blocks</span><span class="mval" id="mHM">–</span><span class="munit">blocks</span></div>
+          <div class="metric"><span class="mlabel">Capacity</span><span class="mval" id="mFits">–</span><span class="munit"></span></div>
+        </div>
+
+        <h3 class="section-title">Tier residency</h3>
+        <div id="tierBars" class="tier-bars"></div>
+
+        <h3 class="section-title">Policy comparison</h3>
+        <div id="policyCards" class="policy-cards"></div>
+
+        <div class="chart-grid">
+          <div class="chart-box">
+            <h4>Latency vs SLO</h4>
+            <canvas id="latencyChart"></canvas>
+          </div>
+          <div class="chart-box">
+            <h4>Time breakdown (restore vs recompute)</h4>
+            <canvas id="breakdownChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== Sweep results ===================== -->
+    <section class="panel results hidden" id="sweepView">
+      <div class="sweep-controls">
+        <p class="hint">Sweeps P95 SLO (rows) against request rate (columns) at the configured hit ratio and placement. Uses <b>Total blocks</b> from the workload panel.</p>
+        <button id="sweepBtn" class="run small">▶ Run Sweep</button>
+        <div id="sweepStatus" class="status"></div>
+      </div>
+      <div id="sweepResults" class="hidden">
+        <div class="legend" id="sweepLegend"></div>
+        <div id="heatmaps" class="heatmaps"></div>
+        <div class="chart-box wide">
+          <h4>SLO success rate vs cache hit ratio</h4>
+          <canvas id="successChart"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="sitefoot">
+    <span>Design &amp; frontend by <b>Claude Code</b></span>
+    <span class="dot">·</span>
+    <span>Backend &amp; simulator by the <b>File Systems &amp; Storage Lab</b>, Department of Computer Science, Stony Brook University</span>
+    <span class="dot">·</span>
+    <span>Under <b>Apache-2.0 License</b> (2026)</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
