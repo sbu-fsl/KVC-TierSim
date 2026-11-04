@@ -1,0 +1,987 @@
+LongBench:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args: {n: 320}
+  fidelity: measured
+  notes: 16 English subsets, 20 each, official dataset2prompt templates and dataset2maxlen output caps
+  rank: 1
+  papers: ['2311.04934', '2401.09670', '2401.18079', '2402.02750', '2402.04617', '2402.06262', '2403.17411', '2404.04793',
+    '2404.14469', '2405.04532', '2405.06219', '2405.16444', '2406.02069', '2406.03482', '2406.10774', '2406.14909', '2407.02490',
+    '2407.11550', '2407.12820', '2407.20485', '2407.21018', '2408.11745', '2409.01227', '2409.12490', '2409.17422', '2410.00161',
+    '2410.05076', '2410.07590', '2410.10819', '2410.13276', '2410.13846', '2410.19258', '2410.21465', '2411.09688', '2411.17116',
+    '2412.03131', '2412.10319', '2412.12706', '2412.18169', '2502.01068', '2502.02617', '2502.14866', '2503.00979', '2503.12491',
+    '2503.17922', '2503.18893', '2503.19950', '2503.24000', '2504.03661', '2504.16083', '2505.00019', '2505.02922', '2505.19586',
+    '2505.22913', '2506.06295', '2506.18879', '2508.02401', '2508.02558', '2508.06447', '2508.06526', '2508.15212', '2509.09754',
+    '2510.09309', '2510.09665', '2510.21270', '2511.00868', '2511.01815', '2512.03324', '2601.03067', '2603.27138', '2605.08840',
+    '2606.24467', '2608.01247', '2609.01507', '2609.10266', '2609.11744', '2609.31382', '2609.33746', '2610.03135', '2610.26754']
+
+GSM8K:
+  category: reasoning
+  hf: openai/gsm8k
+  source: [gsm8k]
+  builder: gsm8k
+  args: {n: 400, shots: 8}
+  fidelity: measured
+  notes: 8-shot CoT prefix shared by every question (lm-eval gsm8k_cot / SGLang style)
+  rank: 2
+  papers: ['2312.07104', '2402.02750', '2403.05527', '2403.17411', '2404.04793', '2405.04434', '2405.05254', '2405.16444',
+    '2406.15786', '2407.02490', '2407.12820', '2407.12866', '2407.21018', '2409.03856', '2409.15355', '2410.00161', '2410.05004',
+    '2410.07590', '2410.13276', '2412.03131', '2412.10319', '2412.13649', '2412.20993', '2502.02617', '2502.14837', '2502.16002',
+    '2503.00979', '2503.18773', '2503.19950', '2503.24000', '2504.07389', '2504.16083', '2505.00019', '2505.19586', '2505.22618',
+    '2505.23416', '2506.06295', '2508.02558', '2510.12872', '2510.14973', '2511.01815', '2512.03324', '2512.22671', '2512.24449',
+    '2601.03067', '2604.04921', '2605.02888', '2605.08151', '2606.09079', '2608.14624', '2609.03430', '2609.07966', '2609.26796',
+    '2609.39329', '2610.03326', '2610.18642']
+
+Needle-in-a-Haystack:
+  category: synthetic
+  hf: null
+  source: [magicdec]
+  builder: niah
+  fidelity: measured
+  notes: Paul Graham essays haystack, 4K-32K x 5 depths; requests at one length share the haystack up to the needle
+  rank: 3
+  papers: ['2402.02750', '2402.05099', '2404.14469', '2404.15574', '2405.04434', '2405.04532', '2406.02069', '2406.11430',
+    '2406.18139', '2407.02490', '2407.12820', '2407.20485', '2408.11049', '2409.10516', '2409.12490', '2409.17422', '2410.05076',
+    '2410.10819', '2410.13276', '2410.15332', '2410.21465', '2411.17116', '2412.10319', '2412.12706', '2502.01068', '2502.12574',
+    '2502.14866', '2502.17599', '2502.18137', '2503.00979', '2503.02812', '2503.17922', '2503.18893', '2503.24000', '2504.16083',
+    '2504.17768', '2505.02922', '2505.19586', '2505.23416', '2506.18879', '2508.02401', '2508.06447', '2509.09754', '2511.01815',
+    '2605.08840', '2606.17034', '2606.24467', '2609.39329', '2610.03135', '2610.26754']
+
+Wikipedia/WikiText:
+  category: lm
+  hf: Salesforce/wikitext
+  source: [magicdec]
+  builder: text_windows
+  args: {file: pg19-test.json, window: 2048, n: 128}
+  fidelity: lengths
+  notes: 'perplexity eval: disjoint 2K windows; WikiText-2 text not in sandbox, PG-19 text used as content (reuse is zero
+    either way)'
+  rank: 4
+  papers: ['2310.07240', '2401.18079', '2402.09398', '2403.01241', '2403.06764', '2403.08845', '2403.19708', '2404.04793',
+    '2405.04532', '2405.05254', '2405.06219', '2405.10637', '2406.02542', '2406.15786', '2406.16635', '2406.19707', '2407.08608',
+    '2407.21118', '2408.05646', '2408.07092', '2408.14690', '2409.01227', '2409.04992', '2409.10593', '2410.01805', '2410.05265',
+    '2410.19313', '2410.23079', '2410.23918', '2411.09688', '2412.08890', '2502.14866', '2503.05840', '2503.10714', '2503.16257',
+    '2503.24000', '2504.03661', '2504.07389', '2504.14569', '2508.04405', '2508.05239', '2508.06526', '2512.22671', '2512.24449',
+    '2604.24971', '2605.01708', '2606.07684', '2609.33889', '2610.03326']
+
+ShareGPT:
+  category: chat
+  hf: anon8231489123/ShareGPT_Vicuna_unfiltered
+  source: [hf_sharegpt]
+  builder: synthetic
+  args: {n: 1000, in_mean: 161, in_cv: 1.6, out_mean: 338, out_cv: 1.0}
+  fidelity: published
+  notes: 'vLLM benchmark_serving usage (first turn only, no reuse); lengths from the vLLM paper (SOSP''23): input mean 161,
+    output mean 338. The 1K-prompt ShareGPT sample found in the artifacts is length-filtered (mean ~1.3K) and duplicated,
+    so it is not used'
+  rank: 5
+  papers: ['2312.05516', '2312.07104', '2401.09670', '2401.17644', '2402.02750', '2403.01241', '2403.17411', '2403.19708',
+    '2404.09526', '2405.04437', '2405.16444', '2405.19888', '2406.15786', '2406.17565', '2406.18139', '2407.15309', '2407.21255',
+    '2408.12757', '2409.04992', '2410.00161', '2410.00428', '2410.05004', '2411.18424', '2411.19379', '2412.00876', '2412.01818',
+    '2412.18169', '2501.14743', '2502.13965', '2502.17599', '2503.14649', '2503.24000', '2505.00019', '2505.11916', '2506.02634',
+    '2506.06295', '2506.15155', '2508.18572', '2510.20707', '2512.03324', '2601.10729', '2605.02888', '2605.08151', '2606.09079',
+    '2609.11744', osdi26-luo]
+
+HotpotQA:
+  category: rag
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [hotpotqa]
+    n: 200
+  fidelity: measured
+  notes: LongBench version; passages are reusable chunks
+  rank: 6
+  papers: ['2311.04934', '2402.02750', '2404.14469', '2405.16444', '2406.02069', '2406.10774', '2406.14909', '2406.17565',
+    '2407.02490', '2407.11550', '2408.03675', '2408.07092', '2408.11049', '2409.15355', '2410.03960', '2410.07590', '2410.13276',
+    '2410.15332', '2410.19313', '2410.21465', '2411.17116', '2412.10319', '2502.02617', '2502.13965', '2502.16002', '2503.00979',
+    '2503.18893', '2503.19950', '2504.16083', '2505.02922', '2505.19586', '2506.17121', '2511.01815', '2512.03324', '2602.01053',
+    '2603.25926', '2606.07684', '2606.09079', '2606.17034', '2609.01507', '2609.10266', '2610.13060', '2610.26754']
+
+RULER:
+  category: synthetic
+  hf: null
+  source: [ruler]
+  builder: ruler
+  args: {length: 8192, n: 220}
+  fidelity: measured
+  notes: 13 tasks at 8K
+  rank: 7
+  papers: ['2401.18079', '2404.15574', '2405.04532', '2406.11430', '2407.02490', '2407.11550', '2408.11049', '2409.10516',
+    '2409.12490', '2409.17422', '2410.10819', '2410.13276', '2410.21465', '2411.09688', '2411.17116', '2412.10319', '2412.12706',
+    '2502.01068', '2502.12574', '2502.14866', '2503.00979', '2503.18893', '2504.16083', '2504.17768', '2505.02922', '2505.19586',
+    '2505.23416', '2506.17121', '2506.18879', '2508.02401', '2508.06447', '2508.15212', '2509.09754', '2511.01815', '2602.10238',
+    '2605.08840', '2606.09079', '2606.24467', '2608.01247', '2609.07966', '2609.33746', '2609.39329', '2610.26754']
+
+SQuAD:
+  category: rag
+  hf: rajpurkar/squad_v2
+  source: [squad]
+  builder: squad
+  args: {n: 600}
+  fidelity: measured
+  notes: SQuAD v2 dev, context-first template, ~5 questions per paragraph
+  rank: 8
+  papers: ['2401.18079', '2403.06764', '2403.09054', '2403.17411', '2404.02827', '2405.05254', '2405.12532', '2405.16444',
+    '2406.16635', '2407.02490', '2408.03675', '2408.11049', '2409.04992', '2410.01805', '2410.13276', '2410.18517', '2410.19313',
+    '2410.21465', '2411.09688', '2411.17116', '2412.10319', '2502.15734', '2502.16002', '2503.02812', '2503.14649', '2503.16257',
+    '2503.18893', '2504.16083', '2504.17768', '2505.00019', '2505.02922', '2505.19586', '2505.23416', '2506.18879', '2508.04405',
+    '2511.01815', '2512.03324', '2603.25926', '2608.01247', '2609.07966', '2609.39329']
+
+MMLU:
+  category: fewshot
+  hf: cais/mmlu
+  source: [mmlu]
+  builder: mmlu
+  args: {shots: 5, n: 600}
+  fidelity: measured
+  notes: 5-shot per subject (STEM subset available in sandbox)
+  rank: 9
+  papers: ['2312.07104', '2401.09670', '2403.01241', '2403.05527', '2403.19708', '2404.04793', '2404.12457', '2405.04434',
+    '2406.15786', '2407.12866', '2408.07092', '2409.03856', '2409.15355', '2410.07590', '2410.10819', '2410.19313', '2412.03131',
+    '2412.13649', '2502.14837', '2502.16002', '2503.00979', '2503.24000', '2504.07389', '2505.22618', '2508.02558', '2510.12872',
+    '2511.01815', '2512.03324', '2512.22671', '2512.24449', '2601.03067', '2605.08151', '2606.09079', '2609.33889', '2610.03326']
+
+Passkey retrieval:
+  category: synthetic
+  hf: null
+  source: []
+  builder: passkey
+  fidelity: measured
+  notes: Landmark/KIVI passkey prompt, 2K-32K
+  rank: 10
+  papers: ['2401.18079', '2402.02750', '2402.04617', '2402.06262', '2404.10308', '2405.04532', '2406.10774', '2406.11430',
+    '2407.02490', '2407.21018', '2408.11745', '2410.01805', '2410.10819', '2412.10319', '2502.14866', '2503.10714', '2503.24000',
+    '2504.16083', '2505.19586', '2506.17121', '2506.18879', '2508.15212', '2509.09754', '2512.03324', '2605.08840', '2609.33746',
+    '2609.33889', '2610.06686']
+
+C4:
+  category: lm
+  hf: allenai/c4
+  source: [magicdec]
+  builder: text_windows
+  args: {file: pg19-test.json, window: 2048, n: 128}
+  fidelity: lengths
+  notes: perplexity eval windows (C4 sample too small; PG-19 text as content)
+  rank: 11
+  papers: ['2401.18079', '2402.02750', '2403.01241', '2403.06764', '2403.19708', '2406.02542', '2406.15786', '2407.02490',
+    '2407.21018', '2407.21118', '2408.05646', '2410.05265', '2410.17897', '2410.19258', '2410.19313', '2412.10319', '2502.15075',
+    '2503.24000', '2504.07389', '2504.14569', '2504.16083', '2505.19586', '2505.22913', '2508.04405', '2605.08151', '2606.09079',
+    '2610.03326', '2610.05329']
+
+NarrativeQA:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [narrativeqa]
+    n: 200
+  fidelity: measured
+  rank: 12
+  papers: ['2310.07240', '2311.04934', '2402.02750', '2404.04793', '2404.14469', '2406.02069', '2406.10774', '2407.02490',
+    '2407.11550', '2407.20485', '2408.07092', '2410.00161', '2410.01805', '2410.03065', '2410.13276', '2412.10319', '2502.02617',
+    '2503.00979', '2503.19950', '2504.16083', '2506.17121', '2508.18572', '2603.27138', '2609.01507', '2610.26754']
+
+HumanEval:
+  category: code
+  hf: openai/openai_humaneval
+  source: [humaneval]
+  builder: humaneval
+  fidelity: measured
+  rank: 13
+  papers: ['2401.09670', '2401.18079', '2403.06764', '2404.04793', '2405.04434', '2405.05254', '2406.15786', '2406.16635',
+    '2409.03856', '2409.15355', '2410.01805', '2410.19313', '2411.09688', '2412.03131', '2505.22618', '2506.06295', '2508.02558',
+    '2510.12872', '2510.14973', '2512.03324', '2605.02888', '2605.08151', '2606.09079', '2609.26796', '2610.03326']
+
+Natural Questions:
+  category: rag
+  hf: google-research-datasets/nq_open
+  source: [nq]
+  builder: nq_rag
+  args: {n: 500, k: 10}
+  fidelity: measured
+  notes: NQ-open with 10 retrieved passages (KVLink/lost-in-the-middle)
+  rank: 14
+  papers: ['2401.18079', '2402.05099', '2402.15220', '2403.06764', '2404.02827', '2404.04793', '2404.12457', '2405.05254',
+    '2406.16635', '2407.08608', '2408.00274', '2408.03675', '2409.10516', '2409.15355', '2410.03960', '2410.19313', '2411.09688',
+    '2502.05431', '2502.16002', '2502.18137', '2503.18893', '2603.25926', '2605.08151', '2606.17034', '2610.06686']
+
+HellaSwag:
+  category: fewshot
+  hf: Rowan/hellaswag
+  source: [hf_hellaswag]
+  builder: synthetic
+  args: {n: 400, in_mean: 110, in_cv: 0.3, out_mean: 1, out_cv: 0.01, shared_prefix: 550, q_per_doc: 4}
+  fidelity: published
+  notes: 'lm-eval 5-shot loglikelihood: ctx ~80 tok + 4 endings ~30 tok share ctx; exemplar prefix ~550 tok'
+  rank: 15
+  papers: ['2312.07104', '2403.04643', '2403.08845', '2403.09054', '2404.02827', '2404.04793', '2405.05254', '2406.15786',
+    '2407.12866', '2408.07092', '2408.14690', '2410.05265', '2410.15704', '2410.19313', '2502.14837', '2502.16002', '2503.05840',
+    '2508.04405', '2512.03324', '2512.22671', '2606.09079', '2609.07966', '2610.03326']
+
+MuSiQue:
+  category: rag
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [musique]
+    n: 200
+  fidelity: measured
+  rank: 16
+  papers: ['2311.04934', '2402.02750', '2405.16444', '2406.02069', '2407.11550', '2410.07590', '2410.13276', '2410.15332',
+    '2502.02617', '2502.15734', '2502.16002', '2503.00979', '2503.19950', '2508.02401', '2511.01815', '2606.17034', '2606.24467',
+    '2609.01507', '2609.10266', '2610.13060', '2610.26754']
+
+TriviaQA:
+  category: rag
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [triviaqa]
+    n: 200
+  fidelity: measured
+  rank: 17
+  papers: ['2310.07240', '2311.04934', '2402.02750', '2403.06764', '2406.02069', '2406.10774', '2407.11550', '2407.20485',
+    '2408.03675', '2408.07092', '2409.04992', '2410.03065', '2410.07590', '2410.19313', '2502.16002', '2503.14649', '2503.24000',
+    '2506.17121', '2508.04405', '2510.09665', '2606.17034']
+
+Qasper:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [qasper]
+    n: 200
+  fidelity: measured
+  rank: 18
+  papers: ['2402.02750', '2404.14469', '2406.02069', '2406.10774', '2406.14909', '2407.11550', '2407.20485', '2408.07092',
+    '2410.13276', '2502.02617', '2503.00979', '2503.18893', '2503.19950', '2511.01815', '2603.27138', '2608.01247', '2609.01507',
+    '2609.10266', '2610.03135', '2610.13060', '2610.26754']
+
+MultiNews:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [multi_news]
+    n: 200
+  fidelity: measured
+  rank: 19
+  papers: ['2311.04934', '2401.18079', '2402.02750', '2403.06764', '2405.16444', '2406.02069', '2406.14909', '2406.16635',
+    '2407.11550', '2407.20485', '2408.03675', '2410.15332', '2410.19258', '2411.09688', '2502.16002', '2503.00979', '2503.16257',
+    '2503.19950', '2503.24000', '2610.13060', '2610.26754']
+
+InfiniteBench:
+  category: longctx
+  hf: xinrongzhang2022/InfiniteBench
+  source: [hf_infinitebench]
+  builder: synthetic
+  args: {n: 60, in_mean: 145000, in_cv: 0.3, out_mean: 64, out_cv: 1.0, in_max: 200000}
+  fidelity: published
+  notes: InfiniteBench (Zhang et al. 2024) avg 87.9K-192.6K tok per task; mean ~145K
+  rank: 20
+  papers: ['2402.04617', '2407.02490', '2407.12820', '2408.11745', '2409.10516', '2410.01805', '2410.19258', '2410.21465',
+    '2412.10319', '2412.13649', '2503.10714', '2504.16083', '2505.19586', '2506.17121', '2506.18879', '2508.15212', '2509.09754',
+    '2512.03324', '2605.08840', '2609.33746', '2610.06686']
+
+2WikiMultihopQA:
+  category: rag
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [2wikimqa]
+    n: 200
+  fidelity: measured
+  rank: 21
+  papers: ['2311.04934', '2402.02750', '2405.16444', '2406.02069', '2407.11550', '2409.15355', '2410.07590', '2410.13276',
+    '2410.15332', '2502.02617', '2502.15734', '2502.16002', '2503.00979', '2503.19950', '2511.01815', '2601.03067', '2603.27138',
+    '2609.01507', '2610.13060', '2610.26754']
+
+LMSYS-Chat-1M:
+  category: chat
+  hf: lmsys/lmsys-chat-1m
+  source: [hf_lmsys]
+  builder: synthetic
+  args: {n: 600, in_mean: 70, in_cv: 1.5, out_mean: 215, out_cv: 1.0, turns: 2, turn_append: 70}
+  fidelity: published
+  notes: 'LMSYS-Chat-1M Table 1: 2.0 turns/conv, 69.5 tok/prompt, 214.5 tok/response'
+  rank: 22
+  papers: ['2403.01876', '2404.14469', '2407.02490', '2407.11550', '2408.12757', '2410.03960', '2410.21465', '2411.09688',
+    '2411.19379', '2412.10319', '2501.06709', '2502.07115', '2503.00979', '2503.24000', '2504.16083', '2505.07833', '2506.17121',
+    '2509.09754', '2610.06686']
+
+SAMSum:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [samsum]
+    n: 200
+  fidelity: measured
+  notes: LongBench few-shot dialogue summarization
+  rank: 23
+  papers: ['2401.18079', '2402.02750', '2403.06764', '2404.04793', '2404.14469', '2405.16444', '2406.02069', '2406.16635',
+    '2407.11550', '2407.20485', '2410.15332', '2410.19313', '2411.09688', '2502.16002', '2503.16257', '2511.01815', '2603.27138']
+
+AIME:
+  category: reasoning
+  hf: HuggingFaceH4/aime_2024
+  source: [aime24]
+  builder: aime
+  args: {out_len: 16384}
+  fidelity: measured
+  notes: 'reasoning setting: 16K generated tokens'
+  rank: 24
+  papers: ['2403.06764', '2405.05254', '2410.13276', '2412.03131', '2412.20993', '2505.02922', '2505.18610', '2505.24133',
+    '2510.12872', '2511.01815', '2512.03324', '2602.07721', '2604.04921', '2605.08151', '2606.09079', '2609.03430']
+
+PIQA:
+  category: fewshot
+  hf: ybisk/piqa
+  source: [piqa]
+  builder: piqa
+  args: {n: 400, shots: 5}
+  fidelity: measured
+  notes: PIQA valid (ybisk GitHub), lm-eval 5-shot, 2 solutions share the goal
+  rank: 25
+  papers: ['2403.04643', '2403.09054', '2403.19708', '2404.02827', '2406.09297', '2406.19707', '2410.05265', '2410.19313',
+    '2502.14837', '2502.16002', '2504.07389', '2504.14569', '2508.02558', '2508.04405', '2512.22671', '2610.03326']
+
+Alpaca:
+  category: chat
+  hf: tatsu-lab/alpaca
+  source: [alpaca]
+  builder: alpaca
+  args: {n: 500}
+  fidelity: measured
+  rank: 26
+  papers: ['2401.09670', '2401.17644', '2403.06764', '2404.02827', '2405.05254', '2406.15786', '2407.12866', '2408.05646',
+    '2408.14690', '2410.19313', '2502.16002', '2503.24000', '2505.22618', '2506.18879', '2512.03324', osdi26-luo]
+
+GovReport:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [gov_report]
+    n: 200
+  fidelity: measured
+  rank: 27
+  papers: ['2311.04934', '2402.02750', '2403.09054', '2406.02069', '2406.10774', '2407.11550', '2407.20485', '2408.07092',
+    '2410.19258', '2503.00979', '2503.19950', '2601.03067', '2603.27138', '2609.31382', '2610.13060']
+
+MultiFieldQA:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [multifieldqa_en]
+    n: 150
+  fidelity: measured
+  rank: 28
+  papers: ['2402.02750', '2406.02069', '2406.10774', '2407.11550', '2407.20485', '2408.07092', '2410.13276', '2502.02617',
+    '2503.00979', '2503.19950', '2511.01815', '2609.01507', '2609.10266', '2610.03135', '2610.26754']
+
+WinoGrande:
+  category: fewshot
+  hf: allenai/winogrande
+  source: [hf_winogrande]
+  builder: synthetic
+  args: {n: 400, in_mean: 40, in_cv: 0.3, out_mean: 1, out_cv: 0.01, shared_prefix: 200}
+  fidelity: published
+  notes: 'partial scoring: the two options change the context, so no within-question sharing'
+  rank: 29
+  papers: ['2403.08845', '2403.09054', '2404.02827', '2405.05254', '2406.19707', '2408.14690', '2410.05265', '2410.19313',
+    '2502.14837', '2502.16002', '2504.14569', '2508.04405', '2512.22671', '2512.24449', '2610.03326']
+
+QMSum:
+  category: longctx
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [qmsum]
+    n: 200
+  fidelity: measured
+  rank: 30
+  papers: ['2311.04934', '2402.02750', '2404.14469', '2406.02069', '2407.11550', '2407.20485', '2410.00161', '2410.19258',
+    '2503.00979', '2503.19950', '2511.01815', '2601.03067', '2603.27138', '2610.13060']
+
+MATH / MATH-500:
+  category: reasoning
+  hf: HuggingFaceH4/MATH-500
+  source: [math500]
+  builder: math500
+  fidelity: measured
+  notes: 2048-token generation cap
+  rank: 31
+  papers: ['2405.05254', '2410.13276', '2412.20993', '2504.17768', '2505.02922', '2505.24133', '2510.12872', '2511.01815',
+    '2512.03324', '2604.04921', '2605.08151', '2606.09079', '2609.03430', '2610.06686']
+
+ARC:
+  category: fewshot
+  hf: allenai/ai2_arc
+  source: [hf_arc]
+  builder: synthetic
+  args: {n: 400, in_mean: 50, in_cv: 0.4, out_mean: 1, out_cv: 0.01, shared_prefix: 300, q_per_doc: 4}
+  fidelity: published
+  notes: ARC-Challenge 5-shot, 4 choices share the question
+  rank: 32
+  papers: ['2404.02827', '2406.09297', '2406.15786', '2410.05265', '2410.19313', '2502.16002', '2504.07389', '2504.14569',
+    '2508.02558', '2508.04405', '2512.03324', '2512.22671', '2609.07966', '2610.03326']
+
+CNN/DailyMail:
+  category: longctx
+  hf: abisee/cnn_dailymail
+  source: [cnndm]
+  builder: cnndm
+  args: {n: 300}
+  fidelity: measured
+  notes: HELM summarization requests (few-shot)
+  rank: 33
+  papers: ['2401.18079', '2402.09398', '2403.06764', '2403.09054', '2405.04437', '2405.05254', '2406.16635', '2409.03856',
+    '2410.23079', '2411.09688', '2502.15734', '2503.16257', '2508.04405']
+
+GPQA:
+  category: reasoning
+  hf: Idavidrein/gpqa
+  source: [hf_gpqa]
+  builder: synthetic
+  args: {n: 198, in_mean: 300, in_cv: 0.4, out_mean: 8000, out_cv: 0.5}
+  fidelity: published
+  notes: GPQA-Diamond 198 Q, reasoning-length outputs
+  rank: 34
+  papers: ['2410.13276', '2412.03131', '2505.02922', '2505.22618', '2508.02558', '2512.03324', '2512.24449', '2602.07721',
+    '2606.09079', '2609.03430', '2610.06686', '2610.18642']
+
+LongBench v2:
+  category: longctx
+  hf: zai-org/LongBench-v2
+  source: [hf_longbench_v2]
+  builder: synthetic
+  args: {n: 120, in_mean: 100000, in_cv: 0.8, in_max: 128000, out_mean: 128, out_cv: 0.5}
+  fidelity: published
+  notes: 503 Q, 8K-2M words; papers truncate to 128K
+  rank: 35
+  papers: ['2405.16444', '2502.12574', '2508.15212', '2510.21270', '2512.03324', '2602.07721', '2605.08151', '2606.09079',
+    '2609.31382', '2610.06686', '2610.18642', '2610.21893']
+
+XSum:
+  category: longctx
+  hf: EdinburghNLP/xsum
+  source: [xsum]
+  builder: fewshot_jsonl
+  args: {file: xsum_5shot.jsonl, field: article, out_len: 64, n: 300}
+  fidelity: measured
+  notes: 5-shot XSum prompts (H2O/LESS setup)
+  rank: 36
+  papers: ['2401.18079', '2403.06764', '2403.09054', '2404.04793', '2405.05254', '2406.16635', '2409.03856', '2410.23079',
+    '2411.09688', '2502.15734', '2502.16002', '2503.16257']
+
+BoolQ:
+  category: fewshot
+  hf: google/boolq
+  source: [hf_boolq]
+  builder: synthetic
+  args: {n: 400, in_mean: 150, in_cv: 0.4, out_mean: 1, out_cv: 0.01, q_per_doc: 2}
+  fidelity: published
+  notes: passage ~130 tok + question, yes/no share it
+  rank: 37
+  papers: ['2403.09054', '2404.02827', '2404.04793', '2405.05254', '2405.12591', '2406.09297', '2410.19313', '2504.07389',
+    '2508.04405', '2512.22671', '2605.08151', '2606.09079']
+
+PG-19:
+  category: lm
+  hf: deepmind/pg19
+  source: [magicdec]
+  builder: text_windows
+  args: {file: pg19-test.json, window: 32768, n: 16}
+  fidelity: measured
+  notes: long-sequence latency tests on book text
+  rank: 38
+  papers: ['2404.10308', '2406.10774', '2406.19707', '2407.02490', '2408.11049', '2408.11745', '2410.05076', '2410.13276',
+    '2412.10319', '2504.16083', '2608.01247']
+
+SCBench:
+  category: longctx
+  hf: microsoft/SCBench
+  source: [hf_scbench]
+  builder: synthetic
+  args: {n: 150, in_mean: 120000, in_cv: 0.5, in_max: 230000, out_mean: 64, out_cv: 1.0, q_per_doc: 5}
+  fidelity: published
+  notes: 'shared-context multi-request mode: 5 queries per context'
+  rank: 39
+  papers: ['2407.02490', '2412.10319', '2502.12574', '2504.16083', '2505.23416', '2506.17121', '2512.03324', '2608.01247',
+    '2609.11744', '2609.39329']
+
+LCC:
+  category: code
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [lcc]
+    n: 200
+  fidelity: measured
+  rank: 40
+  papers: ['2402.02750', '2406.02069', '2406.14909', '2407.11550', '2502.02617', '2503.18893', '2601.03067', '2601.16746',
+    '2610.03135']
+
+MBPP:
+  category: code
+  hf: google-research-datasets/mbpp
+  source: [mbpp]
+  builder: mbpp
+  args: {shots: 3, n: 400}
+  fidelity: measured
+  notes: 3-shot prefix (tasks 2-4) shared
+  rank: 41
+  papers: ['2405.04434', '2405.05254', '2409.03856', '2410.10819', '2412.03131', '2505.22618', '2506.06295', '2609.26796',
+    '2610.03326']
+
+SWE-bench:
+  category: agent
+  hf: princeton-nlp/SWE-bench
+  source: [hf_swebench]
+  builder: synthetic
+  args: {n: 600, in_mean: 8000, in_cv: 0.4, out_mean: 300, out_cv: 0.8, shared_prefix: 3000, turns: 30, turn_append: 2000}
+  fidelity: published
+  notes: 'agentic replay (mini-swe-agent): ~30 turns, ~2K tok tool output per turn, ~70-80K final context (arXiv 2605.26297)'
+  rank: 42
+  papers: ['2411.19379', '2511.02230', '2601.16746', '2604.16682', '2605.26297', '2608.14624', '2609.33762', '2610.21893']
+
+LooGLE:
+  category: longctx
+  hf: bigai-nlco/LooGLE
+  source: [hf_loogle]
+  builder: synthetic
+  args: {n: 240, in_mean: 24000, in_cv: 0.4, out_mean: 64, out_cv: 0.8, q_per_doc: 8}
+  fidelity: published
+  notes: 776 docs / 6,448 QA (~8 per doc), ~20K+ tok docs
+  rank: 43
+  papers: ['2406.17565', '2407.00023', '2505.17694', '2508.15212', '2508.18572', '2605.03375', '2605.08151', '2606.09079']
+
+RepoBench:
+  category: code
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [repobench-p]
+    n: 200
+  fidelity: measured
+  rank: 44
+  papers: ['2402.02750', '2406.02069', '2407.11550', '2502.02617', '2503.18893', '2601.03067', '2610.03135', '2610.26754']
+
+BookSum:
+  category: longctx
+  hf: kmfoda/booksum
+  source: [hf_booksum]
+  builder: synthetic
+  args: {n: 200, in_mean: 5000, in_cv: 0.6, out_mean: 500, out_cv: 0.4}
+  fidelity: published
+  notes: chapter-level BookSum
+  rank: 45
+  papers: ['2405.04532', '2407.02490', '2410.10819', '2410.19258', '2412.10319', '2502.14866', '2504.16083', '2512.03324']
+
+UltraChat:
+  category: chat
+  hf: openbmb/UltraChat
+  source: [ultrachat]
+  builder: ultrachat
+  args: {n_conv: 300}
+  fidelity: measured
+  notes: multi-turn, history re-sent each turn
+  rank: 46
+  papers: ['2312.05516', '2404.02827', '2410.00161', '2410.03960', '2512.03324', '2605.08151', '2606.09079', '2609.01507']
+
+BBH:
+  category: reasoning
+  hf: lukaemon/bbh
+  source: [bbh]
+  builder: bbh
+  args: {per_task: 12}
+  fidelity: measured
+  notes: 27 tasks x 12, official 3-shot CoT prompts (suzgunmirac/BIG-Bench-Hard) as shared task prefix, 256-token CoT output
+  rank: 47
+  papers: ['2403.05527', '2403.17411', '2405.04434', '2409.15355', '2505.00019', '2506.06295', '2512.03324', '2610.03326']
+
+L-Eval:
+  category: longctx
+  hf: L4NLP/LEval
+  source: [leval]
+  builder: leval
+  args: {n: 400}
+  fidelity: measured
+  notes: several instructions per long document
+  rank: 48
+  papers: ['2404.09526', '2407.00079', '2410.01805', '2410.05004', '2511.00868', '2605.03375', '2610.21893']
+
+TREC:
+  category: fewshot
+  hf: zai-org/LongBench
+  source: [longbench, longbench_config]
+  builder: longbench
+  args:
+    tasks: [trec]
+    n: 200
+  fidelity: measured
+  rank: 49
+  papers: ['2402.02750', '2406.02069', '2406.14909', '2407.11550', '2407.20485', '2601.03067', '2610.26754']
+
+MS MARCO:
+  category: rag
+  hf: microsoft/ms_marco
+  source: []
+  builder: synthetic
+  args: {n: 600, in_mean: 1000, in_cv: 0.2, out_mean: 48, out_cv: 0.6, chunks_per_req: 10, chunk_pool: 8000, chunk_len: 80,
+    zipf: 1.0}
+  fidelity: published
+  notes: 'RAG over MS MARCO passages (RAGO setup): 10 retrieved ~80-token passages per query, Zipf(1.0) passage popularity
+    over 8K hot passages'
+  rank: 50
+  papers: ['2404.04793', '2405.05254', '2409.15355', '2410.03960', '2503.14649', '2506.17121', '2609.31382']
+
+arXiv summarization:
+  category: longctx
+  hf: ccdv/arxiv-summarization
+  source: []
+  builder: null
+  rank: 51
+  papers: ['2405.04437', '2405.19888', '2407.00079', '2407.21255', '2501.14743', '2503.24000']
+
+LiveCodeBench:
+  category: code
+  hf: livecodebench/code_generation_lite
+  source: []
+  builder: null
+  rank: 52
+  papers: ['2405.04434', '2410.13276', '2412.20993', '2505.18610', '2511.01815', '2609.03430']
+
+MMLU-Pro:
+  category: fewshot
+  hf: TIGER-Lab/MMLU-Pro
+  source: []
+  builder: null
+  rank: 53
+  papers: ['2412.03131', '2503.18292', '2506.06295', '2510.12872', '2512.03324', '2610.03326']
+
+COPA:
+  category: fewshot
+  hf: pkavumba/balanced-copa
+  source: [hf_copa]
+  builder: synthetic
+  args: {n: 200, in_mean: 20, in_cv: 0.3, out_mean: 1, out_cv: 0.01, shared_prefix: 150, q_per_doc: 2}
+  fidelity: published
+  rank: 54
+  papers: ['2403.09054', '2404.02827', '2405.05254', '2406.19707', '2410.19313', '2504.07389']
+
+LAMBADA:
+  category: lm
+  hf: EleutherAI/lambada_openai
+  source: []
+  builder: null
+  rank: 55
+  papers: ['2405.12591', '2406.09297', '2504.07389', '2508.04405', '2512.22671', '2610.03326']
+
+Mooncake arXiv/Kimi:
+  category: trace
+  hf: null
+  survey_name: Mooncake trace
+  source: [mooncake]
+  builder: trace_hashed
+  args: {file: mooncake_arxiv.jsonl, block_tokens: 512}
+  fidelity: measured
+  notes: same requests as tool&agent with different timestamps; excluded from aggregate analysis
+  rank: 56
+  papers: ['2407.00079', '2505.11916', '2506.02634', '2506.14851', '2605.08151']
+
+Mooncake conversation:
+  category: trace
+  hf: null
+  survey_name: Mooncake trace
+  source: [mooncake]
+  builder: trace_hashed
+  args: {file: mooncake_conversation.jsonl, block_tokens: 512}
+  fidelity: measured
+  rank: 56
+  papers: ['2407.00079', '2505.11916', '2506.02634', '2506.14851', '2605.08151']
+
+Mooncake synthetic:
+  category: trace
+  hf: null
+  survey_name: Mooncake trace
+  source: [mooncake]
+  builder: trace_hashed
+  args: {file: mooncake_synthetic.jsonl, block_tokens: 512}
+  fidelity: measured
+  rank: 56
+  papers: ['2407.00079', '2505.11916', '2506.02634', '2506.14851', '2605.08151']
+
+Mooncake tool&agent:
+  category: trace
+  hf: null
+  survey_name: Mooncake trace
+  source: [mooncake]
+  builder: trace_hashed
+  args: {file: mooncake_toolagent.jsonl, block_tokens: 512}
+  fidelity: measured
+  rank: 56
+  papers: ['2407.00079', '2505.11916', '2506.02634', '2506.14851', '2605.08151']
+
+MT-Bench:
+  category: chat
+  hf: HuggingFaceH4/mt_bench_prompts
+  source: [mtbench]
+  builder: mtbench
+  fidelity: measured
+  rank: 57
+  papers: ['2404.02827', '2405.04434', '2410.10819', '2606.09079', '2608.14624']
+
+OpenBookQA:
+  category: fewshot
+  hf: allenai/openbookqa
+  source: []
+  builder: null
+  rank: 58
+  papers: ['2404.04793', '2406.19707', '2410.19313', '2502.14837', '2512.03324']
+
+Azure code 2023:
+  category: trace
+  hf: null
+  survey_name: Azure LLM inference trace
+  source: [azure_2023]
+  builder: trace_lengths
+  args: {file: AzureLLMInferenceTrace_code.csv, in_col: ContextTokens, out_col: GeneratedTokens, ts_col: TIMESTAMP, n: 5000}
+  fidelity: lengths
+  rank: 59
+  papers: ['2311.18677', '2407.00023', '2411.01142', '2501.06709']
+
+Azure conversation 2023:
+  category: trace
+  hf: null
+  survey_name: Azure LLM inference trace
+  source: [azure_2023]
+  builder: trace_lengths
+  args: {file: AzureLLMInferenceTrace_conv.csv, in_col: ContextTokens, out_col: GeneratedTokens, ts_col: TIMESTAMP, n: 5000}
+  fidelity: lengths
+  rank: 59
+  papers: ['2311.18677', '2407.00023', '2411.01142', '2501.06709']
+
+APPS:
+  category: code
+  hf: codeparrot/apps
+  source: []
+  builder: null
+  rank: 60
+  papers: ['2402.05099', '2404.04793', '2405.05254', '2407.00023']
+
+LV-Eval:
+  category: longctx
+  hf: Infinigence/LVEval
+  source: []
+  builder: null
+  rank: 61
+  papers: ['2404.09526', '2407.15309', '2409.12490', '2410.00428']
+
+AlpacaEval:
+  category: chat
+  hf: tatsu-lab/alpaca_eval
+  source: []
+  builder: null
+  rank: 62
+  papers: ['2405.04434', '2409.15355', '2410.19313', '2512.03324']
+
+HELMET:
+  category: longctx
+  hf: princeton-nlp/HELMET
+  source: []
+  builder: null
+  rank: 63
+  papers: ['2506.17121', '2609.31382', '2610.01762', '2610.21893']
+
+ALFWorld:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 64
+  papers: ['2407.00023', '2506.14851', '2605.26596']
+
+BFCL:
+  category: agent
+  hf: gorilla-llm/Berkeley-Function-Calling-Leaderboard
+  source: []
+  builder: null
+  rank: 65
+  papers: ['2502.13965', '2511.02230', '2606.17034']
+
+ReAct/HotpotQA agent:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 66
+  papers: ['2312.07104', '2605.26596', '2606.09079']
+
+ToolBench:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 67
+  papers: ['2407.00023', '2410.19313', '2606.17034']
+
+WildChat:
+  category: chat
+  hf: allenai/WildChat-1M
+  source: []
+  builder: null
+  rank: 68
+  papers: ['2405.04532', '2501.06709', '2502.14866']
+
+Qwen-Bailian coder:
+  category: trace
+  hf: null
+  survey_name: Alibaba/Qwen serving trace
+  source: [qwen_bailian]
+  builder: trace_hashed
+  args: {file: qwen_coder_blksz_16.jsonl, n: 20000}
+  fidelity: measured
+  rank: 69
+  papers: ['2506.02634', '2609.11744']
+
+Qwen-Bailian thinking:
+  category: trace
+  hf: null
+  survey_name: Alibaba/Qwen serving trace
+  source: [qwen_bailian]
+  builder: trace_hashed
+  args: {file: qwen_thinking_blksz_16.jsonl, n: 20000}
+  fidelity: measured
+  rank: 69
+  papers: ['2506.02634', '2609.11744']
+
+Qwen-Bailian to-B (B):
+  category: trace
+  hf: null
+  survey_name: Alibaba/Qwen serving trace
+  source: [qwen_bailian]
+  builder: trace_hashed
+  args: {file: qwen_traceB_blksz_16.jsonl, n: 20000}
+  fidelity: measured
+  rank: 69
+  papers: ['2506.02634', '2609.11744']
+
+Qwen-Bailian to-C (A):
+  category: trace
+  hf: null
+  survey_name: Alibaba/Qwen serving trace
+  source: [qwen_bailian]
+  builder: trace_hashed
+  args: {file: qwen_traceA_blksz_16.jsonl, n: 20000}
+  fidelity: measured
+  rank: 69
+  papers: ['2506.02634', '2609.11744']
+
+BurstGPT:
+  category: trace
+  hf: lzzmm/BurstGPT
+  source: [burstgpt]
+  builder: trace_lengths
+  args: {file: BurstGPT_1.csv, in_col: Request tokens, out_col: Response tokens, ts_col: Timestamp, n: 5000}
+  fidelity: lengths
+  rank: 70
+  papers: ['2401.17644', '2412.18169']
+
+GAIA:
+  category: agent
+  hf: gaia-benchmark/GAIA
+  source: []
+  builder: null
+  rank: 71
+  papers: ['2605.26297', '2608.14624']
+
+Terminal-Bench:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 72
+  papers: ['2604.16682', '2605.26297']
+
+Tree-of-Thought / few-shot programs:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 73
+  papers: ['2312.07104', '2606.09079']
+
+Video/MLVU:
+  category: longctx
+  hf: null
+  source: []
+  builder: null
+  rank: 74
+  papers: ['2502.14837', '2512.03324']
+
+ZeroSCROLLS:
+  category: longctx
+  hf: tau/zero_scrolls
+  source: []
+  builder: null
+  rank: 75
+  papers: ['2409.01227', '2508.15212']
+
+BABILong:
+  category: synthetic
+  hf: RMT-team/babilong
+  source: []
+  builder: null
+  rank: 76
+  papers: ['2411.17116']
+
+Dolly:
+  category: chat
+  hf: databricks/databricks-dolly-15k
+  source: []
+  builder: null
+  rank: 77
+  papers: ['2402.06262']
+
+OpenOrca:
+  category: chat
+  hf: Open-Orca/OpenOrca
+  source: []
+  builder: null
+  rank: 78
+  papers: ['2410.03960']
+
+SCROLLS:
+  category: longctx
+  hf: tau/scrolls
+  source: []
+  builder: null
+  rank: 79
+  papers: ['2508.15212']
+
+WebShop:
+  category: agent
+  hf: null
+  source: []
+  builder: null
+  rank: 80
+  papers: ['2605.26596']

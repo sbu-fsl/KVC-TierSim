@@ -1,0 +1,1440 @@
+Llama-2-7B:
+  hf: meta-llama/Llama-2-7b-hf
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 4096
+  family: llama2
+  rank: 1
+  papers: ['2311.04934', '2401.09670', '2401.17644', '2401.18079', '2402.02750', '2402.05099', '2402.06262', '2402.09398',
+    '2402.15220', '2403.01241', '2403.04643', '2403.05527', '2403.06764', '2403.08845', '2403.17411', '2404.02827', '2404.04793',
+    '2404.10308', '2404.12457', '2404.15574', '2405.04437', '2405.04532', '2405.06219', '2405.10637', '2405.12532', '2406.02542',
+    '2406.05317', '2406.10774', '2406.11430', '2406.12335', '2406.15786', '2406.19707', '2407.02490', '2407.12866', '2407.15309',
+    '2407.21018', '2407.21118', '2408.05646', '2408.07092', '2408.11049', '2408.11745', '2408.14690', '2409.03856', '2409.04992',
+    '2409.09086', '2410.00161', '2410.00428', '2410.01805', '2410.05004', '2410.05076', '2410.05265', '2410.10819', '2410.13276',
+    '2410.13846', '2410.17897', '2410.18517', '2410.19258', '2410.19313', '2410.20650', '2410.23079', '2411.01142', '2412.00876',
+    '2412.01818', '2412.10319', '2412.20501', '2412.20993', '2501.06709', '2502.02617', '2502.05431', '2502.12574', '2502.14866',
+    '2503.00979', '2503.10714', '2503.12491', '2503.16257', '2503.18773', '2503.19950', '2503.24000', '2504.03661', '2504.07389',
+    '2504.14569', '2504.16083', '2505.00019', '2505.10938', '2505.19586', '2505.22913', '2506.14851', '2506.18879', '2508.02401',
+    '2508.06447', '2508.06526', '2510.20707', '2512.03324', '2512.24449', '2601.03067', '2605.08151', '2605.08840', '2606.09079',
+    '2606.24467', '2609.01507']
+
+Llama-3.1-8B:
+  hf: meta-llama/Llama-3.1-8B
+  params_b: 8.03
+  active_b: 8.03
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 2
+  papers: ['2402.02750', '2405.04532', '2405.05254', '2405.16444', '2406.10774', '2407.02490', '2407.11550', '2407.12820',
+    '2407.20485', '2407.21255', '2408.07092', '2408.11049', '2408.12757', '2409.15355', '2409.16546', '2409.17422', '2410.00161',
+    '2410.01805', '2410.03065', '2410.03960', '2410.05076', '2410.10819', '2410.13276', '2410.15332', '2410.17897', '2410.19313',
+    '2410.21465', '2410.23918', '2411.01142', '2411.17116', '2411.18424', '2412.03594', '2412.10319', '2412.13649', '2412.20993',
+    '2502.01068', '2502.02617', '2502.05431', '2502.13965', '2502.14866', '2502.15075', '2502.16002', '2503.00979', '2503.05840',
+    '2503.10714', '2503.12491', '2503.18292', '2503.18893', '2503.19950', '2503.24000', '2504.03661', '2504.16083', '2505.02922',
+    '2505.19586', '2505.23416', '2506.17121', '2506.18879', '2507.07400', '2508.02401', '2508.06447', '2508.06526', '2508.15212',
+    '2508.18572', '2510.08907', '2510.09665', '2510.12872', '2510.21270', '2511.00868', '2511.01815', '2511.02230', '2512.03324',
+    '2512.24449', '2601.03067', '2602.01053', '2602.07721', '2605.08151', '2605.08840', '2606.09079', '2606.24467', '2607.07144',
+    '2608.01247', '2608.14624', '2609.10266', '2609.11744', '2609.33746', '2609.33889', '2609.39329', '2610.03135', '2610.06686',
+    osdi26-luo]
+
+Llama-3-8B:
+  hf: meta-llama/Meta-Llama-3-8B
+  params_b: 8.03
+  active_b: 8.03
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 8192
+  family: llama3
+  rank: 3
+  papers: ['2401.18079', '2402.02750', '2403.01241', '2404.02827', '2405.04437', '2405.04532', '2406.02069', '2406.03482',
+    '2406.11430', '2406.14909', '2406.15786', '2406.19707', '2407.02490', '2407.12866', '2407.15309', '2407.20485', '2407.21018',
+    '2408.12757', '2408.14690', '2409.03856', '2409.10516', '2409.15355', '2410.00161', '2410.00428', '2410.01805', '2410.05076',
+    '2410.05265', '2410.10819', '2410.13846', '2410.15704', '2410.19258', '2410.21465', '2412.03131', '2412.10319', '2412.12706',
+    '2502.05431', '2502.12574', '2502.14866', '2502.15734', '2503.14649', '2503.17922', '2503.18893', '2503.19950', '2503.24000',
+    '2504.07389', '2504.14569', '2504.16083', '2505.02922', '2505.19586', '2505.22913', '2505.23416', '2505.24133', '2506.15155',
+    '2506.17121', '2508.15212', '2511.00868', '2601.10729', '2604.04921', '2604.24971', '2605.01708', '2605.03375', '2605.08151',
+    '2605.08840', '2606.09079', '2608.01247', '2609.26796', '2609.33746', '2609.33889', '2610.18642']
+
+Mistral-7B:
+  hf: mistralai/Mistral-7B-Instruct-v0.2
+  params_b: 7.24
+  active_b: 7.24
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: mistral
+  rank: 4
+  papers: ['2310.07240', '2401.18079', '2402.02750', '2402.04617', '2403.05527', '2403.06764', '2403.08845', '2403.19708',
+    '2404.04793', '2404.12457', '2404.14469', '2404.15574', '2405.04532', '2405.06219', '2405.16444', '2406.02069', '2406.02542',
+    '2406.15786', '2407.00023', '2407.08608', '2407.11550', '2407.12820', '2407.15309', '2407.20485', '2407.21018', '2407.21118',
+    '2408.07092', '2408.11745', '2408.14690', '2409.01227', '2410.00161', '2410.00428', '2410.10819', '2410.13846', '2410.15332',
+    '2410.15704', '2502.05431', '2502.12574', '2502.14866', '2503.00979', '2503.05840', '2503.24000', '2505.19586', '2505.22913',
+    '2506.18879', '2508.02401', '2508.06526', '2509.09754', '2510.20707', '2511.00868', '2512.03324', '2605.08151', '2605.08840',
+    '2606.07684', '2606.09079', '2606.24467', '2609.33889', '2610.18642']
+
+Llama-7B (v1):
+  hf: huggyllama/llama-7b
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: llama2
+  rank: 5
+  papers: ['2311.04934', '2312.07104', '2401.18079', '2402.05099', '2403.01241', '2403.06764', '2403.08845', '2403.19708',
+    '2404.02827', '2405.04437', '2405.06219', '2405.10637', '2405.12591', '2405.19888', '2406.15786', '2406.18139', '2407.12866',
+    '2407.15309', '2408.07092', '2410.00161', '2410.00428', '2410.01805', '2410.19313', '2412.00876', '2412.01818', '2412.03409',
+    '2502.17599', '2503.24000', '2504.07389', '2506.06295', '2506.14851', '2508.04405', '2512.03324', '2605.22269', '2606.09079']
+
+Llama-3-70B:
+  hf: meta-llama/Meta-Llama-3-70B
+  params_b: 70.6
+  active_b: 70.6
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 8192
+  family: llama3
+  rank: 6
+  papers: ['2401.18079', '2403.01241', '2404.02827', '2405.04434', '2405.04437', '2405.06219', '2406.02069', '2406.02542',
+    '2407.00023', '2407.02490', '2407.21018', '2408.12757', '2408.14690', '2409.03856', '2409.10516', '2410.00161', '2410.05265',
+    '2410.10819', '2410.21465', '2412.03131', '2502.12574', '2502.15734', '2503.14649', '2503.24000', '2504.14569', '2506.02634',
+    '2506.14851', '2506.18879', '2508.15212', '2509.09754', '2601.10729', '2605.08151', '2605.08840', '2606.09079']
+
+Llama-2-13B:
+  hf: meta-llama/Llama-2-13b-hf
+  params_b: 13.0
+  active_b: 13.0
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 40
+  head_dim: 128
+  attn: mha
+  ctx: 4096
+  family: llama2
+  rank: 7
+  papers: ['2311.04934', '2312.05516', '2401.09670', '2401.17644', '2401.18079', '2402.02750', '2402.06262', '2403.01241',
+    '2403.04643', '2403.05527', '2403.08845', '2404.02827', '2405.04532', '2405.06219', '2406.02542', '2406.17565', '2406.19707',
+    '2407.15309', '2409.03856', '2410.00161', '2410.00428', '2410.05004', '2410.19313', '2501.06709', '2502.14866', '2503.10714',
+    '2503.12491', '2503.24000', '2504.14569', '2506.02634', '2506.14851', '2508.04405', '2512.24449']
+
+Llama-3.1-70B:
+  hf: meta-llama/Llama-3.1-70B
+  params_b: 70.6
+  active_b: 70.6
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 8
+  papers: ['2405.05254', '2405.16444', '2407.11550', '2407.12820', '2407.21255', '2408.12757', '2410.00161', '2410.00428',
+    '2410.03065', '2410.03960', '2411.01142', '2411.17116', '2412.03594', '2502.13965', '2503.18292', '2503.24000', '2505.19586',
+    '2506.18879', '2508.15212', '2508.18572', '2510.09665', '2511.02230', '2512.03324', '2605.08151', '2606.09079', '2607.07144',
+    '2609.01507', '2609.33889']
+
+Qwen2.5-7B:
+  hf: Qwen/Qwen2.5-7B-Instruct
+  params_b: 7.62
+  active_b: 7.62
+  layers: 28
+  hidden: 3584
+  q_heads: 28
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 9
+  papers: ['2407.02490', '2410.13276', '2412.03131', '2412.03594', '2412.10319', '2503.10714', '2503.12491', '2503.18893',
+    '2504.07389', '2504.16083', '2504.17768', '2505.02922', '2505.22618', '2505.23416', '2506.18879', '2508.06447', '2510.21270',
+    '2601.16746', '2602.10238', '2604.04921', '2605.08151', '2605.26596', '2606.09079', '2608.01247', '2609.01507', '2609.31382',
+    '2609.39329', '2610.06686']
+
+Llama-2-70B:
+  hf: meta-llama/Llama-2-70b-hf
+  params_b: 69.0
+  active_b: 69.0
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 4096
+  family: llama2
+  rank: 10
+  papers: ['2310.07240', '2311.18677', '2312.05516', '2312.07104', '2401.18079', '2403.01241', '2403.04643', '2403.08845',
+    '2403.19708', '2404.02827', '2404.12457', '2405.04437', '2405.04532', '2405.06219', '2405.16444', '2406.02542', '2407.00079',
+    '2408.12757', '2408.14690', '2410.00161', '2410.05265', '2502.07115', '2502.14866', '2503.24000', '2504.14569', '2508.04405',
+    '2602.01053']
+
+Vicuna-7B:
+  hf: lmsys/vicuna-7b-v1.5
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 4096
+  family: llama2
+  rank: 11
+  papers: ['2402.04617', '2402.06262', '2403.01241', '2403.06764', '2405.06219', '2406.12335', '2406.14909', '2406.15786',
+    '2406.18139', '2408.07092', '2410.00161', '2412.00876', '2412.01818', '2502.17599', '2503.00979', '2503.19950', '2503.24000',
+    '2508.05239', '2510.20707', '2512.03324', '2605.08151', '2606.09079', '2609.01507']
+
+Qwen3-8B:
+  hf: Qwen/Qwen3-8B
+  params_b: 8.19
+  active_b: 8.19
+  layers: 36
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 12
+  papers: ['2405.16444', '2410.13276', '2502.15075', '2503.18773', '2505.23416', '2508.15212', '2512.03324', '2512.24449',
+    '2602.07721', '2603.27138', '2604.04921', '2604.25975', '2605.08151', '2606.17034', '2608.01247', '2609.01507', '2609.10266',
+    '2609.33889', '2610.26754']
+
+Qwen2-7B:
+  hf: Qwen/Qwen2-7B-Instruct
+  params_b: 7.62
+  active_b: 7.62
+  layers: 28
+  hidden: 3584
+  q_heads: 28
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 13
+  papers: ['2403.06764', '2407.02490', '2410.07590', '2410.13276', '2410.21465', '2412.10319', '2502.12574', '2503.10714',
+    '2503.19950', '2503.24000', '2504.16083', '2506.02634', '2508.02401', '2510.20707', '2512.03324', '2605.22269', '2606.24467',
+    '2608.24063']
+
+Llama-3-8B-262K/1048K (Gradient):
+  hf: gradientai/Llama-3-8B-Instruct-Gradient-1048k
+  params_b: 8.03
+  active_b: 8.03
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 1048576
+  family: llama3
+  rank: 14
+  papers: ['2405.04532', '2406.02069', '2406.14909', '2407.02490', '2409.10516', '2410.05076', '2410.10819', '2410.19258',
+    '2410.21465', '2412.10319', '2502.12574', '2502.14866', '2504.16083', '2505.02922', '2505.19586', '2506.17121', '2609.33746']
+
+Mixtral-8x7B:
+  hf: mistralai/Mixtral-8x7B-v0.1
+  params_b: 46.7
+  active_b: 12.9
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: mistral
+  rank: 15
+  papers: ['2312.07104', '2403.06764', '2403.08845', '2404.12457', '2404.14469', '2405.04532', '2406.02069', '2407.15309',
+    '2408.12757', '2408.14690', '2410.00161', '2410.00428', '2502.14866', '2503.24000', '2605.08151', '2606.09079']
+
+Qwen3-4B:
+  hf: Qwen/Qwen3-4B
+  params_b: 4.02
+  active_b: 4.02
+  layers: 36
+  hidden: 2560
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 16
+  papers: ['2405.16444', '2410.13276', '2502.15075', '2503.18893', '2505.17694', '2512.03324', '2602.07721', '2605.08151',
+    '2606.09079', '2608.01247', '2609.01507', '2609.03430', '2609.10266', '2609.11744', '2609.39329']
+
+LongChat-7B-32K:
+  hf: lmsys/longchat-7b-v1.5-32k
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 32768
+  family: llama2
+  rank: 17
+  papers: ['2402.02750', '2404.14469', '2404.15574', '2405.06219', '2406.03482', '2406.10774', '2407.21018', '2409.10593',
+    '2503.00979', '2503.19950', '2503.24000', '2508.02401', '2606.24467', '2609.01507']
+
+Qwen2.5-14B:
+  hf: Qwen/Qwen2.5-14B-Instruct
+  params_b: 14.8
+  active_b: 14.8
+  layers: 48
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 18
+  papers: ['2405.16444', '2412.03594', '2412.18169', '2503.18893', '2504.17768', '2505.23416', '2508.18572', '2605.08151',
+    '2606.09079', '2609.01507', '2609.31382', '2609.33746', '2610.06686']
+
+Llama-3.2-1B:
+  hf: meta-llama/Llama-3.2-1B
+  params_b: 1.24
+  active_b: 1.24
+  layers: 16
+  hidden: 2048
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 64
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 19
+  papers: ['2405.16444', '2408.11049', '2410.01805', '2502.15075', '2502.16002', '2503.05840', '2503.14649', '2506.18879',
+    '2510.08907', '2512.22671', '2605.02888', '2605.08151']
+
+Vicuna-13B:
+  hf: lmsys/vicuna-13b-v1.5
+  params_b: 13.0
+  active_b: 13.0
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 40
+  head_dim: 128
+  attn: mha
+  ctx: 4096
+  family: llama2
+  rank: 20
+  papers: ['2402.06262', '2403.01241', '2403.06764', '2406.18139', '2407.15309', '2410.00428', '2410.19313', '2412.00876',
+    '2412.01818', '2502.17599', '2506.06295', '2510.20707']
+
+OPT-13B:
+  hf: facebook/opt-13b
+  params_b: 12.9
+  active_b: 12.9
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 40
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 21
+  papers: ['2312.05516', '2401.09670', '2403.06764', '2406.15786', '2406.19707', '2407.15309', '2409.04992', '2410.00428',
+    '2504.07389', '2506.15155', osdi26-luo]
+
+Yi-34B(-200K):
+  hf: 01-ai/Yi-34B-200K
+  params_b: 34.4
+  active_b: 34.4
+  layers: 60
+  hidden: 7168
+  q_heads: 56
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 200000
+  family: other
+  rank: 22
+  papers: ['2405.04434', '2405.04437', '2405.04532', '2405.16444', '2407.21255', '2408.11745', '2410.00428', '2502.14866',
+    '2503.24000', '2506.18879', '2509.09754']
+
+Llama-3.2-3B:
+  hf: meta-llama/Llama-3.2-3B
+  params_b: 3.21
+  active_b: 3.21
+  layers: 28
+  hidden: 3072
+  q_heads: 24
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 23
+  papers: ['2410.01805', '2412.08890', '2502.15075', '2502.16002', '2505.23416', '2510.08907', '2512.22671', '2605.02888',
+    '2605.08151', '2609.11744', '2609.33889']
+
+GPT-NeoX-20B:
+  hf: EleutherAI/gpt-neox-20b
+  params_b: 20.6
+  active_b: 20.6
+  layers: 44
+  hidden: 6144
+  q_heads: 64
+  kv_heads: 64
+  head_dim: 96
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 24
+  papers: ['2403.06764', '2403.09054', '2404.04793', '2406.09297', '2407.02490', '2407.15309', '2410.00428', '2410.19313',
+    '2412.10319', '2504.16083', '2508.04405']
+
+GLM-4-9B:
+  hf: THUDM/glm-4-9b-chat-1m
+  params_b: 9.4
+  active_b: 9.4
+  layers: 40
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 1048576
+  family: other
+  rank: 25
+  papers: ['2407.02490', '2410.21465', '2412.10319', '2503.00979', '2503.18893', '2503.24000', '2504.16083', '2506.17121',
+    '2605.03375', '2610.06686']
+
+DeepSeek-R1-Distill-Llama-8B:
+  hf: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  params_b: 8.03
+  active_b: 8.03
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 26
+  papers: ['2412.03131', '2503.02812', '2505.02922', '2505.24133', '2512.03324', '2512.24449', '2602.07721', '2604.04921',
+    '2609.03430', '2610.06686']
+
+Falcon-7B:
+  hf: tiiuae/falcon-7b
+  params_b: 7.22
+  active_b: 7.22
+  layers: 32
+  hidden: 4544
+  q_heads: 71
+  kv_heads: 1
+  head_dim: 64
+  attn: mqa
+  ctx: 2048
+  family: other
+  rank: 27
+  papers: ['2311.04934', '2402.02750', '2402.09398', '2403.06764', '2405.04437', '2407.15309', '2410.00161', '2410.00428',
+    '2503.10714', '2503.24000']
+
+Phi-3-mini:
+  hf: microsoft/Phi-3-mini-128k-instruct
+  params_b: 3.82
+  active_b: 3.82
+  layers: 32
+  hidden: 3072
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 96
+  attn: mha
+  ctx: 131072
+  family: llama2
+  rank: 28
+  papers: ['2407.02490', '2409.17422', '2410.00161', '2410.01805', '2410.21465', '2412.10319', '2503.19950', '2503.24000',
+    '2504.16083', '2512.03324']
+
+GPT-3 (175B, simulated):
+  hf: n/a (architecture from Brown et al. 2020)
+  params_b: 175.0
+  active_b: 175.0
+  layers: 96
+  hidden: 12288
+  q_heads: 96
+  kv_heads: 96
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 29
+  papers: ['2401.17644', '2403.06764', '2404.04793', '2405.04437', '2405.05254', '2407.08608', '2409.15355', '2410.19313',
+    '2508.04405', '2610.26754']
+
+Qwen3-32B:
+  hf: Qwen/Qwen3-32B
+  params_b: 32.8
+  active_b: 32.8
+  layers: 64
+  hidden: 5120
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 30
+  papers: ['2410.03960', '2502.15075', '2508.15212', '2510.09665', '2512.03324', '2604.04921', '2605.01708', '2605.08151',
+    '2606.09079', '2609.03430']
+
+DeepSeek-V2:
+  hf: deepseek-ai/DeepSeek-V2
+  params_b: 236.0
+  active_b: 21.0
+  layers: 60
+  hidden: 5120
+  q_heads: 128
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 163840
+  family: other
+  rank: 31
+  papers: ['2405.04434', '2407.21118', '2410.00161', '2410.03960', '2412.05496', '2503.05840', '2503.18893', '2503.24000',
+    '2605.08151', '2606.09079']
+
+MiniCPM:
+  hf: openbmb/MiniCPM-2B-sft-bf16
+  params_b: 2.72
+  active_b: 2.72
+  layers: 40
+  hidden: 2304
+  q_heads: 36
+  kv_heads: 36
+  head_dim: 64
+  attn: mha
+  ctx: 4096
+  family: other
+  rank: 32
+  papers: ['2402.04617', '2407.15309', '2410.00161', '2410.00428', '2410.01805', '2503.05840', '2503.24000', '2512.03324',
+    '2605.08151', '2608.24063']
+
+Qwen2.5-32B:
+  hf: Qwen/Qwen2.5-32B-Instruct
+  params_b: 32.8
+  active_b: 32.8
+  layers: 64
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 33
+  papers: ['2405.16444', '2410.03960', '2411.18424', '2412.03131', '2504.17768', '2507.07400', '2508.15212', '2511.00868',
+    '2606.09079']
+
+DeepSeek-R1-Distill-Qwen-7B:
+  hf: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+  params_b: 7.62
+  active_b: 7.62
+  layers: 28
+  hidden: 3584
+  q_heads: 28
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 34
+  papers: ['2410.13276', '2412.20993', '2505.02922', '2510.12872', '2511.01815', '2604.04921', '2605.08151', '2610.06686',
+    '2610.18642']
+
+OPT-1.3B:
+  hf: facebook/opt-1.3b
+  params_b: 1.32
+  active_b: 1.32
+  layers: 24
+  hidden: 2048
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 64
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 35
+  papers: ['2401.09670', '2403.06764', '2404.04793', '2405.12591', '2406.15786', '2407.15309', '2410.00428', '2504.07389',
+    '2610.05329']
+
+Jamba:
+  hf: ai21labs/AI21-Jamba-1.5-Mini
+  params_b: 51.6
+  active_b: 12.0
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: hybrid-ssm
+  attn_layers: 4
+  ssm_state_mb: 9.2
+  ctx: 262144
+  family: other
+  rank: 36
+  papers: ['2407.02490', '2410.00161', '2411.19379', '2412.10319', '2503.18292', '2504.16083', '2506.15155', '2506.17121']
+
+Qwen3-30B-A3B:
+  hf: Qwen/Qwen3-30B-A3B
+  params_b: 30.5
+  active_b: 3.3
+  layers: 48
+  hidden: 2048
+  q_heads: 32
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 37
+  papers: ['2410.03960', '2602.07721', '2604.16682', '2605.01708', '2605.08151', '2609.10266', '2609.33746', '2609.33762']
+
+OPT-6.7B:
+  hf: facebook/opt-6.7b
+  params_b: 6.66
+  active_b: 6.66
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 38
+  papers: ['2401.09670', '2403.06764', '2404.04793', '2405.12591', '2406.15786', '2406.19707', '2408.07092', '2504.07389']
+
+ChatGLM3-6B:
+  hf: THUDM/chatglm3-6b-32k
+  params_b: 6.24
+  active_b: 6.24
+  layers: 28
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 2
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: other
+  rank: 39
+  papers: ['2407.15309', '2410.00161', '2410.00428', '2503.00979', '2503.19950', '2503.24000', '2509.09754', '2609.01507']
+
+OPT-30B:
+  hf: facebook/opt-30b
+  params_b: 30.0
+  active_b: 30.0
+  layers: 48
+  hidden: 7168
+  q_heads: 56
+  kv_heads: 56
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 40
+  papers: ['2403.01876', '2406.16635', '2406.19707', '2407.21255', '2410.05004', '2508.04405', osdi26-luo]
+
+OPT-66B:
+  hf: facebook/opt-66b
+  params_b: 65.7
+  active_b: 65.7
+  layers: 64
+  hidden: 9216
+  q_heads: 72
+  kv_heads: 72
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 41
+  papers: ['2312.05516', '2401.09670', '2403.01876', '2404.04793', '2406.15786', '2406.16635', '2504.07389']
+
+Yi-6B-200K:
+  hf: 01-ai/Yi-6B-200K
+  params_b: 6.06
+  active_b: 6.06
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 200000
+  family: other
+  rank: 42
+  papers: ['2402.05099', '2405.04437', '2408.11745', '2409.10516', '2505.19586', '2506.18879', '2509.09754']
+
+CodeLlama-7B:
+  hf: codellama/CodeLlama-7b-hf
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 16384
+  family: llama2
+  rank: 43
+  papers: ['2311.04934', '2402.05099', '2403.06764', '2403.08845', '2408.07092', '2503.24000', '2606.09079']
+
+MPT-7B:
+  hf: mosaicml/mpt-7b
+  params_b: 6.65
+  active_b: 6.65
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 44
+  papers: ['2311.04934', '2403.06764', '2403.09054', '2407.15309', '2408.05646', '2410.00161', '2410.00428']
+
+Gemma-7B:
+  hf: google/gemma-7b
+  params_b: 8.54
+  active_b: 8.54
+  layers: 28
+  hidden: 3072
+  q_heads: 16
+  kv_heads: 16
+  head_dim: 256
+  attn: mha
+  ctx: 8192
+  family: other
+  rank: 45
+  papers: ['2403.06764', '2407.15309', '2410.00161', '2410.00428', '2410.15704', '2503.16257', '2503.24000']
+
+Qwen3-0.6B:
+  hf: Qwen/Qwen3-0.6B
+  params_b: 0.6
+  active_b: 0.6
+  layers: 28
+  hidden: 1024
+  q_heads: 16
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 46
+  papers: ['2405.16444', '2502.15075', '2601.16746', '2603.25926', '2605.08151', '2606.09079', '2610.26754']
+
+DeepSeek-R1-Distill-Qwen-14B:
+  hf: deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+  params_b: 14.8
+  active_b: 14.8
+  layers: 48
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 47
+  papers: ['2410.13276', '2412.03131', '2412.20993', '2505.24133', '2512.03324', '2610.18642']
+
+Qwen2.5-72B:
+  hf: Qwen/Qwen2.5-72B-Instruct
+  params_b: 72.7
+  active_b: 72.7
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 48
+  papers: ['2412.18169', '2504.17768', '2505.02922', '2510.09665', '2601.03067', '2606.09079']
+
+Qwen3-14B:
+  hf: Qwen/Qwen3-14B
+  params_b: 14.8
+  active_b: 14.8
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 49
+  papers: ['2405.16444', '2410.13276', '2512.03324', '2603.27138', '2609.03430', '2609.10266']
+
+Falcon-40B:
+  hf: tiiuae/falcon-40b
+  params_b: 41.8
+  active_b: 41.8
+  layers: 60
+  hidden: 8192
+  q_heads: 128
+  kv_heads: 8
+  head_dim: 64
+  attn: gqa
+  ctx: 2048
+  family: other
+  rank: 50
+  papers: ['2403.06764', '2403.19708', '2405.04437', '2407.15309', '2410.00161', '2410.00428']
+
+OPT-175B:
+  hf: facebook/opt-175b (via metaseq)
+  params_b: 175.0
+  active_b: 175.0
+  layers: 96
+  hidden: 12288
+  q_heads: 96
+  kv_heads: 96
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 51
+  papers: ['2401.09670', '2404.04793', '2406.15786', '2406.16635', '2504.07389', '2508.04405']
+
+Phi-4:
+  hf: microsoft/phi-4
+  params_b: 14.7
+  active_b: 14.7
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 10
+  head_dim: 128
+  attn: gqa
+  ctx: 16384
+  family: other
+  rank: 52
+  papers: ['2503.00979', '2512.03324', '2512.24449', '2605.08151', '2606.09079', '2609.03430']
+
+Pythia (family):
+  hf: EleutherAI/pythia-6.9b
+  params_b: 6.86
+  active_b: 6.86
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 53
+  papers: ['2403.06764', '2406.09297', '2407.15309', '2410.00161', '2410.00428', '2512.03324']
+
+CodeLlama-34B:
+  hf: codellama/CodeLlama-34b-hf
+  params_b: 33.7
+  active_b: 33.7
+  layers: 48
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 16384
+  family: llama2
+  rank: 54
+  papers: ['2402.05099', '2403.08845', '2405.04437', '2408.07092', '2503.24000']
+
+DeepSeek-R1 (671B):
+  hf: deepseek-ai/DeepSeek-R1
+  params_b: 671.0
+  active_b: 37.0
+  layers: 61
+  hidden: 7168
+  q_heads: 128
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 131072
+  family: other
+  rank: 55
+  papers: ['2412.20993', '2502.02617', '2604.04921', '2605.08151', '2606.09079']
+
+Qwen2.5-0.5B:
+  hf: Qwen/Qwen2.5-0.5B-Instruct
+  params_b: 0.49
+  active_b: 0.49
+  layers: 24
+  hidden: 896
+  q_heads: 14
+  kv_heads: 2
+  head_dim: 64
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 56
+  papers: ['2407.02490', '2410.03960', '2412.10319', '2504.16083', '2605.08151']
+
+Llama-3.1-405B:
+  hf: meta-llama/Llama-3.1-405B
+  params_b: 405.9
+  active_b: 405.9
+  layers: 126
+  hidden: 16384
+  q_heads: 128
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 57
+  papers: ['2410.03960', '2503.14649', '2605.08151', '2606.09079']
+
+Llama-3.3-70B:
+  hf: meta-llama/Llama-3.3-70B-Instruct
+  params_b: 70.6
+  active_b: 70.6
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama3
+  rank: 58
+  papers: ['2410.03960', '2502.15075', '2511.01815', '2606.09079']
+
+Qwen3-235B-A22B:
+  hf: Qwen/Qwen3-235B-A22B
+  params_b: 235.1
+  active_b: 22.0
+  layers: 94
+  hidden: 4096
+  q_heads: 64
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 40960
+  family: qwen
+  rank: 59
+  papers: ['2606.09079', '2608.14624', '2609.08450', '2610.01762']
+
+DeepSeek-V2-Lite:
+  hf: deepseek-ai/DeepSeek-V2-Lite
+  params_b: 15.7
+  active_b: 2.4
+  layers: 27
+  hidden: 2048
+  q_heads: 16
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 32768
+  family: other
+  rank: 60
+  papers: ['2405.04434', '2405.16444', '2410.00161', '2503.05840']
+
+Mamba (family):
+  hf: state-spaces/mamba-2.8b-hf
+  status: pending
+  rank: 61
+  papers: ['2403.06764', '2412.05496', '2605.08151', '2606.09079']
+
+Qwen1.5-14B:
+  hf: Qwen/Qwen1.5-14B-Chat
+  params_b: 14.2
+  active_b: 14.2
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 40
+  head_dim: 128
+  attn: mha
+  ctx: 32768
+  family: qwen
+  rank: 62
+  papers: ['2404.15574', '2503.19950', '2508.02401', '2606.24467']
+
+Qwen2.5-3B:
+  hf: Qwen/Qwen2.5-3B-Instruct
+  params_b: 3.09
+  active_b: 3.09
+  layers: 36
+  hidden: 2048
+  q_heads: 16
+  kv_heads: 2
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 63
+  papers: ['2407.02490', '2412.10319', '2504.16083', '2508.15212']
+
+Gemma-2-9B:
+  hf: google/gemma-2-9b-it
+  params_b: 9.24
+  active_b: 9.24
+  layers: 42
+  hidden: 3584
+  q_heads: 16
+  kv_heads: 8
+  head_dim: 256
+  attn: hybrid-swa
+  swa: {window: 4096, local_per_global: 1}
+  ctx: 8192
+  family: other
+  rank: 64
+  papers: ['2406.15786', '2502.12574', '2503.18292']
+
+DeepSeek-Coder-V2-Lite:
+  hf: deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+  params_b: 15.7
+  active_b: 2.4
+  layers: 27
+  hidden: 2048
+  q_heads: 16
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 163840
+  family: other
+  rank: 65
+  papers: ['2503.18893', '2605.08151', '2606.09079']
+
+Mistral-Nemo-12B:
+  hf: mistralai/Mistral-Nemo-Instruct-2407
+  params_b: 12.2
+  active_b: 12.2
+  layers: 40
+  hidden: 5120
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: mistral
+  rank: 66
+  papers: ['2409.17422', '2410.00161', '2511.01815']
+
+QwQ-32B:
+  hf: Qwen/QwQ-32B
+  params_b: 32.8
+  active_b: 32.8
+  layers: 64
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 67
+  papers: ['2412.03131', '2512.03324', '2610.18642']
+
+gpt-oss-120b:
+  hf: openai/gpt-oss-120b
+  params_b: 116.8
+  active_b: 5.1
+  layers: 36
+  hidden: 2880
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 64
+  attn: hybrid-swa
+  swa: {window: 128, local_per_global: 1}
+  ctx: 131072
+  family: other
+  rank: 68
+  papers: ['2604.04921', '2606.09079', '2610.13060']
+
+DeepSeek-V3:
+  hf: deepseek-ai/DeepSeek-V3
+  params_b: 671.0
+  active_b: 37.0
+  layers: 61
+  hidden: 7168
+  q_heads: 128
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 131072
+  family: other
+  rank: 69
+  papers: ['2605.08151', '2606.09079', '2609.08450']
+
+Kimi-K2:
+  hf: moonshotai/Kimi-K2-Instruct
+  params_b: 1026.0
+  active_b: 32.6
+  layers: 61
+  hidden: 7168
+  q_heads: 64
+  kv_heads: 1
+  head_dim: 128
+  attn: mla
+  mla: {kv_lora_rank: 512, rope_dim: 64}
+  ctx: 131072
+  family: other
+  rank: 70
+  papers: ['2605.08151', '2606.09079', '2609.31382']
+
+Mixtral-8x22B:
+  hf: mistralai/Mixtral-8x22B-v0.1
+  params_b: 140.6
+  active_b: 39.1
+  layers: 56
+  hidden: 6144
+  q_heads: 48
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 65536
+  family: mistral
+  rank: 71
+  papers: ['2405.04434', '2406.02542', '2410.00161']
+
+Qwen1.5-72B:
+  hf: Qwen/Qwen1.5-72B-Chat
+  params_b: 72.3
+  active_b: 72.3
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 64
+  head_dim: 128
+  attn: mha
+  ctx: 32768
+  family: qwen
+  rank: 72
+  papers: ['2405.04434', '2405.04532', '2502.14866']
+
+gpt-oss-20b:
+  hf: openai/gpt-oss-20b
+  params_b: 20.9
+  active_b: 3.6
+  layers: 24
+  hidden: 2880
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 64
+  attn: hybrid-swa
+  swa: {window: 128, local_per_global: 1}
+  ctx: 131072
+  family: other
+  rank: 73
+  papers: ['2405.16444', '2604.04921', '2605.08151']
+
+BLOOM-176B:
+  hf: bigscience/bloom
+  params_b: 176.2
+  active_b: 176.2
+  layers: 70
+  hidden: 14336
+  q_heads: 112
+  kv_heads: 112
+  head_dim: 128
+  attn: mha
+  ctx: 2048
+  family: other
+  rank: 74
+  papers: ['2311.18677', '2403.01876']
+
+Gemma-3-12B:
+  hf: google/gemma-3-12b-it
+  params_b: 12.2
+  active_b: 12.2
+  layers: 48
+  hidden: 3840
+  q_heads: 16
+  kv_heads: 8
+  head_dim: 256
+  attn: hybrid-swa
+  swa: {window: 1024, local_per_global: 5}
+  ctx: 131072
+  family: other
+  rank: 75
+  papers: ['2505.23416', '2511.02230']
+
+LWM-7B-1M:
+  hf: LargeWorldModel/LWM-Text-Chat-1M
+  params_b: 6.74
+  active_b: 6.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 1048576
+  family: llama2
+  rank: 76
+  papers: ['2404.09526', '2404.14469']
+
+GLM-4.5:
+  hf: zai-org/GLM-4.5
+  params_b: 355.0
+  active_b: 32.0
+  layers: 92
+  hidden: 5120
+  q_heads: 96
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: other
+  rank: 77
+  papers: ['2405.05254', '2511.02230']
+
+Phi-3-medium:
+  hf: microsoft/Phi-3-medium-128k-instruct
+  params_b: 14.0
+  active_b: 14.0
+  layers: 40
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 10
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: llama2
+  rank: 78
+  papers: ['2409.01227', '2503.19950']
+
+Qwen1.5-7B:
+  hf: Qwen/Qwen1.5-7B-Chat
+  params_b: 7.72
+  active_b: 7.72
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 32
+  head_dim: 128
+  attn: mha
+  ctx: 32768
+  family: qwen
+  rank: 79
+  papers: ['2503.19950', '2503.24000']
+
+Qwen2-72B:
+  hf: Qwen/Qwen2-72B-Instruct
+  params_b: 72.7
+  active_b: 72.7
+  layers: 80
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 80
+  papers: ['2408.12757', '2510.20707']
+
+DeepSeek-R1-Distill-Qwen-32B:
+  hf: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+  params_b: 32.8
+  active_b: 32.8
+  layers: 64
+  hidden: 5120
+  q_heads: 40
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: qwen
+  rank: 81
+  papers: ['2412.20993']
+
+Gemma-2-27B:
+  hf: google/gemma-2-27b-it
+  params_b: 27.2
+  active_b: 27.2
+  layers: 46
+  hidden: 4608
+  q_heads: 32
+  kv_heads: 16
+  head_dim: 128
+  attn: hybrid-swa
+  swa: {window: 4096, local_per_global: 1}
+  ctx: 8192
+  family: other
+  rank: 82
+  papers: ['2503.18292']
+
+Mistral-Small-24B:
+  hf: mistralai/Mistral-Small-24B-Instruct-2501
+  params_b: 23.6
+  active_b: 23.6
+  layers: 40
+  hidden: 5120
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: mistral
+  rank: 83
+  papers: ['2511.00868']
+
+InternLM2-7B:
+  hf: internlm/internlm2-chat-7b
+  params_b: 7.74
+  active_b: 7.74
+  layers: 32
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: other
+  rank: 84
+  papers: ['2503.24000']
+
+Llama-4-Scout:
+  hf: meta-llama/Llama-4-Scout-17B-16E-Instruct
+  status: pending
+  rank: 85
+  papers: ['2606.09079']
+
+Qwen2.5-1.5B:
+  hf: Qwen/Qwen2.5-1.5B-Instruct
+  params_b: 1.54
+  active_b: 1.54
+  layers: 28
+  hidden: 1536
+  q_heads: 12
+  kv_heads: 2
+  head_dim: 128
+  attn: gqa
+  ctx: 32768
+  family: qwen
+  rank: 86
+  papers: ['2410.01805']
+
+Command-R-35B:
+  hf: CohereForAI/c4ai-command-r-v01
+  params_b: 35.0
+  active_b: 35.0
+  layers: 40
+  hidden: 8192
+  q_heads: 64
+  kv_heads: 64
+  head_dim: 128
+  attn: mha
+  ctx: 131072
+  family: other
+  rank: null
+  papers: []
+
+Falcon-180B:
+  hf: tiiuae/falcon-180B
+  params_b: 179.5
+  active_b: 179.5
+  layers: 80
+  hidden: 14848
+  q_heads: 232
+  kv_heads: 8
+  head_dim: 64
+  attn: gqa
+  ctx: 2048
+  family: other
+  rank: null
+  papers: []
+
+Gemma-3-27B:
+  hf: google/gemma-3-27b-it
+  params_b: 27.4
+  active_b: 27.4
+  layers: 62
+  hidden: 5376
+  q_heads: 32
+  kv_heads: 16
+  head_dim: 128
+  attn: hybrid-swa
+  swa: {window: 1024, local_per_global: 5}
+  ctx: 131072
+  family: other
+  rank: null
+  papers: []
+
+Mistral-Large-123B:
+  hf: mistralai/Mistral-Large-Instruct-2407
+  params_b: 122.6
+  active_b: 122.6
+  layers: 88
+  hidden: 12288
+  q_heads: 96
+  kv_heads: 8
+  head_dim: 128
+  attn: gqa
+  ctx: 131072
+  family: mistral
+  rank: null
+  papers: []
+
+Yi-9B-200K:
+  hf: 01-ai/Yi-9B-200K
+  params_b: 8.83
+  active_b: 8.83
+  layers: 48
+  hidden: 4096
+  q_heads: 32
+  kv_heads: 4
+  head_dim: 128
+  attn: gqa
+  ctx: 200000
+  family: other
+  rank: null
+  papers: []

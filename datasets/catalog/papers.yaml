@@ -1,0 +1,2784 @@
+'2310.07240':
+  title: CacheGen
+  venue: SIGCOMM'24
+  year: 2024
+  technique: [compress, tier]
+  evidence: [F]
+  repo: null
+  workloads: [NarrativeQA, TriviaQA, Wikipedia/WikiText]
+  models: [Llama-2-70B, Mistral-7B]
+
+'2311.04934':
+  title: Prompt Cache
+  venue: MLSys'24
+  year: 2024
+  technique: [nonprefix, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, GovReport, HotpotQA, LongBench, MuSiQue, MultiNews, NarrativeQA, QMSum, TriviaQA]
+  models: [CodeLlama-7B, Falcon-7B, Llama-2-13B, Llama-2-7B, Llama-7B (v1), MPT-7B]
+
+'2311.18677':
+  title: Splitwise
+  venue: ISCA'24
+  year: 2024
+  technique: [sched]
+  evidence: [F]
+  repo: null
+  workloads: [Azure LLM inference trace]
+  models: [BLOOM-176B, Llama-2-70B]
+
+'2312.05516':
+  title: Pensieve
+  venue: EuroSys'25
+  year: 2025
+  technique: [tier, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT, UltraChat]
+  models: [Llama-2-13B, Llama-2-70B, OPT-13B, OPT-66B]
+
+'2312.07104':
+  title: SGLang (RadixAttention)
+  venue: NeurIPS'24
+  year: 2024
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: [GSM8K, HellaSwag, MMLU, ReAct/HotpotQA agent, ShareGPT, Tree-of-Thought / few-shot programs]
+  models: [Llama-2-70B, Llama-7B (v1), Mixtral-8x7B]
+
+'2401.04658':
+  title: 'Lightning Attention-2: A Free Lunch for Handling Unlimited Sequence Lengths in Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: OpenNLPLab/lightning-attention
+  workloads: []
+  models: []
+
+'2401.09670':
+  title: DistServe
+  venue: OSDI'24
+  year: 2024
+  technique: [sched]
+  evidence: [A, F]
+  repo: LLMServe/DistServe
+  workloads: [Alpaca, HumanEval, LongBench, MMLU, ShareGPT]
+  models: [Llama-2-13B, Llama-2-7B, OPT-1.3B, OPT-13B, OPT-175B, OPT-6.7B, OPT-66B]
+
+'2401.17644':
+  title: BurstGPT
+  venue: KDD'25
+  year: 2025
+  technique: [sched]
+  evidence: [A, F]
+  repo: HPMLL/BurstGPT
+  workloads: [Alpaca, BurstGPT, ShareGPT]
+  models: ['GPT-3 (175B, simulated)', Llama-2-13B, Llama-2-7B]
+
+'2401.18079':
+  title: KVQuant
+  venue: NeurIPS'24
+  year: 2024
+  technique: [compress]
+  evidence: [A, F]
+  repo: SqueezeAILab/KVQuant
+  workloads: [C4, CNN/DailyMail, HumanEval, LongBench, MultiNews, Natural Questions, Passkey retrieval, RULER, SAMSum, SQuAD,
+    Wikipedia/WikiText, XSum]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-7B (v1), Mistral-7B]
+
+'2402.02750':
+  title: KIVI
+  venue: ICML'24
+  year: 2024
+  technique: [compress]
+  evidence: [A, F]
+  repo: jy-yuan/KIVI
+  workloads: [2WikiMultihopQA, C4, GSM8K, GovReport, HotpotQA, LCC, LongBench, MuSiQue, MultiFieldQA, MultiNews, NarrativeQA,
+    Needle-in-a-Haystack, Passkey retrieval, QMSum, Qasper, RepoBench, SAMSum, ShareGPT, TREC, TriviaQA]
+  models: [Falcon-7B, Llama-2-13B, Llama-2-7B, Llama-3-8B, Llama-3.1-8B, LongChat-7B-32K, Mistral-7B]
+
+'2402.04617':
+  title: 'InfLLM: Training-Free Long-Context Extrapolation for LLMs with an Efficient Context Memory'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: thunlp/InfLLM
+  workloads: [InfiniteBench, LongBench, Passkey retrieval]
+  models: [MiniCPM, Mistral-7B, Vicuna-7B]
+
+'2402.05099':
+  title: Hydragen
+  venue: arXiv
+  year: 2024
+  technique: [prefix]
+  evidence: [A, F]
+  repo: ScalingIntelligence/hydragen
+  workloads: [APPS, Natural Questions, Needle-in-a-Haystack]
+  models: [CodeLlama-34B, CodeLlama-7B, Llama-2-7B, Llama-7B (v1), Yi-6B-200K]
+
+'2402.06262':
+  title: On the Efficacy of Eviction Policy for Key-Value Constrained Generative Language Model Inference
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: DRSY/EasyKV
+  workloads: [Dolly, LongBench, Passkey retrieval]
+  models: [Llama-2-13B, Llama-2-7B, Vicuna-13B, Vicuna-7B]
+
+'2402.09398':
+  title: 'Get More with LESS: Synthesizing Recurrence with KV Cache Compression for Efficient LLM Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: hdong920/LESS
+  workloads: [CNN/DailyMail, Wikipedia/WikiText]
+  models: [Falcon-7B, Llama-2-7B]
+
+'2402.15220':
+  title: ChunkAttention
+  venue: ACL'24
+  year: 2024
+  technique: [prefix]
+  evidence: [A, F]
+  repo: microsoft/chunk-attention
+  workloads: [Natural Questions]
+  models: [Llama-2-7B]
+
+'2403.01241':
+  title: 'IntactKV: Improving Large Languagze Model Quantization by Keeping Pivot Tokens Intact'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: ruikangliu/IntactKV
+  workloads: [C4, MMLU, ShareGPT, Wikipedia/WikiText]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-7B (v1), Vicuna-13B, Vicuna-7B]
+
+'2403.01876':
+  title: DejaVu
+  venue: ICML'24
+  year: 2024
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [LMSYS-Chat-1M]
+  models: [BLOOM-176B, OPT-30B, OPT-66B]
+
+'2403.04643':
+  title: 'QAQ: Quality Adaptive Quantization for LLM KV Cache'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: ClubieDong/QAQ-KVCacheQuantization
+  workloads: [HellaSwag, PIQA]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B]
+
+'2403.05527':
+  title: 'GEAR: An Efficient KV Cache Compression Recipefor Near-Lossless Generative Inference of LLM'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: opengear-project/GEAR
+  workloads: [BBH, GSM8K, MMLU]
+  models: [Llama-2-13B, Llama-2-7B, Mistral-7B]
+
+'2403.06764':
+  title: 'Code for paper: An Image is Worth 1/2 Tokens After Layer 2: Plug-and-Play Inference Acceleration for Large Vision-Language
+    Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: pkunlp-icler/FastV
+  workloads: [AIME, Alpaca, C4, CNN/DailyMail, HumanEval, MultiNews, Natural Questions, SAMSum, SQuAD, TriviaQA, Wikipedia/WikiText,
+    XSum]
+  models: [CodeLlama-7B, Falcon-40B, Falcon-7B, 'GPT-3 (175B, simulated)', GPT-NeoX-20B, Gemma-7B, Llama-2-7B, Llama-7B (v1),
+    MPT-7B, Mamba (family), Mistral-7B, Mixtral-8x7B, OPT-1.3B, OPT-13B, OPT-6.7B, Pythia (family), Qwen2-7B, Vicuna-13B,
+    Vicuna-7B]
+
+'2403.08845':
+  title: 'Bifurcated Attention: Accelerating Massively Parallel Decoding with Shared Prefixes in LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: bifurcated-attn-icml-2024/gpt-fast-parallel-sampling
+  workloads: [HellaSwag, Wikipedia/WikiText, WinoGrande]
+  models: [CodeLlama-34B, CodeLlama-7B, Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-7B (v1), Mistral-7B, Mixtral-8x7B]
+
+'2403.09054':
+  title: 'Keyformer: KV Cache Reduction through Key Tokens Selection for Efficient Generative Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: d-matrix-ai/keyformer-llm
+  workloads: [BoolQ, CNN/DailyMail, COPA, GovReport, HellaSwag, PIQA, SQuAD, WinoGrande, XSum]
+  models: [GPT-NeoX-20B, MPT-7B]
+
+'2403.17411':
+  title: 'PCToolkit: A Unified Plug-and-Play Prompt Compression Toolkit of Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: 3DAgentWorld/Toolkit-for-Prompt-Compression
+  workloads: [BBH, GSM8K, LongBench, SQuAD, ShareGPT]
+  models: [Llama-2-7B]
+
+'2403.19708':
+  title: CachedAttention / AttentionStore
+  venue: USENIX ATC'24
+  year: 2024
+  technique: [tier, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [C4, MMLU, PIQA, ShareGPT, Wikipedia/WikiText]
+  models: [Falcon-40B, Llama-2-70B, Llama-7B (v1), Mistral-7B]
+
+'2404.02827':
+  title: 'BAdam: A Memory Efficient Full Parameter Training Method for Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Ledzy/BAdam
+  workloads: [ARC, Alpaca, BoolQ, COPA, HellaSwag, MT-Bench, Natural Questions, PIQA, SQuAD, UltraChat, WinoGrande]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-7B (v1)]
+
+'2404.04793':
+  title: 'SQUEEZEATTENTION: 2D Management of KV-Cache in LLM Inference via Layer-wise Optimal Budget'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: hetailang/SqueezeAttention
+  workloads: [APPS, BoolQ, GSM8K, HellaSwag, HumanEval, LongBench, MMLU, MS MARCO, NarrativeQA, Natural Questions, OpenBookQA,
+    SAMSum, Wikipedia/WikiText, XSum]
+  models: ['GPT-3 (175B, simulated)', GPT-NeoX-20B, Llama-2-7B, Mistral-7B, OPT-1.3B, OPT-175B, OPT-6.7B, OPT-66B]
+
+'2404.09526':
+  title: LoongServe
+  venue: SOSP'24
+  year: 2024
+  technique: [sched]
+  evidence: [F]
+  repo: null
+  workloads: [L-Eval, LV-Eval, ShareGPT]
+  models: [LWM-7B-1M]
+
+'2404.10308':
+  title: 'Hierarchical Context Merging: Better Long Context Understanding for Pre-trained LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: alinlab/HOMER
+  workloads: [PG-19, Passkey retrieval]
+  models: [Llama-2-7B]
+
+'2404.12457':
+  title: RAGCache
+  venue: arXiv
+  year: 2024
+  technique: [nonprefix, tier]
+  evidence: [F]
+  repo: null
+  workloads: [MMLU, Natural Questions]
+  models: [Llama-2-70B, Llama-2-7B, Mistral-7B, Mixtral-8x7B]
+
+'2404.14469':
+  title: SnapKV
+  venue: NeurIPS'24
+  year: 2024
+  technique: [compress]
+  evidence: [A, F]
+  repo: FasterDecoding/SnapKV
+  workloads: [HotpotQA, LMSYS-Chat-1M, LongBench, NarrativeQA, Needle-in-a-Haystack, QMSum, Qasper, SAMSum]
+  models: [LWM-7B-1M, LongChat-7B-32K, Mistral-7B, Mixtral-8x7B]
+
+'2404.15574':
+  title: Retrieval Head Mechanistically Explains Long-Context Factuality
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: nightdessert/Retrieval_Head
+  workloads: [Needle-in-a-Haystack, RULER]
+  models: [Llama-2-7B, LongChat-7B-32K, Mistral-7B, Qwen1.5-14B]
+
+'2405.04434':
+  title: 'DeepSeek-V2: A Strong, Economical, and Efficient Mixture-of-Experts Language Model – DeepSeek (May 2024)'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: deepseek-ai/DeepSeek-V2
+  workloads: [AlpacaEval, BBH, GSM8K, HumanEval, LiveCodeBench, MBPP, MMLU, MT-Bench, Needle-in-a-Haystack]
+  models: [DeepSeek-V2, DeepSeek-V2-Lite, Llama-3-70B, Mixtral-8x22B, Qwen1.5-72B, Yi-34B(-200K)]
+
+'2405.04437':
+  title: vAttention
+  venue: ASPLOS'25
+  year: 2025
+  technique: [mem]
+  evidence: [A, F]
+  repo: microsoft/vattention
+  workloads: [CNN/DailyMail, ShareGPT, arXiv summarization]
+  models: [CodeLlama-34B, Falcon-40B, Falcon-7B, 'GPT-3 (175B, simulated)', Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B,
+    Llama-7B (v1), Yi-34B(-200K), Yi-6B-200K]
+
+'2405.04532':
+  title: 'QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: mit-han-lab/omniserve
+  workloads: [BookSum, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER, Wikipedia/WikiText, WildChat]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Mistral-7B, Mixtral-8x7B,
+    Qwen1.5-72B, Yi-34B(-200K)]
+
+'2405.05254':
+  title: 'You Only Cache Once: Decoder-Decoder Architectures for Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: microsoft/unilm
+  workloads: [AIME, APPS, Alpaca, BoolQ, CNN/DailyMail, COPA, GSM8K, HellaSwag, HumanEval, MATH / MATH-500, MBPP, MS MARCO,
+    Natural Questions, SQuAD, Wikipedia/WikiText, WinoGrande, XSum]
+  models: [GLM-4.5, 'GPT-3 (175B, simulated)', Llama-3.1-70B, Llama-3.1-8B]
+
+'2405.06219':
+  title: 'SKVQ: Sliding-window Key and Value Cache Quantization for Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: cat538/SKVQ
+  workloads: [LongBench, Wikipedia/WikiText]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-7B (v1), LongChat-7B-32K, Mistral-7B, Vicuna-7B]
+
+'2405.10637':
+  title: Layer-Condensed KV Cache for Efficient Inference of Large Language Models
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: whyNLP/LCKV
+  workloads: [Wikipedia/WikiText]
+  models: [Llama-2-7B, Llama-7B (v1)]
+
+'2405.12532':
+  title: 'PyramidInfer: Pyramid KV Cache Compression for High-throughput LLM Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: mutonix/pyramidinfer
+  workloads: [SQuAD]
+  models: [Llama-2-7B]
+
+'2405.12591':
+  title: Unlocking Data-free Low-bit Quantization with Matrix Decomposition for KV Cache Compression
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: lpyhdzx/DecoQuant_code
+  workloads: [BoolQ, LAMBADA]
+  models: [Llama-7B (v1), OPT-1.3B, OPT-6.7B]
+
+'2405.12981':
+  title: Reducing Transformer Key-Value Cache Size with Cross-Layer Attention
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: JerryYin777/Cross-Layer-Attention
+  workloads: []
+  models: []
+
+'2405.14256':
+  title: 'ZipCache: Accurate and Efficient KV Cache Quantization with Salient Token Identification'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: ThisisBillhe/ZipCache
+  workloads: []
+  models: []
+
+'2405.14366':
+  title: 'MiniCache: KV Cache Compression in Depth Dimension for Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: AkideLiu/MiniCache
+  workloads: []
+  models: []
+
+'2405.16444':
+  title: CacheBlend
+  venue: EuroSys'25
+  year: 2025
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: LMCache/LMCache
+  workloads: [2WikiMultihopQA, GSM8K, HotpotQA, LongBench, LongBench v2, MuSiQue, MultiNews, SAMSum, SQuAD, ShareGPT]
+  models: [DeepSeek-V2-Lite, Llama-2-70B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.2-1B, Mistral-7B, Qwen2.5-14B, Qwen2.5-32B,
+    Qwen3-0.6B, Qwen3-14B, Qwen3-4B, Qwen3-8B, Yi-34B(-200K), gpt-oss-20b]
+
+'2405.19888':
+  title: Parrot
+  venue: OSDI'24
+  year: 2024
+  technique: [prefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT, arXiv summarization]
+  models: [Llama-7B (v1)]
+
+'2406.02069':
+  title: PyramidKV
+  venue: arXiv
+  year: 2024
+  technique: [compress]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, GovReport, HotpotQA, LCC, LongBench, MuSiQue, MultiFieldQA, MultiNews, NarrativeQA, Needle-in-a-Haystack,
+    QMSum, Qasper, RepoBench, SAMSum, TREC, TriviaQA]
+  models: [Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Mistral-7B, Mixtral-8x7B]
+
+'2406.02542':
+  title: 'Loki: Low-Rank Keys for Efficient Sparse Attention'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: hpcgroup/loki
+  workloads: [C4, Wikipedia/WikiText]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Mistral-7B, Mixtral-8x22B]
+
+'2406.03482':
+  title: 'QJL: 1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: amirzandieh/QJL
+  workloads: [LongBench]
+  models: [Llama-3-8B, LongChat-7B-32K]
+
+'2406.05317':
+  title: 'LoCoCo: Dropping In Convolutions for Long Context Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: VITA-Group/LoCoCo
+  workloads: []
+  models: [Llama-2-7B]
+
+'2406.06973':
+  title: 'RWKV-CLIP: A Robust Vision-Language Representation Learner'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: deepglint/RWKV-CLIP
+  workloads: []
+  models: []
+
+'2406.09297':
+  title: 'MLKV: Multi-Layer Key-Value Heads for Memory Efficient Transformer Decoding'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: zaydzuhri/pythia-mlkv
+  workloads: [ARC, BoolQ, LAMBADA, PIQA]
+  models: [GPT-NeoX-20B, Pythia (family)]
+
+'2406.10247':
+  title: 'QCQA: Quality and Capacity-aware grouped Query Attention'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: vinayjoshi22/qcqa
+  workloads: []
+  models: []
+
+'2406.10774':
+  title: Quest
+  venue: ICML'24
+  year: 2024
+  technique: [compress]
+  evidence: [A, F]
+  repo: mit-han-lab/Quest
+  workloads: [GovReport, HotpotQA, LongBench, MultiFieldQA, NarrativeQA, PG-19, Passkey retrieval, Qasper, TriviaQA]
+  models: [Llama-2-7B, Llama-3.1-8B, LongChat-7B-32K]
+
+'2406.11430':
+  title: A Simple and Effective L2 Norm-Based Strategy for KV Cache Compression
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: alessiodevoto/l2compress
+  workloads: [Needle-in-a-Haystack, Passkey retrieval, RULER]
+  models: [Llama-2-7B, Llama-3-8B]
+
+'2406.12335':
+  title: 'Attention Score is not All You Need for Token Importance Indicator in KV Cache Reduction: Value Also Matters'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: guozhiyu/vatp
+  workloads: []
+  models: [Llama-2-7B, Vicuna-7B]
+
+'2406.14909':
+  title: 'MoA: Mixture of Sparse Attention for Automatic Large Language Model Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: thu-nics/MoA
+  workloads: [HotpotQA, LCC, LongBench, MultiNews, Qasper, TREC]
+  models: [Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Vicuna-7B]
+
+'2406.15786':
+  title: What Matters in Transformers? Not All Attention is Needed
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: CASE-Lab-UMD/LLM-Drop
+  workloads: [ARC, Alpaca, C4, GSM8K, HellaSwag, HumanEval, MMLU, ShareGPT, Wikipedia/WikiText]
+  models: [Gemma-2-9B, Llama-2-7B, Llama-3-8B, Llama-7B (v1), Mistral-7B, OPT-1.3B, OPT-13B, OPT-175B, OPT-6.7B, OPT-66B,
+    Vicuna-7B]
+
+'2406.16635':
+  title: 'ShadowLLM: Predictor-based Contextual Sparsity for Large Language Models'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: abdelfattah-lab/shadow_llm
+  workloads: [CNN/DailyMail, HumanEval, MultiNews, Natural Questions, SAMSum, SQuAD, Wikipedia/WikiText, XSum]
+  models: [OPT-175B, OPT-30B, OPT-66B]
+
+'2406.17415':
+  title: 'Layer-Wise Quantization: A Pragmatic and Effective Method for Quantizing LLMs Beyond Integer Bit-Levels'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: RazvanDu/LayerwiseQuant
+  workloads: []
+  models: []
+
+'2406.17565':
+  title: MemServe
+  venue: arXiv
+  year: 2024
+  technique: [prefix, tier, sched]
+  evidence: [F]
+  repo: null
+  workloads: [HotpotQA, LooGLE, ShareGPT]
+  models: [Llama-2-13B]
+
+'2406.18139':
+  title: 'LOOK-M: Look-Once Optimization in KV Cache for Efficient Multimodal Long-Context Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: SUSTechBruce/LOOK-M
+  workloads: [Needle-in-a-Haystack, ShareGPT]
+  models: [Llama-7B (v1), Vicuna-13B, Vicuna-7B]
+
+'2406.19707':
+  title: InfiniGen
+  venue: OSDI'24
+  year: 2024
+  technique: [tier, compress]
+  evidence: [F]
+  repo: null
+  workloads: [COPA, OpenBookQA, PG-19, PIQA, Wikipedia/WikiText, WinoGrande]
+  models: [Llama-2-13B, Llama-2-7B, Llama-3-8B, OPT-13B, OPT-30B, OPT-6.7B]
+
+'2407.00023':
+  title: Preble
+  venue: ICLR'25
+  year: 2025
+  technique: [prefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [ALFWorld, APPS, Azure LLM inference trace, LooGLE, ToolBench]
+  models: [Llama-3-70B, Mistral-7B]
+
+'2407.00079':
+  title: Mooncake
+  venue: FAST'25
+  year: 2025
+  technique: [tier, prefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [L-Eval, Mooncake trace, arXiv summarization]
+  models: [Llama-2-70B]
+
+'2407.02328':
+  title: Efficient Sparse Attention needs Adaptive Token Release
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: WHUIR/ADORE
+  workloads: []
+  models: []
+
+'2407.02490':
+  title: MInference
+  venue: NeurIPS'24
+  year: 2024
+  technique: [compress]
+  evidence: [A, F]
+  repo: microsoft/MInference
+  workloads: [BookSum, C4, GSM8K, HotpotQA, InfiniteBench, LMSYS-Chat-1M, LongBench, NarrativeQA, Needle-in-a-Haystack, PG-19,
+    Passkey retrieval, RULER, SCBench, SQuAD]
+  models: [GLM-4-9B, GPT-NeoX-20B, Jamba, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B,
+    Phi-3-mini, Qwen2-7B, Qwen2.5-0.5B, Qwen2.5-3B, Qwen2.5-7B]
+
+'2407.08608':
+  title: 'FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Dao-AILab/flash-attention
+  workloads: [Natural Questions, Wikipedia/WikiText]
+  models: ['GPT-3 (175B, simulated)', Mistral-7B]
+
+'2407.11550':
+  title: Ada-KV
+  venue: NeurIPS'25
+  year: 2025
+  technique: [compress]
+  evidence: [A, F]
+  repo: FFY0/AdaKV
+  workloads: [2WikiMultihopQA, GovReport, HotpotQA, LCC, LMSYS-Chat-1M, LongBench, MuSiQue, MultiFieldQA, MultiNews, NarrativeQA,
+    QMSum, Qasper, RULER, RepoBench, SAMSum, TREC, TriviaQA]
+  models: [Llama-3.1-70B, Llama-3.1-8B, Mistral-7B]
+
+'2407.12077':
+  title: 'GoldFinch: High Performance RWKV/Transformer Hybrid with Linear Pre-Fill and Extreme KV-Cache Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: recursal/GoldFinch-paper
+  workloads: []
+  models: []
+
+'2407.12820':
+  title: PQCache
+  venue: SIGMOD'25
+  year: 2025
+  technique: [compress, tier]
+  evidence: [F]
+  repo: null
+  workloads: [GSM8K, InfiniteBench, LongBench, Needle-in-a-Haystack]
+  models: [Llama-3.1-70B, Llama-3.1-8B, Mistral-7B]
+
+'2407.12866':
+  title: 'Beyond KV Caching: Shared Attention for Efficient LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: metacarbon/shareAtt
+  workloads: [Alpaca, GSM8K, HellaSwag, MMLU]
+  models: [Llama-2-7B, Llama-3-8B, Llama-7B (v1)]
+
+'2407.15309':
+  title: 'vTensor: Flexible Virtual Tensor Management for Efficient LLM Serving'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: antgroup/glake
+  workloads: [LV-Eval, ShareGPT]
+  models: [ChatGLM3-6B, Falcon-40B, Falcon-7B, GPT-NeoX-20B, Gemma-7B, Llama-2-13B, Llama-2-7B, Llama-3-8B, Llama-7B (v1),
+    MPT-7B, MiniCPM, Mistral-7B, Mixtral-8x7B, OPT-1.3B, OPT-13B, Pythia (family), Vicuna-13B]
+
+'2407.18003':
+  title: 'Keep the Cost Down: A Review on Methods to Optimize LLM'' s KV-Cache Consumption'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: zcli-charlie/Awesome-KV-Cache
+  workloads: []
+  models: []
+
+'2407.20485':
+  title: 'A2SF: Accumulative Attention Scoring with Forgetting Factor for Token Pruning in Transformer Decoder'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Dirac-Notation/A2SF
+  workloads: [GovReport, LongBench, MultiFieldQA, MultiNews, NarrativeQA, Needle-in-a-Haystack, QMSum, Qasper, SAMSum, TREC,
+    TriviaQA]
+  models: [Llama-3-8B, Llama-3.1-8B, Mistral-7B]
+
+'2407.21018':
+  title: 'ThinK: Thinner Key Cache by Query-Driven Pruning'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: SalesforceAIResearch/ThinK
+  workloads: [C4, GSM8K, LongBench, Passkey retrieval]
+  models: [Llama-2-7B, Llama-3-70B, Llama-3-8B, LongChat-7B-32K, Mistral-7B]
+
+'2407.21118':
+  title: 'Palu: Compressing KV-Cache with Low-Rank Projection'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: shadowpa0327/Palu
+  workloads: [C4, Wikipedia/WikiText]
+  models: [DeepSeek-V2, Llama-2-7B, Mistral-7B]
+
+'2407.21255':
+  title: AQUA
+  venue: ASPLOS'25
+  year: 2025
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT, arXiv summarization]
+  models: [Llama-3.1-70B, Llama-3.1-8B, OPT-30B, Yi-34B(-200K)]
+
+'2408.00274':
+  title: 'QUITO: Accelerating Long-Context Reasoning through Query-Guided Context Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Wenshansilvia/attention_compressor
+  workloads: [Natural Questions]
+  models: []
+
+'2408.03675':
+  title: 'NACL: A General and Effective KV Cache Eviction Framework for LLMs at Inference Time'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: PaddlePaddle/Research
+  workloads: [HotpotQA, MultiNews, Natural Questions, SQuAD, TriviaQA]
+  models: []
+
+'2408.04093':
+  title: 'Tree Attention: Topology-aware Decoding for Long-Context Attention on GPU clusters'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Zyphra/tree_attention
+  workloads: []
+  models: []
+
+'2408.05646':
+  title: 'Eigen Attention: Attention in Low-Rank Space for KV Cache Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: UtkarshSaxena1/EigenAttn
+  workloads: [Alpaca, C4, Wikipedia/WikiText]
+  models: [Llama-2-7B, MPT-7B]
+
+'2408.07092':
+  title: Post-Training Sparse Attention with Double Sparsity
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: andy-yang-1/DoubleSparse
+  workloads: [GovReport, HellaSwag, HotpotQA, MMLU, MultiFieldQA, NarrativeQA, Qasper, TriviaQA, Wikipedia/WikiText]
+  models: [CodeLlama-34B, CodeLlama-7B, Llama-2-7B, Llama-3.1-8B, Llama-7B (v1), Mistral-7B, OPT-6.7B, Vicuna-7B]
+
+'2408.08454':
+  title: 'Beyond Uniform Query Distribution: Key-Driven Grouped Query Attention'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: zohaib-khan5040/key-driven-gqa
+  workloads: []
+  models: []
+
+'2408.11049':
+  title: 'MagicDec: Breaking the Latency-Throughput Tradeoff for Long Context Generation with Speculative Decoding'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Infini-AI-Lab/MagicDec
+  workloads: [HotpotQA, Needle-in-a-Haystack, PG-19, RULER, SQuAD]
+  models: [Llama-2-7B, Llama-3.1-8B, Llama-3.2-1B]
+
+'2408.11745':
+  title: 'FocusLLM: Scaling LLM’s Context by Parallel Decoding'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: leezythu/FocusLLM
+  workloads: [InfiniteBench, LongBench, PG-19, Passkey retrieval]
+  models: [Llama-2-7B, Mistral-7B, Yi-34B(-200K), Yi-6B-200K]
+
+'2408.12757':
+  title: 'NanoFlow: Towards Optimal Large Language Model Serving Throughput'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: efeslab/Nanoflow
+  workloads: [LMSYS-Chat-1M, ShareGPT]
+  models: [Llama-2-70B, Llama-3-70B, Llama-3-8B, Llama-3.1-70B, Llama-3.1-8B, Mixtral-8x7B, Qwen2-72B]
+
+'2408.14690':
+  title: Training-Free Activation Sparsity in Large Language Models
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: FasterDecoding/TEAL
+  workloads: [Alpaca, HellaSwag, Wikipedia/WikiText, WinoGrande]
+  models: [Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Mistral-7B, Mixtral-8x7B]
+
+'2409.01227':
+  title: Prompt Compression with Context-Aware Sentence Encoding for Fast and Improved LLM Inference
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Workday/cpc
+  workloads: [LongBench, Wikipedia/WikiText, ZeroSCROLLS]
+  models: [Mistral-7B, Phi-3-medium]
+
+'2409.03856':
+  title: 'Sirius: Contextual Sparsity with Correction for Efficient LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Infini-AI-Lab/Sirius
+  workloads: [CNN/DailyMail, GSM8K, HumanEval, MBPP, MMLU, XSum]
+  models: [Llama-2-13B, Llama-2-7B, Llama-3-70B, Llama-3-8B]
+
+'2409.04992':
+  title: InstInfer
+  venue: arXiv
+  year: 2024
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [SQuAD, ShareGPT, TriviaQA, Wikipedia/WikiText]
+  models: [Llama-2-7B, OPT-13B]
+
+'2409.09086':
+  title: 'Inf-MLLM: Efficient Streaming Inference of Multimodal Large Language Models on a Single GPU'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: infly-ai/INF-MLLM
+  workloads: []
+  models: [Llama-2-7B]
+
+'2409.10516':
+  title: RetrievalAttention
+  venue: arXiv
+  year: 2024
+  technique: [compress, tier]
+  evidence: [A, F]
+  repo: jzbjyb/ReAtt
+  workloads: [InfiniteBench, Natural Questions, Needle-in-a-Haystack, RULER]
+  models: [Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Yi-6B-200K]
+
+'2409.10593':
+  title: 'CSKV: Training-Efficient Channel Shrinking for KV Cache in Long-Context Scenarios'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: wln20/CSKV
+  workloads: [Wikipedia/WikiText]
+  models: [LongChat-7B-32K]
+
+'2409.12490':
+  title: 'CritiPrefill: A Segment-wise Criticality-based Approach for Prefilling Acceleration in LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: 66RING/CritiPrefill
+  workloads: [LV-Eval, LongBench, Needle-in-a-Haystack, RULER]
+  models: []
+
+'2409.15355':
+  title: Block-Attention for Efficient Prefilling
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: TemporaryLoRA/Block-attention
+  workloads: [2WikiMultihopQA, AlpacaEval, BBH, GSM8K, HotpotQA, HumanEval, MMLU, MS MARCO, Natural Questions]
+  models: ['GPT-3 (175B, simulated)', Llama-3-8B, Llama-3.1-8B]
+
+'2409.16546':
+  title: 'AlignedKV: Reducing Memory Access of KV-Cache with Precision-Aligned Quantization'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: AlignedQuant/AlignedKV
+  workloads: []
+  models: [Llama-3.1-8B]
+
+'2409.16997':
+  title: 'INT-FLASHATTENTION: ENABLING FLASH ATTENTION FOR INT8 QUANTIZATION'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: INT-FlashAttention2024/INT-FlashAttention
+  workloads: []
+  models: []
+
+'2409.17422':
+  title: 'Discovering the Gems in Early Layers: Accelerating Long-Context LLMs with 1000x Input Token Reduction'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: SalesforceAIResearch/GemFilter
+  workloads: [LongBench, Needle-in-a-Haystack, RULER]
+  models: [Llama-3.1-8B, Mistral-Nemo-12B, Phi-3-mini]
+
+'2410.00161':
+  title: 'KV-Compress: Paged KV-Cache Compression with Variable Compression Rates per Attention Head'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: IsaacRe/vllm-kvcompress
+  workloads: [GSM8K, LongBench, NarrativeQA, QMSum, ShareGPT, UltraChat]
+  models: [ChatGLM3-6B, DeepSeek-V2, DeepSeek-V2-Lite, Falcon-40B, Falcon-7B, Gemma-7B, Jamba, Llama-2-13B, Llama-2-70B, Llama-2-7B,
+    Llama-3-70B, Llama-3-8B, Llama-3.1-70B, Llama-3.1-8B, Llama-7B (v1), MPT-7B, MiniCPM, Mistral-7B, Mistral-Nemo-12B, Mixtral-8x22B,
+    Mixtral-8x7B, Phi-3-mini, Pythia (family), Vicuna-7B]
+
+'2410.00428':
+  title: LayerKV
+  venue: arXiv
+  year: 2024
+  technique: [tier]
+  evidence: [A, F]
+  repo: antgroup/glake
+  workloads: [LV-Eval, ShareGPT]
+  models: [ChatGLM3-6B, Falcon-40B, Falcon-7B, GPT-NeoX-20B, Gemma-7B, Llama-2-13B, Llama-2-7B, Llama-3-8B, Llama-3.1-70B,
+    Llama-7B (v1), MPT-7B, MiniCPM, Mistral-7B, Mixtral-8x7B, OPT-1.3B, OPT-13B, Pythia (family), Vicuna-13B, Yi-34B(-200K)]
+
+'2410.01805':
+  title: 'Locret: Enhancing Eviction in Long-Context LLM Inference with Trained Retaining Heads'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: huangyuxiang03/Locret
+  workloads: [HumanEval, InfiniteBench, L-Eval, NarrativeQA, Passkey retrieval, SQuAD, Wikipedia/WikiText]
+  models: [Llama-2-7B, Llama-3-8B, Llama-3.1-8B, Llama-3.2-1B, Llama-3.2-3B, Llama-7B (v1), MiniCPM, Phi-3-mini, Qwen2.5-1.5B]
+
+'2410.02367':
+  title: 'SageAttention: Accurate 8-Bit Attention for Plug-and-play Inference Acceleration'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: thu-ml/SageAttention
+  workloads: []
+  models: []
+
+'2410.03065':
+  title: Cake (Compute or Load KV)
+  venue: arXiv
+  year: 2024
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [NarrativeQA, TriviaQA]
+  models: [Llama-3.1-70B, Llama-3.1-8B]
+
+'2410.03960':
+  title: 'SwiftKV: Fast Prefill-Optimized Inference with Knowledge-Preserving Model Transformation'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: snowflakedb/arctictraining
+  workloads: [HotpotQA, LMSYS-Chat-1M, MS MARCO, Natural Questions, OpenOrca, UltraChat]
+  models: [DeepSeek-V2, Llama-3.1-405B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.3-70B, Qwen2.5-0.5B, Qwen2.5-32B, Qwen3-30B-A3B,
+    Qwen3-32B]
+
+'2410.05004':
+  title: HCache
+  venue: EuroSys'25
+  year: 2025
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [GSM8K, L-Eval, ShareGPT]
+  models: [Llama-2-13B, Llama-2-7B, OPT-30B]
+
+'2410.05076':
+  title: 'TidalDecode: Fast and Accurate LLM Decoding with Position Persistent Sparse Attention'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: DerrickYLJ/TidalDecode
+  workloads: [LongBench, Needle-in-a-Haystack, PG-19]
+  models: [Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B]
+
+'2410.05265':
+  title: 'PrefixQuant: Eliminating Outliers by Prefixed Tokens for Large Language Models Quantization'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: ChenMnZ/PrefixQuant
+  workloads: [ARC, C4, HellaSwag, PIQA, Wikipedia/WikiText, WinoGrande]
+  models: [Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B]
+
+'2410.07590':
+  title: TurboRAG
+  venue: arXiv
+  year: 2024
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: MooreThreads/TurboRAG
+  workloads: [2WikiMultihopQA, GSM8K, HotpotQA, LongBench, MMLU, MuSiQue, TriviaQA]
+  models: [Qwen2-7B]
+
+'2410.10819':
+  title: DuoAttention
+  venue: ICLR'25
+  year: 2025
+  technique: [compress]
+  evidence: [A, F]
+  repo: mit-han-lab/duo-attention
+  workloads: [BookSum, LongBench, MBPP, MMLU, MT-Bench, Needle-in-a-Haystack, Passkey retrieval, RULER]
+  models: [Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Mistral-7B]
+
+'2410.13276':
+  title: 'SeerAttention: Learning Intrinsic Sparse Attention in Your LLMs'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: microsoft/SeerAttention
+  workloads: [2WikiMultihopQA, AIME, GPQA, GSM8K, HotpotQA, LiveCodeBench, LongBench, MATH / MATH-500, MuSiQue, MultiFieldQA,
+    NarrativeQA, Needle-in-a-Haystack, PG-19, Qasper, RULER, SQuAD]
+  models: [DeepSeek-R1-Distill-Qwen-14B, DeepSeek-R1-Distill-Qwen-7B, Llama-2-7B, Llama-3.1-8B, Qwen2-7B, Qwen2.5-7B, Qwen3-14B,
+    Qwen3-4B, Qwen3-8B]
+
+'2410.13846':
+  title: 'LightTransfer: Your Long-Context LLM is Secretly a Hybrid Model with Effortless Adaptation'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: sail-sg/SimLayerKV
+  workloads: [LongBench]
+  models: [Llama-2-7B, Llama-3-8B, Mistral-7B]
+
+'2410.15332':
+  title: EPIC
+  venue: ICML'25
+  year: 2025
+  technique: [nonprefix]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, HotpotQA, MuSiQue, MultiNews, Needle-in-a-Haystack, SAMSum]
+  models: [Llama-3.1-8B, Mistral-7B]
+
+'2410.15704':
+  title: Residual vector quantization for KV cache compression in large language model
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: iankur/vqllm
+  workloads: [HellaSwag]
+  models: [Gemma-7B, Llama-3-8B, Mistral-7B]
+
+'2410.17897':
+  title: Value Residual Learning For Alleviating Attention Concentration In Transformers
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Zcchill/Value-Residual-Learning
+  workloads: [C4]
+  models: [Llama-2-7B, Llama-3.1-8B]
+
+'2410.18517':
+  title: 'KVSharer: Efficient Inference via Layer-Wise Dissimilar KV Cache Sharing'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: yangyifei729/KVSharer
+  workloads: [SQuAD]
+  models: [Llama-2-7B]
+
+'2410.19258':
+  title: 'Not All Heads Matter: A Head-Level KV Cache Compression Method with Integrated Retrieval and Reasoning'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Clement25/SharedLLM
+  workloads: [BookSum, C4, GovReport, InfiniteBench, LongBench, MultiNews, QMSum]
+  models: [Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient)]
+
+'2410.19313':
+  title: 'COAT: Compressing Optimizer states and Activation for Memory-Efficient FP8 Training'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: NVlabs/COAT
+  workloads: [ARC, Alpaca, AlpacaEval, BoolQ, C4, COPA, HellaSwag, HotpotQA, HumanEval, MMLU, Natural Questions, OpenBookQA,
+    PIQA, SAMSum, SQuAD, ToolBench, TriviaQA, Wikipedia/WikiText, WinoGrande]
+  models: ['GPT-3 (175B, simulated)', GPT-NeoX-20B, Llama-2-13B, Llama-2-7B, Llama-3.1-8B, Llama-7B (v1), Vicuna-13B]
+
+'2410.20650':
+  title: 'NeuZip: Memory-Efficient Training and Inference with Dynamic Compression of Neural Networks'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: BorealisAI/neuzip
+  workloads: []
+  models: [Llama-2-7B]
+
+'2410.21465':
+  title: ShadowKV
+  venue: ICML'25
+  year: 2025
+  technique: [compress, tier]
+  evidence: [A, F]
+  repo: bytedance/ShadowKV
+  workloads: [HotpotQA, InfiniteBench, LMSYS-Chat-1M, LongBench, Needle-in-a-Haystack, RULER, SQuAD]
+  models: [GLM-4-9B, Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Phi-3-mini, Qwen2-7B]
+
+'2410.23079':
+  title: 'BUZZ: Beehive-structured Sparse KV Cache with Segmented Heavy Hitters for Efficient LLM Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: JunqiZhao888/buzz-llm
+  workloads: [CNN/DailyMail, Wikipedia/WikiText, XSum]
+  models: [Llama-2-7B]
+
+'2410.23918':
+  title: 'BitStack: Any-Size Compression of Large Language Models in Variable Memory Environments'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: xinghaow99/BitStack
+  workloads: [Wikipedia/WikiText]
+  models: [Llama-3.1-8B]
+
+'2411.01142':
+  title: NEO
+  venue: MLSys'25
+  year: 2025
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [Azure LLM inference trace]
+  models: [Llama-2-7B, Llama-3.1-70B, Llama-3.1-8B]
+
+'2411.09688':
+  title: 'Squeezed Attention: Accelerating Long Context Length LLM Inference'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: SqueezeAILab/SqueezedAttention
+  workloads: [CNN/DailyMail, HumanEval, LMSYS-Chat-1M, LongBench, MultiNews, Natural Questions, RULER, SAMSum, SQuAD, Wikipedia/WikiText,
+    XSum]
+  models: []
+
+'2411.10958':
+  title: 'SageAttention2: Efficient Attention with Thorough Outlier Smoothing and Per-thread INT4 Quantization'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: thu-ml/SageAttention
+  workloads: []
+  models: []
+
+'2411.17116':
+  title: 'Star Attention : Efficient LLM Inference over Long Sequences'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: NVIDIA/Star-Attention
+  workloads: [BABILong, HotpotQA, LongBench, Needle-in-a-Haystack, RULER, SQuAD]
+  models: [Llama-3.1-70B, Llama-3.1-8B]
+
+'2411.18424':
+  title: FastSwitch
+  venue: arXiv
+  year: 2024
+  technique: [tier, sched]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT]
+  models: [Llama-3.1-8B, Qwen2.5-32B]
+
+'2411.19379':
+  title: Marconi
+  venue: MLSys'25
+  year: 2025
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: [LMSYS-Chat-1M, SWE-bench, ShareGPT]
+  models: [Jamba]
+
+'2412.00876':
+  title: 'Dynamic-LLaVA: Efficient Multimodal Large Language Models via Dynamic Vision-language Context Sparsification'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Osilly/dynamic_llava
+  workloads: [ShareGPT]
+  models: [Llama-2-7B, Llama-7B (v1), Vicuna-13B, Vicuna-7B]
+
+'2412.01818':
+  title: '[CLS] Attention is All You Need for Training-Free Visual Token Pruning: Make VLM Inference Faster'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Theia-4869/FasterVLM
+  workloads: [ShareGPT]
+  models: [Llama-2-7B, Llama-7B (v1), Vicuna-13B, Vicuna-7B]
+
+'2412.03131':
+  title: DiffKV
+  venue: SOSP'25
+  year: 2025
+  technique: [mem, compress]
+  evidence: [F]
+  repo: null
+  workloads: [AIME, GPQA, GSM8K, HumanEval, LongBench, MBPP, MMLU, MMLU-Pro]
+  models: [DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-14B, Llama-3-70B, Llama-3-8B, QwQ-32B, Qwen2.5-32B, Qwen2.5-7B]
+
+'2412.03409':
+  title: 'PrefixKV: Adaptive Prefix KV Cache is What Vision Instruction-Following Models Need for Efficient Generation'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: THU-MIG/PrefixKV
+  workloads: []
+  models: [Llama-7B (v1)]
+
+'2412.03594':
+  title: BatchLLM
+  venue: MLSys'26
+  year: 2026
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: []
+  models: [Llama-3.1-70B, Llama-3.1-8B, Qwen2.5-14B, Qwen2.5-7B]
+
+'2412.05496':
+  title: 'Flex Attention: A Programming Model for Generating Optimized Attention Kernels'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: pytorch-labs/attention-gym
+  workloads: []
+  models: [DeepSeek-V2, Mamba (family)]
+
+'2412.08890':
+  title: 'Lexico: Extreme KV Cache Compression via Sparse Coding over Universal Dictionaries'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: krafton-ai/lexico
+  workloads: [Wikipedia/WikiText]
+  models: [Llama-3.2-3B]
+
+'2412.10319':
+  title: 'SCBench: A KV Cache-Centric Analysis of Long-Context Methods'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: microsoft/MInference
+  workloads: [BookSum, C4, GSM8K, HotpotQA, InfiniteBench, LMSYS-Chat-1M, LongBench, NarrativeQA, Needle-in-a-Haystack, PG-19,
+    Passkey retrieval, RULER, SCBench, SQuAD]
+  models: [GLM-4-9B, GPT-NeoX-20B, Jamba, Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Phi-3-mini,
+    Qwen2-7B, Qwen2.5-0.5B, Qwen2.5-3B, Qwen2.5-7B]
+
+'2412.12706':
+  title: 'More Tokens, Lower Precision: Towards the Optimal Token-Precision Trade-off in KV Cache Compression'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: zhzihao/QPruningKV
+  workloads: [LongBench, Needle-in-a-Haystack, RULER]
+  models: [Llama-3-8B]
+
+'2412.13649':
+  title: 'SCOPE: Optimizing Key-Value Cache Compression in Long-context Generation'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: Linking-ai/SCOPE
+  workloads: [GSM8K, InfiniteBench, MMLU]
+  models: [Llama-3.1-8B]
+
+'2412.18169':
+  title: KunServe
+  venue: EuroSys'26
+  year: 2026
+  technique: [mem, tier]
+  evidence: [F]
+  repo: null
+  workloads: [BurstGPT, LongBench, ShareGPT]
+  models: [Qwen2.5-14B, Qwen2.5-72B]
+
+'2412.20501':
+  title: 'TokenRing: An Efficient Parallelism Framework for Infinite-Context LLMs via Bidirectional Communication'
+  venue: arXiv
+  year: 2024
+  technique: []
+  evidence: [A]
+  repo: ACA-Lab-SJTU/token-ring
+  workloads: []
+  models: [Llama-2-7B]
+
+'2412.20993':
+  title: Certaindex (Dynasor)
+  venue: arXiv
+  year: 2025
+  technique: [sched]
+  evidence: [F]
+  repo: null
+  workloads: [AIME, GSM8K, LiveCodeBench, MATH / MATH-500]
+  models: [DeepSeek-R1 (671B), DeepSeek-R1-Distill-Qwen-14B, DeepSeek-R1-Distill-Qwen-32B, DeepSeek-R1-Distill-Qwen-7B, Llama-2-7B,
+    Llama-3.1-8B]
+
+'2501.06425':
+  title: Tensor Product Attention Is All You Need
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: tensorgi/T6
+  workloads: []
+  models: []
+
+'2501.06709':
+  title: MELL
+  venue: arXiv
+  year: 2025
+  technique: [mem, sched]
+  evidence: [F]
+  repo: null
+  workloads: [Azure LLM inference trace, LMSYS-Chat-1M, WildChat]
+  models: [Llama-2-13B, Llama-2-7B]
+
+'2501.14743':
+  title: KVDirect
+  venue: arXiv
+  year: 2025
+  technique: [sched, tier]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT, arXiv summarization]
+  models: []
+
+'2502.01068':
+  title: 'FastKV: Decoupling of Context Reduction and KV Cache Compression for Prefill-Decoding Acceleration'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: dongwonjo/FastKV
+  workloads: [LongBench, Needle-in-a-Haystack, RULER]
+  models: [Llama-3.1-8B]
+
+'2502.02617':
+  title: 'PolarQuant: Quantizing KV Caches with Polar Transformation'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: ericshwu/PolarQuant
+  workloads: [2WikiMultihopQA, GSM8K, HotpotQA, LCC, LongBench, MuSiQue, MultiFieldQA, NarrativeQA, Qasper, RepoBench]
+  models: [DeepSeek-R1 (671B), Llama-2-7B, Llama-3.1-8B]
+
+'2502.05431':
+  title: 'APE: Faster and Longer Context-Augmented Generation via Adaptive Parallel Encoding'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: Infini-AI-Lab/APE
+  workloads: [Natural Questions]
+  models: [Llama-2-7B, Llama-3-8B, Llama-3.1-8B, Mistral-7B]
+
+'2502.07115':
+  title: Online Scheduling with KV Cache Constraints
+  venue: arXiv
+  year: 2025
+  technique: [sched]
+  evidence: [F]
+  repo: null
+  workloads: [LMSYS-Chat-1M]
+  models: [Llama-2-70B]
+
+'2502.12574':
+  title: HeadInfer
+  venue: arXiv
+  year: 2025
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [LongBench v2, Needle-in-a-Haystack, RULER, SCBench]
+  models: [Gemma-2-9B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Mistral-7B, Qwen2-7B]
+
+'2502.13965':
+  title: Autellix
+  venue: arXiv
+  year: 2025
+  technique: [sched, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [BFCL, HotpotQA, ShareGPT]
+  models: [Llama-3.1-70B, Llama-3.1-8B]
+
+'2502.14837':
+  title: 'Towards Economical Inference: Enabling DeepSeek’s Multi-Head Latent Attention in Any Transformer-based LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: JT-Ushio/MHA2MLA
+  workloads: [GSM8K, HellaSwag, MMLU, OpenBookQA, PIQA, Video/MLVU, WinoGrande]
+  models: []
+
+'2502.14866':
+  title: 'LServe: Efficient Long-sequence LLM Serving with Unified Sparse Attention'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: mit-han-lab/omniserve
+  workloads: [BookSum, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER, Wikipedia/WikiText, WildChat]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Mistral-7B, Mixtral-8x7B,
+    Qwen1.5-72B, Yi-34B(-200K)]
+
+'2502.15075':
+  title: 'Quantize What Counts: More for Keys, Less for Values'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: mohsenhariri/spectral-kv
+  workloads: [C4]
+  models: [Llama-3.1-8B, Llama-3.2-1B, Llama-3.2-3B, Llama-3.3-70B, Qwen3-0.6B, Qwen3-32B, Qwen3-4B, Qwen3-8B]
+
+'2502.15734':
+  title: Cache-Craft
+  venue: SIGMOD'25
+  year: 2025
+  technique: [nonprefix]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, CNN/DailyMail, MuSiQue, SQuAD, XSum]
+  models: [Llama-3-70B, Llama-3-8B]
+
+'2502.16002':
+  title: KVLink
+  venue: NeurIPS'25
+  year: 2025
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: UCSB-NLP-Chang/KVLink
+  workloads: [2WikiMultihopQA, ARC, Alpaca, GSM8K, HellaSwag, HotpotQA, MMLU, MuSiQue, MultiNews, Natural Questions, PIQA,
+    SAMSum, SQuAD, TriviaQA, WinoGrande, XSum]
+  models: [Llama-3.1-8B, Llama-3.2-1B, Llama-3.2-3B]
+
+'2502.17599':
+  title: 'MEDA: Dynamic KV Cache Allocation for Efficient Multimodal Long-Context Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: AIoT-MLSys-Lab/MEDA
+  workloads: [Needle-in-a-Haystack, ShareGPT]
+  models: [Llama-7B (v1), Vicuna-13B, Vicuna-7B]
+
+'2502.18137':
+  title: 'SpargeAttention: Accurate and Training-free Sparse Attention Accelerating Any Model Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: thu-ml/SpargeAttn
+  workloads: [Natural Questions, Needle-in-a-Haystack]
+  models: []
+
+'2503.00979':
+  title: 'Dialogue Without Limits: Constant-Sized KV Caches for Extended Responses in LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: ghadiaravi13/MorphKV
+  workloads: [2WikiMultihopQA, GSM8K, GovReport, HotpotQA, LMSYS-Chat-1M, LongBench, MMLU, MuSiQue, MultiFieldQA, MultiNews,
+    NarrativeQA, Needle-in-a-Haystack, QMSum, Qasper, RULER]
+  models: [ChatGLM3-6B, GLM-4-9B, Llama-2-7B, Llama-3.1-8B, LongChat-7B-32K, Mistral-7B, Phi-4, Vicuna-7B]
+
+'2503.02812':
+  title: 'Q-Filters: Leveraging QK Geometry for Efficient KV Cache Compression'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: NathanGodey/qfilters
+  workloads: [Needle-in-a-Haystack, SQuAD]
+  models: [DeepSeek-R1-Distill-Llama-8B]
+
+'2503.05840':
+  title: 'Slim attention: cut your context memory in half without loss of accuracy, K-cache is all you need for MHA'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: OpenMachine-ai/transformer-tricks
+  workloads: [HellaSwag, Wikipedia/WikiText]
+  models: [DeepSeek-V2, DeepSeek-V2-Lite, Llama-3.1-8B, Llama-3.2-1B, MiniCPM, Mistral-7B]
+
+'2503.10337':
+  title: 'KV-Distill: Nearly Lossless Learnable Context Compression for LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: vnchari/kv-distill
+  workloads: []
+  models: []
+
+'2503.10714':
+  title: 'ZeroMerge: Parameter-Free KV Cache Compression for Memory-Efficient Long-Context LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: SusCom-Lab/ZSMerge
+  workloads: [InfiniteBench, Passkey retrieval, Wikipedia/WikiText]
+  models: [Falcon-7B, Llama-2-13B, Llama-2-7B, Llama-3.1-8B, Qwen2-7B, Qwen2.5-7B]
+
+'2503.12491':
+  title: 'CAKE: Cascading and Adaptive KV Cache Eviction with Layer Preferences'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: antgroup/cakekv
+  workloads: [LongBench]
+  models: [Llama-2-13B, Llama-2-7B, Llama-3.1-8B, Qwen2.5-7B]
+
+'2503.14649':
+  title: RAGO
+  venue: ISCA'25
+  year: 2025
+  technique: [nonprefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [MS MARCO, SQuAD, ShareGPT, TriviaQA]
+  models: [Llama-3-70B, Llama-3-8B, Llama-3.1-405B, Llama-3.2-1B]
+
+'2503.16257':
+  title: Plug-and-Play 1.x-Bit KV Cache Quantization for Video Large Language Models
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: KD-TAO/VidKV
+  workloads: [CNN/DailyMail, MultiNews, SAMSum, SQuAD, Wikipedia/WikiText, XSum]
+  models: [Gemma-7B, Llama-2-7B]
+
+'2503.17922':
+  title: 'WindowKV: Task-Adaptive Group-Wise KV Cache Window Selection for Efficient LLM Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: optim996/WindowKV
+  workloads: [LongBench, Needle-in-a-Haystack]
+  models: [Llama-3-8B]
+
+'2503.18292':
+  title: Jenga
+  venue: SOSP'25
+  year: 2025
+  technique: [mem, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [MMLU-Pro]
+  models: [Gemma-2-27B, Gemma-2-9B, Jamba, Llama-3.1-70B, Llama-3.1-8B]
+
+'2503.18773':
+  title: 'BitDecoding: Unlocking Tensor Cores for Long-Context LLMs Decoding with Low-Bit KV Cache'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: DD-DuDa/BitDecoding
+  workloads: [GSM8K]
+  models: [Llama-2-7B, Qwen3-8B]
+
+'2503.18893':
+  title: xKV
+  venue: ICML'26
+  year: 2026
+  technique: [compress]
+  evidence: [A, F]
+  repo: abdelfattah-lab/xKV
+  workloads: [HotpotQA, LCC, LongBench, Natural Questions, Needle-in-a-Haystack, Qasper, RULER, RepoBench, SQuAD]
+  models: [DeepSeek-Coder-V2-Lite, DeepSeek-V2, GLM-4-9B, Llama-3-8B, Llama-3.1-8B, Qwen2.5-14B, Qwen2.5-7B, Qwen3-4B]
+
+'2503.19950':
+  title: 'LogQuant: Log-Distributed 2-Bit Quantization of KV Cache with Superior Accuracy Preservation'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: Concyclics/LogQuantKV
+  workloads: [2WikiMultihopQA, GSM8K, GovReport, HotpotQA, LongBench, MuSiQue, MultiFieldQA, MultiNews, NarrativeQA, QMSum,
+    Qasper]
+  models: [ChatGLM3-6B, Llama-2-7B, Llama-3-8B, Llama-3.1-8B, LongChat-7B-32K, Phi-3-medium, Phi-3-mini, Qwen1.5-14B, Qwen1.5-7B,
+    Qwen2-7B, Vicuna-7B]
+
+'2503.24000':
+  title: Rethinking Key-Value Cache Compression Techniques for Large Language Model Serving
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: LLMkvsys/rethink-kv-compression
+  workloads: [Alpaca, C4, GSM8K, LMSYS-Chat-1M, LongBench, MMLU, MultiNews, Needle-in-a-Haystack, Passkey retrieval, ShareGPT,
+    TriviaQA, Wikipedia/WikiText, arXiv summarization]
+  models: [ChatGLM3-6B, CodeLlama-34B, CodeLlama-7B, DeepSeek-V2, Falcon-7B, GLM-4-9B, Gemma-7B, InternLM2-7B, Llama-2-13B,
+    Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-3.1-70B, Llama-3.1-8B, Llama-7B (v1), LongChat-7B-32K, MiniCPM,
+    Mistral-7B, Mixtral-8x7B, Phi-3-mini, Qwen1.5-7B, Qwen2-7B, Vicuna-7B, Yi-34B(-200K)]
+
+'2504.03661':
+  title: 'MILLION: Mastering Long-Context LLM Inference Via Outlier-Immunized KV Product Quantization'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: ZongwuWang/MILLION
+  workloads: [LongBench, Wikipedia/WikiText]
+  models: [Llama-2-7B, Llama-3.1-8B]
+
+'2504.07389':
+  title: 'Task-Circuit Quantization: Leveraging Knowledge Localization and Interpretability for Compression'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: The-Inscrutable-X/TACQ
+  workloads: [ARC, BoolQ, C4, COPA, GSM8K, LAMBADA, MMLU, PIQA, Wikipedia/WikiText]
+  models: [Llama-2-7B, Llama-3-8B, Llama-7B (v1), OPT-1.3B, OPT-13B, OPT-175B, OPT-6.7B, OPT-66B, Qwen2.5-7B]
+
+'2504.14569':
+  title: 'NoWag: A Unified Framework for Shape Preserving Compression of Large Language Models'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: LawrenceRLiu/NoWag
+  workloads: [ARC, C4, PIQA, Wikipedia/WikiText, WinoGrande]
+  models: [Llama-2-13B, Llama-2-70B, Llama-2-7B, Llama-3-70B, Llama-3-8B]
+
+'2504.16083':
+  title: 'MMInference: Accelerating Pre-filling for Long-Context Visual Language Models via Modality-Aware Permutation Sparse
+    Attention'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: microsoft/MInference
+  workloads: [BookSum, C4, GSM8K, HotpotQA, InfiniteBench, LMSYS-Chat-1M, LongBench, NarrativeQA, Needle-in-a-Haystack, PG-19,
+    Passkey retrieval, RULER, SCBench, SQuAD]
+  models: [GLM-4-9B, GPT-NeoX-20B, Jamba, Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Phi-3-mini,
+    Qwen2-7B, Qwen2.5-0.5B, Qwen2.5-3B, Qwen2.5-7B]
+
+'2504.17768':
+  title: 'The Sparse Frontier: Sparse Attention Trade-offs in Transformer LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: PiotrNawrot/sparse-frontier
+  workloads: [MATH / MATH-500, Needle-in-a-Haystack, RULER, SQuAD]
+  models: [Qwen2.5-14B, Qwen2.5-32B, Qwen2.5-72B, Qwen2.5-7B]
+
+'2505.00019':
+  title: An Empirical Study on Prompt Compression for Large Language Models
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: 3DAgentWorld/Toolkit-for-Prompt-Compression
+  workloads: [BBH, GSM8K, LongBench, SQuAD, ShareGPT]
+  models: [Llama-2-7B]
+
+'2505.02922':
+  title: 'RetroInfer: A Vector-Storage Approach for Scalable Long-Context LLM Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: microsoft/RetrievalAttention
+  workloads: [AIME, GPQA, HotpotQA, LongBench, MATH / MATH-500, Needle-in-a-Haystack, RULER, SQuAD]
+  models: [DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B,
+    Qwen2.5-72B, Qwen2.5-7B]
+
+'2505.07833':
+  title: Harmonia/Patchwork
+  venue: arXiv
+  year: 2025
+  technique: [nonprefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [LMSYS-Chat-1M]
+  models: []
+
+'2505.10938':
+  title: Accurate KV Cache Quantization with Outlier Tokens Tracing
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: yisunlp/OTT
+  workloads: []
+  models: [Llama-2-7B]
+
+'2505.11594':
+  title: 'SageAttention3: Microscaling FP4 Attention for Inference and An Exploration of 8-Bit Training'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: thu-ml/SageAttention
+  workloads: []
+  models: []
+
+'2505.11916':
+  title: 'Arrow: Adaptive Scheduling Mechanisms for Disaggregated LLM Inference Architecture'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: athrael-soju/Narwhal
+  workloads: [Mooncake trace, ShareGPT]
+  models: []
+
+'2505.15781':
+  title: 'dKV-Cache: The Cache for Diffusion Language Models'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: horseee/dKV-Cache
+  workloads: []
+  models: []
+
+'2505.17694':
+  title: CoDec / FlashForge
+  venue: SIGMOD'26
+  year: 2026
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: [LooGLE]
+  models: [Qwen3-4B]
+
+'2505.17787':
+  title: 'Titanus: Enabling KV Cache Pruning and Quantization On-the-Fly for LLM Acceleration'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: peilin-chen/Titanus-for-LLM-acceleration
+  workloads: []
+  models: []
+
+'2505.18610':
+  title: 'PM-KVQ: Progressive Mixed-precision KV Cache Quantization for Long-CoT LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: thu-nics/PM-KVQ
+  workloads: [AIME, LiveCodeBench]
+  models: []
+
+'2505.19586':
+  title: 'TailorKV: A Hybrid Framework for Long-Context Inference via Tailored KV Cache Optimization'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: ydyhello/TailorKV
+  workloads: [C4, GSM8K, HotpotQA, InfiniteBench, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER, SQuAD]
+  models: [Llama-2-7B, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-70B, Llama-3.1-8B, Mistral-7B, Yi-6B-200K]
+
+'2505.22618':
+  title: 'Fast-dLLM: Training-free Acceleration of Diffusion LLM by Enabling KV Cache and Parallel Decoding'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: NVlabs/Fast-dLLM
+  workloads: [Alpaca, GPQA, GSM8K, HumanEval, MBPP, MMLU]
+  models: [Qwen2.5-7B]
+
+'2505.22913':
+  title: 'Mustafar: Promoting Unstructured Sparsity for KV Cache Pruning in LLM Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: dhjoo98/mustafar
+  workloads: [C4, LongBench]
+  models: [Llama-2-7B, Llama-3-8B, Mistral-7B]
+
+'2505.23416':
+  title: KVzip
+  venue: NeurIPS'25
+  year: 2025
+  technique: [compress]
+  evidence: [A, F]
+  repo: snu-mllab/KVzip
+  workloads: [GSM8K, Needle-in-a-Haystack, RULER, SCBench, SQuAD]
+  models: [Gemma-3-12B, Llama-3-8B, Llama-3.1-8B, Llama-3.2-3B, Qwen2.5-14B, Qwen2.5-7B, Qwen3-8B]
+
+'2505.24133':
+  title: R-KV
+  venue: NeurIPS'25
+  year: 2025
+  technique: [compress]
+  evidence: [F]
+  repo: null
+  workloads: [AIME, MATH / MATH-500]
+  models: [DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-14B, Llama-3-8B]
+
+'2506.02634':
+  title: KVCache Cache in the Wild
+  venue: USENIX ATC'25
+  year: 2025
+  technique: [prefix, tier]
+  evidence: [F]
+  repo: null
+  workloads: [Alibaba/Qwen serving trace, Mooncake trace, ShareGPT]
+  models: [Llama-2-13B, Llama-3-70B, Qwen2-7B]
+
+'2506.06295':
+  title: 'dLLM-Cache: Accelerating Diffusion Large Language Models with Adaptive Caching'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: maomaocun/dLLM-cache
+  workloads: [BBH, GSM8K, HumanEval, LongBench, MBPP, MMLU-Pro, ShareGPT]
+  models: [Llama-7B (v1), Vicuna-13B]
+
+'2506.14851':
+  title: Probabilistic Demand Modeling
+  venue: arXiv
+  year: 2025
+  technique: [sched]
+  evidence: [F]
+  repo: null
+  workloads: [ALFWorld, Mooncake trace]
+  models: [Llama-2-13B, Llama-2-7B, Llama-3-70B, Llama-7B (v1)]
+
+'2506.15155':
+  title: eLLM
+  venue: DAC'26
+  year: 2026
+  technique: [mem]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT]
+  models: [Jamba, Llama-3-8B, OPT-13B]
+
+'2506.17121':
+  title: 'Cache Me If You Can: How Many KVs Do You Need for Effective Long-Context LMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: princeton-pli/PruLong
+  workloads: [HELMET, HotpotQA, InfiniteBench, LMSYS-Chat-1M, MS MARCO, NarrativeQA, Passkey retrieval, RULER, SCBench, TriviaQA]
+  models: [GLM-4-9B, Jamba, Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B]
+
+'2506.18879':
+  title: 'CommVQ: Commutative Vector Quantization for KV Cache Compression'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: UMass-Embodied-AGI/CommVQ
+  workloads: [Alpaca, InfiniteBench, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER, SQuAD]
+  models: [Llama-2-7B, Llama-3-70B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.2-1B, Mistral-7B, Qwen2.5-7B, Yi-34B(-200K), Yi-6B-200K]
+
+'2507.07400':
+  title: KVFlow
+  venue: arXiv
+  year: 2025
+  technique: [prefix, tier]
+  evidence: [F]
+  repo: null
+  workloads: []
+  models: [Llama-3.1-8B, Qwen2.5-32B]
+
+'2508.02401':
+  title: 'CompressKV: Semantic Retrieval Heads Know What Tokens are Not Important Before Generation'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: TUDa-HWAI/CompressKV
+  workloads: [LongBench, MuSiQue, Needle-in-a-Haystack, RULER]
+  models: [Llama-2-7B, Llama-3.1-8B, LongChat-7B-32K, Mistral-7B, Qwen1.5-14B, Qwen2-7B]
+
+'2508.02558':
+  title: 'Sparse-dLLM: Accelerating Diffusion LLMs with Dynamic Cache Eviction'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: OpenMOSS/Sparse-dLLM
+  workloads: [ARC, GPQA, GSM8K, HumanEval, LongBench, MMLU, PIQA]
+  models: []
+
+'2508.04405':
+  title: 'FlexQ: Efficient Post-training INT6 Quantization for LLM Serving via Algorithm-System Co-Design'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: FlyFoxPlayer/FlexQ
+  workloads: [ARC, BoolQ, C4, CNN/DailyMail, HellaSwag, LAMBADA, PIQA, SQuAD, TriviaQA, Wikipedia/WikiText, WinoGrande]
+  models: ['GPT-3 (175B, simulated)', GPT-NeoX-20B, Llama-2-13B, Llama-2-70B, Llama-7B (v1), OPT-175B, OPT-30B]
+
+'2508.05239':
+  title: Pruning Large Language Models by Identifying and Preserving Functional Networks
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: WhatAboutMyStar/LLM_ACTIVATION
+  workloads: [Wikipedia/WikiText]
+  models: [Vicuna-7B]
+
+'2508.06447':
+  title: 'SlimInfer: Accelerating Long-Context LLM Inference via Dynamic Token Pruning'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: Longxmas/SlimInfer
+  workloads: [LongBench, Needle-in-a-Haystack, RULER]
+  models: [Llama-2-7B, Llama-3.1-8B, Qwen2.5-7B]
+
+'2508.06526':
+  title: 'PiKV: KV Cache Management System for Mixture of Experts'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: NoakLiu/PiKV
+  workloads: [LongBench, Wikipedia/WikiText]
+  models: [Llama-2-7B, Llama-3.1-8B, Mistral-7B]
+
+'2508.15212':
+  title: 'SparK: Query-Aware Unstructured Sparsity with Recoverable KV Cache Channel Pruning'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: Xnhyacinth/SparK
+  workloads: [InfiniteBench, LongBench, LongBench v2, LooGLE, Passkey retrieval, RULER, SCROLLS, ZeroSCROLLS]
+  models: [Llama-3-70B, Llama-3-8B, Llama-3.1-70B, Llama-3.1-8B, Qwen2.5-32B, Qwen2.5-3B, Qwen3-32B, Qwen3-8B]
+
+'2508.18572':
+  title: Strata
+  venue: OSDI'26
+  year: 2026
+  technique: [tier, prefix]
+  evidence: [F]
+  repo: null
+  workloads: [LooGLE, NarrativeQA, ShareGPT]
+  models: [Llama-3.1-70B, Llama-3.1-8B, Qwen2.5-14B]
+
+'2509.09754':
+  title: 'LAVa: Layer-wise KV Cache Eviction with Dynamic Budget Allocation'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: MGDDestiny/Lava
+  workloads: [InfiniteBench, LMSYS-Chat-1M, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER]
+  models: [ChatGLM3-6B, Llama-3-70B, Mistral-7B, Yi-34B(-200K), Yi-6B-200K]
+
+'2510.08907':
+  title: Autoencoding-Free Context Compression for LLMs via Contextual Semantic Anchors
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: lx-Meteors/SAC
+  workloads: []
+  models: [Llama-3.1-8B, Llama-3.2-1B, Llama-3.2-3B]
+
+'2510.09309':
+  title: 'Mask Tokens as Prophet: Fine-Grained Cache Eviction for Efficient dLLM Inference'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: jianuo-huang/MaskKV
+  workloads: [LongBench]
+  models: []
+
+'2510.09665':
+  title: LMCache
+  venue: MLSys'26
+  year: 2026
+  technique: [tier, prefix, nonprefix]
+  evidence: [F]
+  repo: null
+  workloads: [LongBench, TriviaQA]
+  models: [Llama-3.1-70B, Llama-3.1-8B, Qwen2.5-72B, Qwen3-32B]
+
+'2510.12872':
+  title: KVCOMM
+  venue: NeurIPS'25
+  year: 2025
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: FastMAS/KVCOMM
+  workloads: [AIME, GSM8K, HumanEval, MATH / MATH-500, MMLU, MMLU-Pro]
+  models: [DeepSeek-R1-Distill-Qwen-7B, Llama-3.1-8B]
+
+'2510.14973':
+  title: Attention Is All You Need for KV Cache in Diffusion LLMs
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: VILA-Lab/Elastic-Cache
+  workloads: [GSM8K, HumanEval]
+  models: []
+
+'2510.20707':
+  title: 'Mixing Importance with Diversity: Joint Optimization for KV Cache Compression in Large Vision-Language Models'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: xuyang-liu16/MixKV
+  workloads: [ShareGPT]
+  models: [Llama-2-7B, Mistral-7B, Qwen2-72B, Qwen2-7B, Vicuna-13B, Vicuna-7B]
+
+'2510.21270':
+  title: Sparser Block-Sparse Attention via Token Permutation
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: xinghaow99/pbs-attn
+  workloads: [LongBench, LongBench v2]
+  models: [Llama-3.1-8B, Qwen2.5-7B]
+
+'2511.00868':
+  title: FlexiCache
+  venue: MLSys'26
+  year: 2026
+  technique: [tier, compress]
+  evidence: [F]
+  repo: null
+  workloads: [L-Eval, LongBench]
+  models: [Llama-3-8B, Llama-3.1-8B, Mistral-7B, Mistral-Small-24B, Qwen2.5-32B]
+
+'2511.01815':
+  title: KV Cache Transform Coding
+  venue: ICLR'26
+  year: 2026
+  technique: [compress, tier]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, AIME, GSM8K, HotpotQA, LiveCodeBench, LongBench, MATH / MATH-500, MMLU, MuSiQue, MultiFieldQA,
+    Needle-in-a-Haystack, QMSum, Qasper, RULER, SAMSum, SQuAD]
+  models: [DeepSeek-R1-Distill-Qwen-7B, Llama-3.1-8B, Llama-3.3-70B, Mistral-Nemo-12B]
+
+'2511.02230':
+  title: Continuum
+  venue: PVLDB'26
+  year: 2026
+  technique: [prefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [BFCL, SWE-bench]
+  models: [GLM-4.5, Gemma-3-12B, Llama-3.1-70B, Llama-3.1-8B]
+
+'2512.03324':
+  title: 'Cache What Lasts: Token Retention for Memory-Bounded KV Cache in LLMs'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: ngocbh/trimkv
+  workloads: [AIME, ARC, Alpaca, AlpacaEval, BBH, BookSum, GPQA, GSM8K, HellaSwag, HotpotQA, HumanEval, InfiniteBench, LongBench,
+    LongBench v2, MATH / MATH-500, MMLU, MMLU-Pro, OpenBookQA, Passkey retrieval, SCBench, SQuAD, ShareGPT, UltraChat, Video/MLVU]
+  models: [DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-14B, Llama-2-7B, Llama-3.1-70B, Llama-3.1-8B, Llama-7B (v1),
+    MiniCPM, Mistral-7B, Phi-3-mini, Phi-4, Pythia (family), QwQ-32B, Qwen2-7B, Qwen3-14B, Qwen3-32B, Qwen3-4B, Qwen3-8B,
+    Vicuna-7B]
+
+'2512.22671':
+  title: 'Fragile Knowledge, Robust Instruction-Following: The Width Pruning Dichotomy in Llama-3.2'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: peremartra/llama-glu-expansion-pruning
+  workloads: [ARC, BoolQ, GSM8K, HellaSwag, LAMBADA, MMLU, PIQA, Wikipedia/WikiText, WinoGrande]
+  models: [Llama-3.2-1B, Llama-3.2-3B]
+
+'2512.24449':
+  title: 'PackKV: Reducing KV Cache Memory Footprint through LLM-Aware Lossy Compression'
+  venue: arXiv
+  year: 2025
+  technique: []
+  evidence: [A]
+  repo: BoJiang03/PackKV
+  workloads: [GPQA, GSM8K, MMLU, Wikipedia/WikiText, WinoGrande]
+  models: [DeepSeek-R1-Distill-Llama-8B, Llama-2-13B, Llama-2-7B, Llama-3.1-8B, Phi-4, Qwen3-8B]
+
+'2601.03067':
+  title: Joint Encoding of KV-Cache Blocks
+  venue: arXiv
+  year: 2026
+  technique: [compress, tier]
+  evidence: [A, F]
+  repo: sef1/kv_fast_fusion
+  workloads: [2WikiMultihopQA, GSM8K, GovReport, LCC, LongBench, MMLU, QMSum, RepoBench, TREC]
+  models: [Llama-2-7B, Llama-3.1-8B, Qwen2.5-72B]
+
+'2601.10729':
+  title: OrbitFlow
+  venue: PVLDB'26
+  year: 2026
+  technique: [tier, sched]
+  evidence: [F]
+  repo: null
+  workloads: [ShareGPT]
+  models: [Llama-3-70B, Llama-3-8B]
+
+'2601.16746':
+  title: 'SWE-Pruner: Self-Adaptive Context Pruning for Coding Agents'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Ayanami1314/swe-pruner
+  workloads: [LCC, SWE-bench]
+  models: [Qwen2.5-7B, Qwen3-0.6B]
+
+'2602.01053':
+  title: LRAgent
+  venue: ICML'26
+  year: 2026
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: [HotpotQA]
+  models: [Llama-2-70B, Llama-3.1-8B]
+
+'2602.07721':
+  title: 'ParisKV: Fast and Drift-Robust KV-Cache Retrieval for Long-Context LLMs'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: amy-77/ParisKV
+  workloads: [AIME, GPQA, LongBench v2]
+  models: [DeepSeek-R1-Distill-Llama-8B, Llama-3.1-8B, Qwen3-30B-A3B, Qwen3-4B, Qwen3-8B]
+
+'2602.10238':
+  title: Learning to Evict from Key-Value Cache
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: apple/ml-learning-to-evict
+  workloads: [RULER]
+  models: [Qwen2.5-7B]
+
+'2603.13017':
+  title: 'Structured Distillation for Personalized Agent Memory: 11x Token Reduction with Retrieval Preservation'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Process-Point-Technologies-Corporation/searchat
+  workloads: []
+  models: []
+
+'2603.25926':
+  title: Density-aware Soft Context Compression with Semi-Dynamic Compression Ratio
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: yuyijiong/semi-dynamic-context-compress
+  workloads: [HotpotQA, Natural Questions, SQuAD]
+  models: [Qwen3-0.6B]
+
+'2603.27138':
+  title: ScoutAttention
+  venue: DAC'26
+  year: 2026
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [2WikiMultihopQA, GovReport, LongBench, NarrativeQA, QMSum, Qasper, SAMSum]
+  models: [Qwen3-14B, Qwen3-8B]
+
+'2604.04921':
+  title: 'TriAttention: Efficient Long Reasoning with Trigonometric KV Compression'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: WeianMao/triattention
+  workloads: [AIME, GSM8K, MATH / MATH-500]
+  models: [DeepSeek-R1 (671B), DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-7B, Llama-3-8B, Qwen2.5-7B, Qwen3-32B,
+    Qwen3-8B, gpt-oss-120b, gpt-oss-20b]
+
+'2604.16682':
+  title: KAIROS
+  venue: arXiv
+  year: 2026
+  technique: [prefix, sched]
+  evidence: [F]
+  repo: null
+  workloads: [SWE-bench, Terminal-Bench]
+  models: [Qwen3-30B-A3B]
+
+'2604.16957':
+  title: 'Open-TQ-Metal: Fused Compressed-Domain Attention for Long-Context LLM Inference on Apple Silicon'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: mutable-state-inc/gemma4metal
+  workloads: []
+  models: []
+
+'2604.24971':
+  title: 'PolyKV: A Shared Asymmetrically-Compressed KV Cache Pool for Multi-Agent LLM Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: ishan1410/PolyKV
+  workloads: [Wikipedia/WikiText]
+  models: [Llama-3-8B]
+
+'2604.25975':
+  title: Rethinking KV Cache Eviction via a Unified Information-Theoretic Objective
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: jiamingyy/CapKV
+  workloads: []
+  models: [Qwen3-8B]
+
+'2605.01708':
+  title: 'SplitZip: Ultra Fast Lossless KV Compression for Disaggregated LLM Serving'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Intelligent-Microsystems-Lab/SplitZip
+  workloads: [Wikipedia/WikiText]
+  models: [Llama-3-8B, Qwen3-30B-A3B, Qwen3-32B]
+
+'2605.02888':
+  title: 'SpecKV: Adaptive Speculative Decoding with Compression-Aware Gamma Selection'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Amorfati123/SpecKV
+  workloads: [GSM8K, HumanEval, ShareGPT]
+  models: [Llama-3.2-1B, Llama-3.2-3B]
+
+'2605.03375':
+  title: Tutti
+  venue: arXiv
+  year: 2026
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [L-Eval, LooGLE]
+  models: [GLM-4-9B, Llama-3-8B]
+
+'2605.08151':
+  title: 'SPECTRE: Hybrid Ordinary-Parallel Speculative Serving for Resource-Efficient LLM Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: sgl-project/sglang
+  workloads: [AIME, BoolQ, C4, GSM8K, HumanEval, LongBench v2, LooGLE, MATH / MATH-500, MMLU, Mooncake trace, Natural Questions,
+    ShareGPT, UltraChat]
+  models: [DeepSeek-Coder-V2-Lite, DeepSeek-R1 (671B), DeepSeek-R1-Distill-Qwen-7B, DeepSeek-V2, DeepSeek-V3, Kimi-K2, Llama-2-7B,
+    Llama-3-70B, Llama-3-8B, Llama-3.1-405B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.2-1B, Llama-3.2-3B, Mamba (family), MiniCPM,
+    Mistral-7B, Mixtral-8x7B, Phi-4, Qwen2.5-0.5B, Qwen2.5-14B, Qwen2.5-7B, Qwen3-0.6B, Qwen3-30B-A3B, Qwen3-32B, Qwen3-4B,
+    Qwen3-8B, Vicuna-7B, gpt-oss-20b]
+
+'2605.08840':
+  title: 'ReST-KV: Robust KV Cache Eviction with Layer-wise Output Reconstruction and Spatial-Temporal Smoothing'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: an-yongqi/rest-kv
+  workloads: [InfiniteBench, LongBench, Needle-in-a-Haystack, Passkey retrieval, RULER]
+  models: [Llama-2-7B, Llama-3-70B, Llama-3-8B, Llama-3.1-8B, Mistral-7B]
+
+'2605.22269':
+  title: 'MuKV: Multi-Grained KV Cache Compression for Long Streaming Video Question-Answering'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: IMBALDY/MuKV
+  workloads: []
+  models: [Llama-7B (v1), Qwen2-7B]
+
+'2605.26297':
+  title: Agentic AI Workload Characteristics
+  venue: arXiv
+  year: 2026
+  technique: [prefix]
+  evidence: [F]
+  repo: null
+  workloads: [GAIA, SWE-bench, Terminal-Bench]
+  models: []
+
+'2605.26596':
+  title: 'AGORA: Adapter-Grounded Observation-Action Retention for Inference-Free Prompt Compression in LLM Agents'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: ranranrannervous/agoracompression
+  workloads: [ALFWorld, ReAct/HotpotQA agent, WebShop]
+  models: [Qwen2.5-7B]
+
+'2606.07684':
+  title: Semantic Cache Distillation
+  venue: ICML'26
+  year: 2026
+  technique: [nonprefix]
+  evidence: [F]
+  repo: null
+  workloads: [HotpotQA, Wikipedia/WikiText]
+  models: [Mistral-7B]
+
+'2606.09079':
+  title: 'FlashMemory-DeepSeek-V4: Lightning Index Ultra-Long Context via Lookahead Sparse Attention'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: libertywing/FlashMemory-Deepseek-V4
+  workloads: [AIME, BoolQ, C4, GPQA, GSM8K, HellaSwag, HotpotQA, HumanEval, LongBench v2, LooGLE, MATH / MATH-500, MMLU, MT-Bench,
+    RULER, ReAct/HotpotQA agent, ShareGPT, Tree-of-Thought / few-shot programs, UltraChat]
+  models: [CodeLlama-7B, DeepSeek-Coder-V2-Lite, DeepSeek-R1 (671B), DeepSeek-V2, DeepSeek-V3, Kimi-K2, Llama-2-7B, Llama-3-70B,
+    Llama-3-8B, Llama-3.1-405B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.3-70B, Llama-4-Scout, Llama-7B (v1), Mamba (family),
+    Mistral-7B, Mixtral-8x7B, Phi-4, Qwen2.5-14B, Qwen2.5-32B, Qwen2.5-72B, Qwen2.5-7B, Qwen3-0.6B, Qwen3-235B-A22B, Qwen3-32B,
+    Qwen3-4B, Vicuna-7B, gpt-oss-120b]
+
+'2606.17034':
+  title: 'KVEraser: Learning to Steer KV Cache for Efficient Localized Context Erasing'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Graph-COM/KVEraser
+  workloads: [BFCL, HotpotQA, MuSiQue, Natural Questions, Needle-in-a-Haystack, ToolBench, TriviaQA]
+  models: [Qwen3-8B]
+
+'2606.24467':
+  title: 'CompressKV: Semantic-Retrieval-Guided KV-Cache Compression for Resource-Efficient Long-Context LLM Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: TUDa-HWAI/CompressKV
+  workloads: [LongBench, MuSiQue, Needle-in-a-Haystack, RULER]
+  models: [Llama-2-7B, Llama-3.1-8B, LongChat-7B-32K, Mistral-7B, Qwen1.5-14B, Qwen2-7B]
+
+'2607.07144':
+  title: 'Fractal KV-Cache Archives: Lossless Symbolic Storage with In-Place Retrieval for Long-Context LLM Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: eighteight/fractal-kv
+  workloads: []
+  models: [Llama-3.1-70B, Llama-3.1-8B]
+
+'2608.01247':
+  title: 'RestoreKV: Recovering Full-Cache Behavior Under Aggressive Query-Agnostic KV Cache Eviction'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: cvsp-lab/RestoreKV
+  workloads: [LongBench, PG-19, Qasper, RULER, SCBench, SQuAD]
+  models: [Llama-3-8B, Llama-3.1-8B, Qwen2.5-7B, Qwen3-4B, Qwen3-8B]
+
+'2608.14624':
+  title: Learning Agent Execution for KV-Cache Mgmt
+  venue: arXiv
+  year: 2026
+  technique: [prefix, tier]
+  evidence: [F]
+  repo: null
+  workloads: [GAIA, GSM8K, MT-Bench, SWE-bench]
+  models: [Llama-3.1-8B, Qwen3-235B-A22B]
+
+'2608.24063':
+  title: 'VisCache: Visual KV Cache Pruning for Efficient Vision Large Language Model Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Wlklk/VisCache
+  workloads: []
+  models: [MiniCPM, Qwen2-7B]
+
+'2609.01507':
+  title: 'LatentPress: Context Compression Beyond Text and Vision'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: HJSang/LatentPress
+  workloads: [2WikiMultihopQA, HotpotQA, LongBench, MuSiQue, MultiFieldQA, NarrativeQA, Qasper, UltraChat]
+  models: [ChatGLM3-6B, Llama-2-7B, Llama-3.1-70B, LongChat-7B-32K, Qwen2.5-14B, Qwen2.5-7B, Qwen3-4B, Qwen3-8B, Vicuna-7B]
+
+'2609.03430':
+  title: 'Random Attention: Rethinking KV Cache Eviction for Efficient Reasoning'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: SalesforceAIResearch/Random-Attention
+  workloads: [AIME, GPQA, GSM8K, LiveCodeBench, MATH / MATH-500]
+  models: [DeepSeek-R1-Distill-Llama-8B, Phi-4, Qwen3-14B, Qwen3-32B, Qwen3-4B]
+
+'2609.07966':
+  title: 'MetaKV: Adaptive KV Cache Compression for Constrained LLM Inference'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: MichaelWang0505/MetaKV
+  workloads: [ARC, GSM8K, HellaSwag, RULER, SQuAD]
+  models: []
+
+'2609.08450':
+  title: Sample-Guided Exact Top-K Selection for Long-Context Sparse Attention
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Tencent/hpc-ops
+  workloads: []
+  models: [DeepSeek-V3, Qwen3-235B-A22B]
+
+'2609.10266':
+  title: KVShareArena
+  venue: arXiv
+  year: 2026
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: xishi404/KVShare-Arena
+  workloads: [HotpotQA, LongBench, MuSiQue, MultiFieldQA, Qasper]
+  models: [Llama-3.1-8B, Qwen3-14B, Qwen3-30B-A3B, Qwen3-4B, Qwen3-8B]
+
+'2609.11582':
+  title: 'OmniKVQuant: KV Cache Quantization for Omni-LLMs'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: kaistmm/OmniKVQuant
+  workloads: []
+  models: []
+
+'2609.11744':
+  title: py-kvcache (vLLM + NVMe)
+  venue: arXiv
+  year: 2026
+  technique: [tier]
+  evidence: [A, F]
+  repo: atlarge-research/py-kvcache
+  workloads: [Alibaba/Qwen serving trace, LongBench, SCBench, ShareGPT]
+  models: [Llama-3.1-8B, Llama-3.2-3B, Qwen3-4B]
+
+'2609.26796':
+  title: 'Flash-dLLM: IO-Aware KV Caching and Parallel Decoding for Fast, Memory-Efficient Diffusion LLMs'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: VILA-Lab/Flash-dLLM
+  workloads: [GSM8K, HumanEval, MBPP]
+  models: [Llama-3-8B]
+
+'2609.31382':
+  title: 'Highlight-Then-Summarize: Learning to Compress Evidence for Long-Context Understanding'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: X-Luffy/Highlight-Then-Summarize
+  workloads: [GovReport, HELMET, LongBench, LongBench v2, MS MARCO]
+  models: [Kimi-K2, Qwen2.5-14B, Qwen2.5-7B]
+
+'2609.33746':
+  title: 'PQ-HSA: Reusing Product-Quantized Scores for Hybrid Sparse-Approximate Attention'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: KunmingSHAO/pqhsa_release
+  workloads: [InfiniteBench, LongBench, Passkey retrieval, RULER]
+  models: [Llama-3-8B, Llama-3-8B-262K/1048K (Gradient), Llama-3.1-8B, Qwen2.5-14B, Qwen3-30B-A3B]
+
+'2609.33762':
+  title: EfficientAgent
+  venue: arXiv
+  year: 2026
+  technique: [tier, prefix]
+  evidence: [A, F]
+  repo: KunmingSHAO/efficientagent_release
+  workloads: [SWE-bench]
+  models: [Qwen3-30B-A3B]
+
+'2609.33889':
+  title: Where Activation Sparsity and KV-Cache Sparsity Cross in LLM Decoding
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: js-lee-AI/ByteCross
+  workloads: [MMLU, Passkey retrieval, Wikipedia/WikiText]
+  models: [Llama-3-8B, Llama-3.1-70B, Llama-3.1-8B, Llama-3.2-3B, Mistral-7B, Qwen3-8B]
+
+'2609.39329':
+  title: 'PatchKV: Weight-Space Compensation of KV Cache'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: cusasak/PatchKV
+  workloads: [GSM8K, Needle-in-a-Haystack, RULER, SCBench, SQuAD]
+  models: [Llama-3.1-8B, Qwen2.5-7B, Qwen3-4B]
+
+'2610.01762':
+  title: 'OneStreamer: Unifying Perception, Memory, and Proactive Response in Streaming Video Interaction'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: MCG-NJU/OneStreamer
+  workloads: [HELMET]
+  models: [Qwen3-235B-A22B]
+
+'2610.03135':
+  title: 'Page-EntroKV: Hardware-Aligned, Entropy-Weighted KV-Cache Eviction under Grouped-Query Attention'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: bruce12-glitch/PageEntro-KV
+  workloads: [LCC, LongBench, MultiFieldQA, Needle-in-a-Haystack, Qasper, RepoBench]
+  models: [Llama-3.1-8B]
+
+'2610.03326':
+  title: Preserving Mathematical Reasoning in Compressed Diffusion Language Models via Trajectory-Aware Low-Rank Approximation
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Zishan-Shao/traj-mc
+  workloads: [ARC, BBH, C4, GSM8K, HellaSwag, HumanEval, LAMBADA, MBPP, MMLU, MMLU-Pro, PIQA, Wikipedia/WikiText, WinoGrande]
+  models: []
+
+'2610.03842':
+  title: 'KVE-KD: Key Visual Evidence-Guided Knowledge Distillation for Vision-Language Models'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: zhangjianbin07/KVE-KD
+  workloads: []
+  models: []
+
+'2610.05329':
+  title: Understanding the Weight Averaging Mechanism in LLM Training for Post-Training Quantization
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: MOFA-LAB/weight-averaging-for-ptq
+  workloads: [C4]
+  models: [OPT-1.3B]
+
+'2610.06686':
+  title: 'OVAL: Output-Aware Local Page Bases for KV Cache Retrieval'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: Ashkan13776/oval-kv
+  workloads: [GPQA, InfiniteBench, LMSYS-Chat-1M, LongBench v2, MATH / MATH-500, Natural Questions, Passkey retrieval]
+  models: [DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-7B, GLM-4-9B, Llama-3.1-8B, Qwen2.5-14B, Qwen2.5-7B]
+
+'2610.13060':
+  title: KV-Repurpose
+  venue: arXiv
+  year: 2026
+  technique: [nonprefix]
+  evidence: [A, F]
+  repo: taiga333/eval-kv-repurpose
+  workloads: [2WikiMultihopQA, GovReport, HotpotQA, MuSiQue, MultiNews, QMSum, Qasper]
+  models: [gpt-oss-120b]
+
+'2610.18642':
+  title: 'MultiAlloc: Budget-Aware Precision Allocation for KV Cache Quantization'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: RL-MIND/MultiAlloc
+  workloads: [GPQA, GSM8K, LongBench v2]
+  models: [DeepSeek-R1-Distill-Qwen-14B, DeepSeek-R1-Distill-Qwen-7B, Llama-3-8B, Mistral-7B, QwQ-32B]
+
+'2610.20927':
+  title: 'Prune the Summary, Not the History: Source-Judged Compaction for Long-Horizon Agents'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: GuanghuiMin/sjc
+  workloads: []
+  models: []
+
+'2610.21893':
+  title: 'GACC-Bench: Benchmarking Goal-Adaptive Context Compression Ability across Large Language Models'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: weiting24/GACC-Bench
+  workloads: [HELMET, L-Eval, LongBench v2, SWE-bench]
+  models: []
+
+'2610.26754':
+  title: 'TokenGate: Adapting LLMs for Fast and Memory-Efficient Prefill with Learned Token Pruning'
+  venue: arXiv
+  year: 2026
+  technique: []
+  evidence: [A]
+  repo: token-gate-llms/TokenGate
+  workloads: [2WikiMultihopQA, HotpotQA, LongBench, MuSiQue, MultiFieldQA, MultiNews, NarrativeQA, Needle-in-a-Haystack, Qasper,
+    RULER, RepoBench, TREC]
+  models: ['GPT-3 (175B, simulated)', Qwen3-0.6B, Qwen3-8B]
+
+osdi26-luo:
+  title: No Buffer, No Bottleneck (zero-copy KV offloading)
+  venue: OSDI'26
+  year: 2026
+  technique: [tier]
+  evidence: [F]
+  repo: null
+  workloads: [Alpaca, ShareGPT]
+  models: [Llama-3.1-8B, OPT-13B, OPT-30B]

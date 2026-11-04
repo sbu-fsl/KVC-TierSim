@@ -1,0 +1,34 @@
+model,hf_repo_checked,status,changes
+GLM-4-9B,THUDM/glm-4-9b-chat-1m,fixed,multi_query_group_num 2->4 (KV 2x larger)
+ChatGLM3-6B,THUDM/chatglm3-6b-32k,ok,
+Falcon-40B,tiiuae/falcon-40b,ok,
+Falcon-7B,tiiuae/falcon-7b,ok,multi_query=true
+Yi-34B(-200K),01-ai/Yi-34B-200K,ok,
+Yi-6B-200K,01-ai/Yi-6B-200K,ok,
+MiniCPM,openbmb/MiniCPM-2B-sft-bf16,ok,
+Jamba,ai21labs/Jamba-v0.1 (1.5-Mini gated),ok,attn every 8 layers; SSM state recomputed 9.2 MB
+Qwen3-8B,Qwen/Qwen3-8B,fixed,ctx 32768->40960
+Qwen3-4B,Qwen/Qwen3-4B,fixed,ctx 32768->40960
+Qwen3-32B,Qwen/Qwen3-32B,fixed,ctx 32768->40960
+Qwen3-0.6B,Qwen/Qwen3-0.6B,fixed,ctx 32768->40960
+Qwen3-30B-A3B,Qwen/Qwen3-30B-A3B,fixed,ctx 32768->40960
+Qwen2.5-7B,Qwen/Qwen2.5-7B-Instruct,fixed,ctx 131072->32768 (config native; 128K needs YaRN)
+Qwen2.5-14B,Qwen/Qwen2.5-14B-Instruct,fixed,ctx 131072->32768
+Qwen2.5-32B,Qwen/Qwen2.5-32B-Instruct,fixed,ctx 131072->32768
+Llama-3.2-1B,unsloth/Llama-3.2-1B (mirror),ok,
+Llama-3.2-3B,unsloth/Llama-3.2-3B (mirror),ok,
+Llama-3.1-8B,unsloth/Meta-Llama-3.1-8B (mirror),ok,
+Llama-2-70B,NousResearch/Llama-2-70b-hf (mirror),ok,
+DeepSeek-V2,deepseek-ai/DeepSeek-V2,fixed,ctx 131072->163840; MLA rank 512 + rope 64 confirmed
+Phi-3-mini,microsoft/Phi-3-mini-128k-instruct,ok,
+Phi-4,microsoft/phi-4,ok,
+Mixtral-8x7B,mistralai/Mixtral-8x7B-v0.1,ok,
+Mistral-7B,mistralai/Mistral-7B-Instruct-v0.2,ok,sliding_window null
+GPT-NeoX-20B,EleutherAI/gpt-neox-20b,ok,
+OPT-66B,facebook/opt-66b,ok,
+OPT-30B,facebook/opt-30b,ok,
+LongChat-7B-32K,lmsys/longchat-7b-v1.5-32k,ok,linear RoPE x8 -> 32K
+Pythia (family),EleutherAI/pythia-6.9b,ok,
+Qwen2.5-7B-family distills,deepseek-ai/DeepSeek-R1-Distill-Qwen-7B,inherits,same arch as Qwen2.5-Math-7B
+Gemma-7B,google/gemma-7b,unverified (gated),
+MPT-7B,mosaicml/mpt-7b,unverified (fetch failed),

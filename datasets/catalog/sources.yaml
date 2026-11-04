@@ -1,0 +1,105 @@
+# Raw data sources, fetched into datasets/data/raw/ by `make fetch`
+# (python datasets/scripts/fetch.py). Workloads point at these keys with
+# `source:` in catalog/workloads.yaml.
+#
+# kinds
+#   hf_zip      one archive in a Hugging Face dataset repo; `members` maps archive path -> raw path
+#   hf_file     files in a Hugging Face dataset repo; `files` maps repo path -> raw path
+#   hf_dataset  a Hugging Face dataset loaded with `datasets` and normalized by
+#               kvwl/hf_sources.py:<normalizer> into raw/hf/<workload>.jsonl
+#               (needs `pip install datasets`; gated sets need HF_TOKEN)
+#   url         plain files; `files` maps URL -> raw path
+#   github_dir  files in a GitHub directory (`dirs` maps repo dir -> raw dir; `match` filters names)
+#
+# `{task}` in a path expands over `tasks`. The non-HF entries are the exact files the
+# shipped streams were built from (most are copies vendored in KV-cache paper artifacts);
+# they are pinned to the default branch (HEAD) of each repository.
+
+# ------------------------------------------------------------------ Hugging Face
+longbench:
+  kind: hf_zip
+  repo: zai-org/LongBench
+  file: data.zip
+  tasks: [narrativeqa, qasper, multifieldqa_en, hotpotqa, 2wikimqa, musique, gov_report, qmsum, multi_news,
+          trec, triviaqa, samsum, passage_count, passage_retrieval_en, lcc, repobench-p]
+  members: {"data/{task}.jsonl": "longbench/{task}.jsonl"}
+longbench_config:
+  kind: url
+  files:
+    https://raw.githubusercontent.com/THUDM/LongBench/HEAD/LongBench/config/dataset2prompt.json: longbench/dataset2prompt.json
+    https://raw.githubusercontent.com/THUDM/LongBench/HEAD/LongBench/config/dataset2maxlen.json: longbench/dataset2maxlen.json
+leval:
+  kind: hf_file
+  repo: L4NLP/LEval
+  tasks_exam: [quality, coursera, gsm100, topic_retrieval_longchat, tpo, codeU]
+  tasks_gen: [narrative_qa, paper_assistant, meeting_summ, financial_qa, legal_contract_qa, gov_report_summ]
+  files:
+    "LEval/Exam/{tasks_exam}.jsonl": "leval/{tasks_exam}.jsonl"
+    "LEval/Generation/{tasks_gen}.jsonl": "leval/{tasks_gen}.jsonl"
+hf_sharegpt:      {kind: hf_dataset, normalizer: sharegpt, repo: anon8231489123/ShareGPT_Vicuna_unfiltered}
+hf_lmsys:         {kind: hf_dataset, normalizer: lmsys, repo: lmsys/lmsys-chat-1m, gated: true}
+hf_infinitebench: {kind: hf_dataset, normalizer: infinitebench, repo: xinrongzhang2022/InfiniteBench}
+hf_longbench_v2:  {kind: hf_dataset, normalizer: longbench_v2, repo: zai-org/LongBench-v2}
+hf_booksum:       {kind: hf_dataset, normalizer: booksum, repo: kmfoda/booksum}
+hf_scbench:       {kind: hf_dataset, normalizer: scbench, repo: microsoft/SCBench}
+hf_loogle:        {kind: hf_dataset, normalizer: loogle, repo: bigai-nlco/LooGLE}
+hf_swebench:      {kind: hf_dataset, normalizer: swebench_agent, repo: nebius/SWE-agent-trajectories}
+hf_gpqa:          {kind: hf_dataset, normalizer: gpqa, repo: Idavidrein/gpqa, gated: true}
+hf_hellaswag:     {kind: hf_dataset, normalizer: hellaswag, repo: Rowan/hellaswag}
+hf_winogrande:    {kind: hf_dataset, normalizer: winogrande, repo: allenai/winogrande}
+hf_arc:           {kind: hf_dataset, normalizer: arc, repo: allenai/ai2_arc}
+hf_boolq:         {kind: hf_dataset, normalizer: boolq, repo: google/boolq}
+hf_copa:          {kind: hf_dataset, normalizer: copa, repo: pkavumba/balanced-copa}
+
+# ------------------------------------------------------------------ GitHub / web
+ruler:
+  kind: github_dir
+  repo: dongwonjo/FastKV            # vendors RULER generated with NVIDIA/RULER
+  dirs: {data/RULER/8192: ruler/8192, data/RULER/16384: ruler/16384}
+  match: '\.jsonl$'
+bbh:
+  kind: github_dir
+  repo: suzgunmirac/BIG-Bench-Hard
+  dirs: {bbh: bbh/data, cot-prompts: bbh/cot}
+  match: '\.(json|txt)$'
+magicdec:
+  kind: url
+  files:
+    https://raw.githubusercontent.com/Infini-AI-Lab/MagicDec/HEAD/Data/Ruler/synthetic/json/PaulGrahamEssays.json: misc/PaulGrahamEssays.json
+    https://raw.githubusercontent.com/Infini-AI-Lab/MagicDec/HEAD/Data/pg19/pg19-test.json: misc/pg19-test.json
+squad:      {kind: url, files: {https://raw.githubusercontent.com/PiotrNawrot/sparse-frontier/HEAD/sparse_frontier/tasks/qa/data/squad.json: misc/squad_v2_dev.json}}
+math500:    {kind: url, files: {https://raw.githubusercontent.com/PiotrNawrot/sparse-frontier/HEAD/sparse_frontier/tasks/math/data/math_500.jsonl: misc/math_500.jsonl}}
+nq:         {kind: url, files: {https://raw.githubusercontent.com/UCSB-NLP-Chang/KVLink/HEAD/data/raw/nq/nq-open-10_0.jsonl: misc/nq-open-10_0.jsonl}}
+gsm8k:      {kind: url, files: {https://raw.githubusercontent.com/3DAgentWorld/Toolkit-for-Prompt-Compression/HEAD/dataset/GSM8K/grade_school_math/data/test.jsonl: misc/gsm8k_test.jsonl}}
+alpaca:     {kind: url, files: {https://raw.githubusercontent.com/NVlabs/Fast-dLLM/HEAD/v2/data/alpaca/train/train_52002.json: misc/alpaca.json}}
+ultrachat:  {kind: url, files: {https://raw.githubusercontent.com/HJSang/LatentPress/HEAD/experiments/vtc_memory_validation/longmemeval_evaluation_training_data/ultrachat_train.json: misc/ultrachat_2k.json}}
+aime24:     {kind: url, files: {https://raw.githubusercontent.com/ngocbh/trimkv/HEAD/experiments/math/evaluation/aime24/default-aime24_math_eval.jsonl: misc/aime24.jsonl}}
+cnndm:      {kind: url, files: {https://raw.githubusercontent.com/hetailang/SqueezeAttention/HEAD/data/cnndm.jsonl: misc/cnndm.jsonl}}
+xsum:       {kind: url, files: {https://raw.githubusercontent.com/hdong920/LESS/HEAD/data/xsum_data/xsum_5shot.jsonl: misc/xsum_5shot.jsonl}}
+mmlu:       {kind: url, files: {https://raw.githubusercontent.com/microsoft/unilm/HEAD/ReSA/math_data/mmlu_stem/test.jsonl: misc/mmlu_stem_test.jsonl}}
+mtbench:    {kind: url, files: {https://raw.githubusercontent.com/lm-sys/FastChat/HEAD/fastchat/llm_judge/data/mt_bench/question.jsonl: misc/mtbench_question.jsonl}}
+humaneval:  {kind: url, files: {https://raw.githubusercontent.com/openai/human-eval/HEAD/data/HumanEval.jsonl.gz: misc/HumanEval.jsonl.gz}}
+mbpp:       {kind: url, files: {https://raw.githubusercontent.com/google-research/google-research/HEAD/mbpp/mbpp.jsonl: misc/mbpp.jsonl}}
+piqa:       {kind: url, files: {https://raw.githubusercontent.com/ybisk/ybisk.github.io/HEAD/piqa/data/valid.jsonl: misc/piqa_valid.jsonl}}
+
+# ------------------------------------------------------------------ production traces
+mooncake:
+  kind: url
+  files:
+    https://raw.githubusercontent.com/kvcache-ai/Mooncake/HEAD/FAST25-release/traces/conversation_trace.jsonl: traces/mooncake_conversation.jsonl
+    https://raw.githubusercontent.com/kvcache-ai/Mooncake/HEAD/FAST25-release/traces/toolagent_trace.jsonl: traces/mooncake_toolagent.jsonl
+    https://raw.githubusercontent.com/kvcache-ai/Mooncake/HEAD/FAST25-release/traces/synthetic_trace.jsonl: traces/mooncake_synthetic.jsonl
+    https://raw.githubusercontent.com/kvcache-ai/Mooncake/HEAD/FAST25-release/arxiv-trace/mooncake_trace.jsonl: traces/mooncake_arxiv.jsonl
+qwen_bailian:
+  kind: url                          # git-LFS objects, served from media.githubusercontent.com
+  files:
+    https://media.githubusercontent.com/media/alibaba-edu/qwen-bailian-usagetraces-anon/HEAD/qwen_traceA_blksz_16.jsonl: traces/qwen_traceA_blksz_16.jsonl
+    https://media.githubusercontent.com/media/alibaba-edu/qwen-bailian-usagetraces-anon/HEAD/qwen_traceB_blksz_16.jsonl: traces/qwen_traceB_blksz_16.jsonl
+    https://media.githubusercontent.com/media/alibaba-edu/qwen-bailian-usagetraces-anon/HEAD/qwen_thinking_blksz_16.jsonl: traces/qwen_thinking_blksz_16.jsonl
+    https://media.githubusercontent.com/media/alibaba-edu/qwen-bailian-usagetraces-anon/HEAD/qwen_coder_blksz_16.jsonl: traces/qwen_coder_blksz_16.jsonl
+azure_2023:
+  kind: url
+  files:
+    https://raw.githubusercontent.com/Azure/AzurePublicDataset/HEAD/data/AzureLLMInferenceTrace_code.csv: traces/AzureLLMInferenceTrace_code.csv
+    https://raw.githubusercontent.com/Azure/AzurePublicDataset/HEAD/data/AzureLLMInferenceTrace_conv.csv: traces/AzureLLMInferenceTrace_conv.csv
+burstgpt:   {kind: url, files: {https://raw.githubusercontent.com/HPMLL/BurstGPT/HEAD/data/BurstGPT_1.csv: traces/BurstGPT_1.csv}}
