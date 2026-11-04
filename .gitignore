@@ -1,23 +1,43 @@
+# Credentials (template: secrets.env.example)
+secrets.env
+.env
+
+# Per-host settings (scripts/setup_host.sh)
+local.env
+
 # OS & IDE
 .idea/
 .vscode/
 .DS_Store
 
 # Python
-__pycache__
+__pycache__/
+*.pyc
 venv/
 .venv/
-*.pyc
+*.egg-info/
+build/
 
-# Generated outputs at the repository root (re-runs of the CLIs land here).
-# Curated copies live under results/ and are tracked on purpose.
+# Generated outputs from re-running the CLIs (they write to the working directory).
+# Curated copies under simulator/results/, datasets/figures/ and HotStorage26/ are tracked on purpose.
 plots
 *.png
 *.pdf
 /*.json
-!results/**/*.png
-!results/**/*.pdf
-!results/**/*.json
+!simulator/results/**/*.png
+!simulator/results/**/*.pdf
+!simulator/results/**/*.json
+!datasets/figures/*.png
+!datasets/figures/*.pdf
 
 # scratch simulation outputs
 /scratchpad/
+
+# Dataset analysis: big / re-creatable data stays out of git.
+#   raw sources      -> make fetch / make fetch-hf          (catalog/sources.yaml)
+#   request streams  -> make profile (built from the raw sources)
+# (or anywhere else via KVWL_DATA_DIR, e.g. /mnt/gpfs/kvc_tiersim_kvwl)
+datasets/data/raw/
+datasets/data/streams/
+datasets/data/results/v1/
+datasets/.cache/

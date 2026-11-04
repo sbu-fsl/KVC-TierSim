@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kvc-tiersim"
+version = "0.2.0"
+description = "KVC-TierSim (restore-vs-recompute KV-cache simulator) and KVWL (workload x model dataset analysis)"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+# Two top-level packages:
+#   simulator  -> simulator/        (KVC-TierSim)
+#   kvwl       -> datasets/kvwl/    (dataset analysis; reads data from datasets/)
+[tool.setuptools.packages.find]
+where = [".", "datasets"]
+include = ["simulator*", "kvwl*"]
+
+[tool.setuptools.package-data]
+simulator = ["hardware/*.yaml", "frontend/*"]
+kvwl = ["*.html"]
