@@ -1,6 +1,6 @@
 """CLI comparing KV-cache policies on a single-tier (disk) hardware model.
 
-The policy strategies themselves live in the ``src/policies/`` package; this module
+The policy strategies themselves live in the ``simulator/core/policies/`` package; this module
 owns the *hardware math* (how X and Y are derived) and the experiment plumbing.
 Every registered policy is evaluated automatically, so adding a policy module
 makes it show up here too.
@@ -14,9 +14,9 @@ import math
 from dataclasses import asdict, dataclass
 from typing import Iterable
 
-from src.policies import PolicyContext, evaluate, get_policies, policy_keys
-from src.policies.core import PolicyResult  # re-exported for backward compatibility
-from src.pool import DISKS, DRAMS, GPUS, LINKS
+from simulator.core.policies import PolicyContext, evaluate, get_policies, policy_keys
+from simulator.core.policies.core import PolicyResult  # re-exported for backward compatibility
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS
 
 BYTES_PER_BLOCK = 2e6
 TOKENS_PER_BLOCK = 16

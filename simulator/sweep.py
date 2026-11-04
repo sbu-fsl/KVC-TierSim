@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch
 
-from simulator import ExperimentConfig, HardwareConfig, run_experiments
-from src.pool import DISKS, DRAMS, GPUS, LINKS
+from simulator.experiment import ExperimentConfig, HardwareConfig, run_experiments
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS
 
 # Default sweep settings. Edit these values or override them via the CLI.
 STACK_KEY = "a100"

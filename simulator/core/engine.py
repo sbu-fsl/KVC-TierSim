@@ -4,9 +4,9 @@ import math
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from simulator import HardwareConfig
-from src.policies import PolicyContext, evaluate, get_policies, policy_meta
-from src.pool import DISKS, DRAMS, GPUS, LINKS
+from simulator.experiment import HardwareConfig
+from simulator.core.policies import PolicyContext, evaluate, get_policies, policy_meta
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS
 
 TIER_ORDER = ("vram", "dram", "disk")
 

@@ -19,10 +19,10 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from src.policies import policy_keys, policy_meta
-from simulator import HardwareConfig, STACK_PRESETS
-from src.engine import Placement, Workload, simulate
-from src.pool import DISKS, DRAMS, GPUS, LINKS, MODELS
+from simulator.core.policies import policy_keys, policy_meta
+from simulator.experiment import HardwareConfig, STACK_PRESETS
+from simulator.core.engine import Placement, Workload, simulate
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS, MODELS
 
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 

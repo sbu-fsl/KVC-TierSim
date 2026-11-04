@@ -4,7 +4,7 @@ import matplotlib.ticker as ticker
 import numpy as np
 from matplotlib.lines import Line2D
 
-from src.pool import DISKS, DRAMS, GPUS, LINKS
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS
 
 # set the global font family to serif
 plt.rcParams["font.family"] = "serif"

@@ -50,9 +50,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 
-from simulator import ExperimentConfig, HardwareConfig, hardware_throughputs
-from src.policies import PolicyBase, PolicyContext, evaluate, get_policies
-from src.pool import DISKS, DRAMS, GPUS, LINKS
+from simulator.experiment import ExperimentConfig, HardwareConfig, hardware_throughputs
+from simulator.core.policies import PolicyBase, PolicyContext, evaluate, get_policies
+from simulator.core.pool import DISKS, DRAMS, GPUS, LINKS
 
 # Default hardware. Edit here or override on the CLI.
 STACK_KEY = "a100"

@@ -8,7 +8,7 @@ import yaml
 
 from .types import DRAM, Disk, GPU, Link, ModelPreset
 
-# hardware/ lives next to the repository root, i.e. one level above src/.
+# hardware/ lives in the simulator package, one level above core/.
 HARDWARE_DIR = Path(__file__).resolve().parent.parent / "hardware"
 
 T = TypeVar("T")
